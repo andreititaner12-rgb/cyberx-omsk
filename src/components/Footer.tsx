@@ -1,14 +1,19 @@
 import React from 'react';
 import { ARENAS } from '../data/arenaData';
-import { MapPin, Phone, Send, ArrowUpRight } from 'lucide-react';
+import { MapPin, Phone, Send, ArrowUpRight, SlidersHorizontal } from 'lucide-react';
 import { sound } from '../utils/sound';
 
 interface FooterProps {
   onOpenBooking: () => void;
   onOpenTournaments: () => void;
+  onOpenAdmin?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenTournaments }) => {
+export const Footer: React.FC<FooterProps> = ({ 
+  onOpenBooking, 
+  onOpenTournaments,
+  onOpenAdmin,
+}) => {
   const scrollToTop = () => {
     sound.playClick();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -134,8 +139,21 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenTournaments
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-500">
-          <div>
-            © 2026 CYBERX COMMUNITY OMSK. Все права защищены.
+          <div className="flex items-center gap-3">
+            <span>© 2026 CYBERX COMMUNITY OMSK. Все права защищены.</span>
+            {onOpenAdmin && (
+              <button
+                onClick={() => {
+                  sound.playClick();
+                  onOpenAdmin();
+                }}
+                className="hover:text-zinc-300 transition-colors flex items-center gap-1 text-[11px] opacity-60 hover:opacity-100"
+                title="Панель владельца клубов"
+              >
+                <SlidersHorizontal className="w-3 h-3" />
+                <span>Панель управления</span>
+              </button>
+            )}
           </div>
 
           <div className="flex items-center gap-6">

@@ -2,32 +2,6 @@ import { ArenaLocation, ZoneType, HardwareItem, Tournament, Promotion } from '..
 
 export const ARENAS: ArenaLocation[] = [
   {
-    id: 'cyberx-arena',
-    name: 'CYBERX ARENA // ЛЕНИНА, 19',
-    tagline: 'Главный киберспортивный комплекс Омска со сценой, Premium залами и автосимуляторами',
-    address: 'ул. Ленина, 19',
-    metro: 'Ост. «Драмтеатр» / «КДЦ Маяковский»',
-    area: '540 м²',
-    rigsCount: 86,
-    vipRoomsCount: 2, // 2 Premium зала
-    ps5RoomsCount: 4, // 4 PS5 зала + кино-лаунж
-    phone: '+7 (908) 110-97-77',
-    telegram: '@cyberxcommunityomsklenina',
-    workingHours: '24/7 Круглосуточно',
-    rating: 5.0,
-    reviewsCount: 1280,
-    image: 'https://langame.ru/storage/clubs/2023/Jul/05/168857344564a59605677bb.webp',
-    features: [
-      '86 мощных игровых ПК (RTX 5070 Ti / i5-14600KF / BenQ 600Hz & 400Hz)',
-      '2 эксклюзивных Premium зала (5 ПК + PS5 + Большой стол для команды)',
-      '2 профессиональных автосимулятора Sim-Racing с рулями Direct Drive',
-      'Большой кино-лаунж с проектором 150" для трансляций и турниров',
-      '4 приватных PS5 зала с диванами, кальян и бар'
-    ],
-    status: 'ONLINE',
-    coordinates: { x: 54.984185, y: 73.375841 },
-  },
-  {
     id: 'cyberx-evropa',
     name: 'CYBERX ЕВРОПА // МИРА, 42К1',
     tagline: 'Киберспортивный хаб в Нефтяниках с Solo Room на Ryzen 7 7800X3D и 600Hz',
@@ -52,6 +26,32 @@ export const ARENAS: ArenaLocation[] = [
     ],
     status: 'ONLINE',
     coordinates: { x: 55.028412, y: 73.284310 },
+  },
+  {
+    id: 'cyberx-arena',
+    name: 'CYBERX ARENA // ЛЕНИНА, 19',
+    tagline: 'Главный киберспортивный комплекс Омска со сценой, Premium залами и автосимуляторами',
+    address: 'ул. Ленина, 19',
+    metro: 'Ост. «Драмтеатр» / «КДЦ Маяковский»',
+    area: '540 м²',
+    rigsCount: 86,
+    vipRoomsCount: 2, // 2 Premium зала
+    ps5RoomsCount: 4, // 4 PS5 зала + кино-лаунж
+    phone: '+7 (908) 110-97-77',
+    telegram: '@cyberxcommunityomsklenina',
+    workingHours: '24/7 Круглосуточно',
+    rating: 5.0,
+    reviewsCount: 1280,
+    image: 'https://langame.ru/storage/clubs/2023/Jul/05/168857344564a59605677bb.webp',
+    features: [
+      '86 мощных игровых ПК (RTX 5070 Ti / i5-14600KF / BenQ 600Hz & 400Hz)',
+      '2 эксклюзивных Premium зала (5 ПК + PS5 + Большой стол для команды)',
+      '2 профессиональных автосимулятора Sim-Racing с рулями Direct Drive',
+      'Большой кино-лаунж с проектором 150" для трансляций и турниров',
+      '4 приватных PS5 зала с диванами, кальян и бар'
+    ],
+    status: 'ONLINE',
+    coordinates: { x: 54.984185, y: 73.375841 },
   },
   {
     id: 'cyberx-oktyabr',

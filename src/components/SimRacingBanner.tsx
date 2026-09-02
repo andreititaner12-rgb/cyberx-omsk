@@ -136,7 +136,7 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
                 <button
                   onClick={() => {
                     sound.playTrigger();
-                    onOpenBooking('cyberx-lenina', 'sim-racing');
+                    onOpenBooking('cyberx-arena', 'sim-racing');
                   }}
                   onMouseEnter={() => sound.playHover()}
                   className="w-full py-3.5 px-6 rounded-xl font-display font-black text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#E32124] to-[#B30E11] hover:from-[#FF2A2E] hover:to-[#E32124] shadow-lg shadow-red-600/30 hover:scale-[1.01] transition-all flex items-center justify-center gap-2"

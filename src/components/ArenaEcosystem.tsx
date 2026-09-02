@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ARENAS } from '../data/arenaData';
 import { 
   MapPin, 
@@ -7,9 +7,20 @@ import {
   Star, 
   Check, 
   ArrowRight, 
-  Building2
+  Building2, 
+  Tv, 
+  Gamepad2, 
+  Gauge, 
+  PhoneCall, 
+  Flame, 
+  ShieldCheck, 
+  Zap, 
+  Users,
+  Sparkle
 } from 'lucide-react';
 import { sound } from '../utils/sound';
+import { motion } from 'framer-motion';
+import { GlowingEffect } from './ui/glowing-effect';
 
 interface ArenaEcosystemProps {
   onOpenBooking: (arenaId: string) => void;
@@ -20,193 +31,474 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
   onOpenBooking,
   selectedArenaId,
 }) => {
-  const [activeId, setActiveId] = useState<string>(selectedArenaId || ARENAS[0].id);
+  // Flagship CyberX Arena is in the center and selected by default
+  const [activeId, setActiveId] = useState<string>(selectedArenaId || 'cyberx-arena');
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const currentArena = ARENAS.find((a) => a.id === activeId) || ARENAS[0];
+  const currentArena = ARENAS.find((a) => a.id === activeId) || ARENAS[1];
+
+  const handleSelectArena = (arenaId: string) => {
+    sound.playClick();
+    setActiveId(arenaId);
+    
+    // Smooth scroll down to deep dive details
+    const detailsEl = document.getElementById('arena-deep-dive');
+    if (detailsEl) {
+      detailsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   return (
     <section id="arenas" className="relative py-24 sm:py-32 bg-[#000000] overflow-hidden">
       
-      {/* Subtle glow background */}
-      <div className="pointer-events-none absolute top-1/3 right-0 w-[500px] h-[500px] bg-[#E32124]/[0.035] rounded-full blur-[140px]" />
+      {/* Background ambient lighting */}
+      <div className="pointer-events-none absolute top-1/4 right-0 w-[550px] h-[550px] bg-[#E32124]/[0.035] rounded-full blur-[150px]" />
+      <div className="pointer-events-none absolute bottom-1/4 left-0 w-[450px] h-[450px] bg-red-600/[0.03] rounded-full blur-[140px]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E32124]/10 border border-[#E32124]/30 text-[#E32124] text-xs font-mono font-bold tracking-wider uppercase mb-3">
-              <Building2 className="w-3.5 h-3.5" />
-              Сеть киберспортивных пространств CyberX
-            </div>
-            <h2 className="font-display font-black text-3xl sm:text-5xl tracking-tight uppercase text-white">
-              3 КЛУБА <span className="text-[#E32124]">//</span> В ОМСКЕ
-            </h2>
-            <p className="mt-3 text-zinc-400 text-sm sm:text-base max-w-xl">
-              <span className="text-white font-bold">CyberX Arena</span> (Ленина, 19), <span className="text-white font-bold">CyberX Европа</span> (Мира, 42к1) и <span className="text-white font-bold">CyberX Октябрь</span> (Серова, 19А). 182 игровых ПК суммарно, единый клубный аккаунт и 10 PS5 залов.
-            </p>
+        {/* Centered Section Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E32124]/10 border border-[#E32124]/30 text-[#E32124] text-xs font-mono font-bold tracking-wider uppercase mb-3.5">
+            <Building2 className="w-3.5 h-3.5" />
+            Выбор киберспортивного пространства
           </div>
+          <h2 className="font-display font-black text-3xl sm:text-5xl tracking-tight uppercase text-white">
+            3 КЛУБА В ОМСКЕ <span className="text-[#E32124]">//</span> АРЕНЫ
+          </h2>
+          <p className="mt-3 text-zinc-400 text-sm sm:text-base leading-relaxed">
+            Нажмите на карточку клуба для просмотра детального оснащения, фотографий и мгновенного бронирования.
+          </p>
+        </motion.div>
 
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-mono text-zinc-400">
-              Всего в сети: <span className="text-white font-bold">182 Игровых ПК</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Arenas Interactive Switcher Tabs */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          {ARENAS.map((arena) => {
+        {/* 3 Tall, Solid 3D Focus Cards (100% Crisp, Sharp, No Blurring artifacts, Flagship in Center) */}
+        <motion.div 
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8 mb-20 items-stretch"
+        >
+          {ARENAS.map((arena, idx) => {
             const isSelected = arena.id === activeId;
+            const isHovered = hoveredIndex === idx;
+
             return (
-              <button
+              <HoloCardItem
                 key={arena.id}
-                onClick={() => {
-                  sound.playClick();
-                  setActiveId(arena.id);
-                }}
-                onMouseEnter={() => sound.playHover()}
-                className={`text-left p-5 rounded-2xl transition-all duration-300 border backdrop-blur-md relative ${
-                  isSelected
-                    ? 'bg-[#151520] border-[#E32124] shadow-xl shadow-red-950/40 translate-y-[-2px]'
-                    : 'bg-[#0a0a0f]/80 hover:bg-[#12121a] border-white/[0.08] hover:border-white/20'
-                }`}
-              >
-                {/* Active top line */}
-                {isSelected && (
-                  <div className="absolute top-0 left-6 right-6 h-[2px] bg-gradient-to-r from-transparent via-[#E32124] to-transparent" />
-                )}
-
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-mono tracking-widest uppercase font-bold text-[#E32124]">
-                    {arena.id === 'cyberx-arena' ? 'ФЛАГМАН СЕТИ' : arena.id === 'cyberx-evropa' ? 'ХАБ НЕФТЯНИКИ' : 'ХАБ ОКТЯБРЬ'}
-                  </span>
-                  <div className="flex items-center gap-1 text-amber-400 text-xs font-mono">
-                    <Star className="w-3.5 h-3.5 fill-amber-400" />
-                    <span>{arena.rating.toFixed(1)}</span>
-                  </div>
-                </div>
-
-                <div className="font-display font-extrabold text-base sm:text-lg text-white">
-                  {arena.name.split('//')[0].trim()}
-                </div>
-                <div className="text-xs text-zinc-400 mt-1 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-[#E32124] shrink-0" />
-                  <span className="truncate">{arena.address}</span>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs font-mono text-zinc-400">
-                  <span>{arena.rigsCount} ПК</span>
-                  <span className="text-zinc-500">•</span>
-                  <span>{arena.id === 'cyberx-arena' ? '2 Premium' : 'VIP залы'}</span>
-                  <span className="text-zinc-500">•</span>
-                  <span>{arena.ps5RoomsCount} PS5 залов</span>
-                </div>
-              </button>
+                arena={arena}
+                idx={idx}
+                isSelected={isSelected}
+                isHovered={isHovered}
+                onHover={(i) => setHoveredIndex(i)}
+                onLeave={() => setHoveredIndex(null)}
+                onSelect={(id) => handleSelectArena(id)}
+              />
             );
           })}
-        </div>
+        </motion.div>
 
-        {/* Active Arena Deep Dive Showcase Card */}
-        <div className="glass-card rounded-3xl border border-white/[0.09] overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-12">
+        {/* Selected Arena Deep Dive Details & Walkthrough Section */}
+        <motion.div 
+          id="arena-deep-dive" 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="scroll-mt-28"
+        >
+          <div className="glass-card rounded-3xl border border-white/[0.12] overflow-hidden shadow-2xl relative">
             
-            {/* Left Photo & Visual Highlights */}
-            <div className="lg:col-span-6 relative min-h-[340px] lg:min-h-full">
-              <img
-                src={currentArena.image}
-                alt={currentArena.name}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#000000] via-[#000000]/60 to-transparent" />
+            {/* Top red laser neon strip */}
+            <div className="h-1 w-full bg-gradient-to-r from-transparent via-[#E32124] to-transparent" />
 
-              {/* Badges on image */}
-              <div className="absolute top-6 left-6 flex flex-wrap gap-2">
-                <span className="px-3 py-1 rounded-full bg-[#000000]/80 backdrop-blur-md border border-white/15 text-xs font-mono text-white flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-emerald-400" />
-                  {currentArena.workingHours}
-                </span>
-                <span className="px-3 py-1 rounded-full bg-[#E32124] text-white text-xs font-mono font-bold">
-                  {currentArena.rigsCount} Игровых ПК
-                </span>
-              </div>
+            <div className="grid grid-cols-1 lg:grid-cols-12">
+              
+              {/* Left Photo & Visual Atmosphere */}
+              <div className="lg:col-span-6 relative min-h-[420px] lg:min-h-full">
+                <img
+                  src={currentArena.image}
+                  alt={currentArena.name}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#000000] via-[#000000]/60 to-transparent" />
 
-              <div className="absolute bottom-6 left-6 right-6">
-                <div className="text-2xl font-display font-black text-white">
-                  {currentArena.name}
-                </div>
-                <p className="text-xs text-zinc-300 mt-1 font-light">
-                  {currentArena.tagline}
-                </p>
-              </div>
-            </div>
-
-            {/* Right Details & Booking CTA */}
-            <div className="lg:col-span-6 p-6 sm:p-10 flex flex-col justify-between">
-              <div>
-                
-                {/* Address and Contacts */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 p-4 rounded-2xl bg-[#08080c] border border-white/[0.06]">
-                  <div>
-                    <span className="text-[10px] font-mono uppercase text-zinc-500 block">Адрес в Омске</span>
-                    <div className="text-xs font-bold text-white mt-0.5">{currentArena.address}</div>
-                    <div className="text-[11px] text-[#E32124] mt-0.5">{currentArena.metro}</div>
-                  </div>
-
-                  <div>
-                    <span className="text-[10px] font-mono uppercase text-zinc-500 block">Бронь и контакты</span>
-                    <a href={`tel:${currentArena.phone}`} className="text-xs font-mono font-semibold text-white hover:text-[#E32124] transition-colors block mt-0.5">
-                      {currentArena.phone}
-                    </a>
-                    <a href={`https://t.me/${currentArena.telegram.replace('@', '')}`} target="_blank" rel="noreferrer" className="text-[11px] text-zinc-400 hover:text-white flex items-center gap-1 mt-0.5">
-                      <Send className="w-3 h-3 text-sky-400" />
-                      {currentArena.telegram}
-                    </a>
-                  </div>
-                </div>
-
-                {/* Key Infrastructure Highlights */}
-                <div className="mb-6">
-                  <span className="text-xs font-mono font-bold tracking-wider text-zinc-300 uppercase block mb-3">
-                    Инфраструктура и эксклюзивы:
+                {/* Badges on image */}
+                <div className="absolute top-6 left-6 flex flex-wrap gap-2">
+                  <span className="px-3 py-1 rounded-full bg-[#000000]/80 backdrop-blur-md border border-white/15 text-xs font-mono text-white flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-emerald-400" />
+                    {currentArena.workingHours}
                   </span>
-                  <div className="space-y-2.5">
-                    {currentArena.features.map((feat, idx) => (
-                      <div key={idx} className="flex items-start gap-3">
-                        <div className="w-5 h-5 rounded-full bg-[#E32124]/15 border border-[#E32124]/30 flex items-center justify-center shrink-0 mt-0.5 text-[#E32124]">
-                          <Check className="w-3 h-3" />
-                        </div>
-                        <span className="text-xs sm:text-sm text-zinc-300">
-                          {feat}
-                        </span>
-                      </div>
-                    ))}
+                  <span className="px-3 py-1 rounded-full bg-[#E32124] text-white text-xs font-mono font-bold shadow-lg shadow-red-600/30">
+                    {currentArena.rigsCount} Игровых ПК
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-black/80 border border-white/15 text-white text-xs font-mono font-bold">
+                    {currentArena.ps5RoomsCount} PS5 залов
+                  </span>
+                </div>
+
+                <div className="absolute bottom-6 left-6 right-6">
+                  <span className="text-xs font-mono font-bold tracking-wider text-[#E32124] uppercase">
+                    Подробный обзор клуба
+                  </span>
+                  <div className="text-3xl font-display font-black text-white mt-1">
+                    {currentArena.name}
                   </div>
+                  <p className="text-xs sm:text-sm text-zinc-300 mt-1 font-light">
+                    {currentArena.tagline}
+                  </p>
+                </div>
+              </div>
+
+              {/* Right Details, Infrastructure & Booking Action */}
+              <div className="lg:col-span-6 p-6 sm:p-10 flex flex-col justify-between">
+                <div>
+                  
+                  {/* Address & Direct Contacts */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 p-4 rounded-2xl bg-[#08080c] border border-white/[0.06]">
+                    <div>
+                      <span className="text-[10px] font-mono uppercase text-zinc-500 block">Адрес в Омске</span>
+                      <div className="text-xs font-bold text-white mt-0.5">{currentArena.address}</div>
+                      <div className="text-[11px] text-[#E32124] mt-0.5">{currentArena.metro}</div>
+                    </div>
+
+                    <div>
+                      <span className="text-[10px] font-mono uppercase text-zinc-500 block">Бронь и консультации</span>
+                      <a 
+                        href={`tel:${currentArena.phone}`} 
+                        className="text-xs font-mono font-semibold text-white hover:text-[#E32124] transition-colors flex items-center gap-1.5 mt-0.5"
+                      >
+                        <PhoneCall className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>{currentArena.phone}</span>
+                      </a>
+                      <a 
+                        href={`https://t.me/${currentArena.telegram.replace('@', '')}`} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="text-[11px] text-zinc-400 hover:text-white flex items-center gap-1.5 mt-1"
+                      >
+                        <Send className="w-3.5 h-3.5 text-sky-400" />
+                        <span>{currentArena.telegram}</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Key Infrastructure Highlights */}
+                  <div className="mb-6">
+                    <span className="text-xs font-mono font-bold tracking-wider text-zinc-300 uppercase block mb-3">
+                      Особенности и оснащение клуба:
+                    </span>
+                    <div className="space-y-2.5">
+                      {currentArena.features.map((feat, idx) => (
+                        <div key={idx} className="flex items-start gap-3">
+                          <div className="w-5 h-5 rounded-full bg-[#E32124]/15 border border-[#E32124]/30 flex items-center justify-center shrink-0 mt-0.5 text-[#E32124]">
+                            <Check className="w-3 h-3" />
+                          </div>
+                          <span className="text-xs sm:text-sm text-zinc-300">
+                            {feat}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Exclusive Features Banner */}
+                  {currentArena.id === 'cyberx-arena' && (
+                    <div className="p-3.5 rounded-2xl bg-[#E32124]/10 border border-[#E32124]/30 mb-6 flex items-center gap-3">
+                      <Tv className="w-5 h-5 text-[#E32124] shrink-0" />
+                      <div className="text-xs text-zinc-300">
+                        <span className="font-bold text-white">Эксклюзив Arena на Ленина:</span> 2 автосимулятора Sim-Racing, 2 Premium Squad зала (5 ПК + PS5 + стол) и Кино-Лаунж 150".
+                      </div>
+                    </div>
+                  )}
+
+                  {currentArena.id === 'cyberx-evropa' && (
+                    <div className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/[0.1] mb-6 flex items-center gap-3">
+                      <Gauge className="w-5 h-5 text-[#E32124] shrink-0" />
+                      <div className="text-xs text-zinc-300">
+                        <span className="font-bold text-white">Фишка Европа на Мира:</span> Solo Room с процессором <span className="text-white font-semibold">AMD Ryzen 7 7800X3D</span> и монитором <span className="text-[#E32124] font-bold">BenQ 600Hz</span>.
+                      </div>
+                    </div>
+                  )}
+
+                  {currentArena.id === 'cyberx-oktyabr' && (
+                    <div className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/[0.1] mb-6 flex items-center gap-3">
+                      <Users className="w-5 h-5 text-[#E32124] shrink-0" />
+                      <div className="text-xs text-zinc-300">
+                        <span className="font-bold text-white">Фишка Октябрь на Серова:</span> Trio Rooms (3 ПК), Duo Room (2 ПК) и Solo Room с монитором 600Hz.
+                      </div>
+                    </div>
+                  )}
+
+                </div>
+
+                {/* Direct Action Button */}
+                <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                  <div>
+                    <div className="text-[10px] font-mono text-zinc-500 uppercase">Стартовый тариф</div>
+                    <div className="text-xl font-display font-black text-white">
+                      от {currentArena.id === 'cyberx-arena' ? 130 : currentArena.id === 'cyberx-evropa' ? 70 : 100} ₽ <span className="text-xs font-mono font-normal text-zinc-400">/ час</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      sound.playTrigger();
+                      onOpenBooking(currentArena.id);
+                    }}
+                    onMouseEnter={() => sound.playHover()}
+                    className="py-3.5 px-8 rounded-xl font-display font-black text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#E32124] to-[#B30E11] hover:from-[#FF2A2E] hover:to-[#E32124] shadow-lg shadow-red-600/30 hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
+                  >
+                    <Zap className="w-4 h-4" />
+                    <span>Забронировать в {currentArena.name.split('//')[0].trim()}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
                 </div>
 
               </div>
 
-              {/* Action Button */}
-              <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                <button
-                  onClick={() => {
-                    sound.playTrigger();
-                    onOpenBooking(currentArena.id);
-                  }}
-                  onMouseEnter={() => sound.playHover()}
-                  className="flex-1 py-3.5 px-6 rounded-xl font-display font-black text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#E32124] to-[#B30E11] hover:from-[#FF2A2E] hover:to-[#E32124] shadow-lg shadow-red-600/30 hover:scale-[1.01] transition-all flex items-center justify-center gap-2"
-                >
-                  <span>Забронировать в {currentArena.name.split('//')[0].trim()}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-
             </div>
-
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </section>
+  );
+};
+
+// Tall, Solid 3D Holographic Card (Sharp, Crisp, Never Blurry!)
+interface HoloCardItemProps {
+  arena: typeof ARENAS[0];
+  idx: number;
+  isSelected: boolean;
+  isHovered: boolean;
+  onHover: (i: number) => void;
+  onLeave: () => void;
+  onSelect: (id: string) => void;
+}
+
+const HoloCardItem: React.FC<HoloCardItemProps> = ({
+  arena,
+  idx,
+  isSelected,
+  isHovered,
+  onHover,
+  onLeave,
+  onSelect,
+}) => {
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const [rotateX, setRotateX] = useState<number>(0);
+  const [rotateY, setRotateY] = useState<number>(0);
+  const [glare, setGlare] = useState<{ x: number; y: number; opacity: number }>({ x: 50, y: 50, opacity: 0 });
+
+  const isFlagship = arena.id === 'cyberx-arena';
+  const isEvropa = arena.id === 'cyberx-evropa';
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Gentle, natural 3D tilt
+    const rX = -((y - rect.height / 2) / 22);
+    const rY = (x - rect.width / 2) / 22;
+
+    setRotateX(rX);
+    setRotateY(rY);
+    setGlare({
+      x: (x / rect.width) * 100,
+      y: (y / rect.height) * 100,
+      opacity: 0.1,
+    });
+  };
+
+  const handleMouseEnter = () => {
+    sound.playHover();
+    onHover(idx);
+  };
+
+  const handleMouseLeave = () => {
+    onLeave();
+    setRotateX(0);
+    setRotateY(0);
+    setGlare((prev) => ({ ...prev, opacity: 0 }));
+  };
+
+  return (
+    <div
+      style={{ perspective: '1000px' }}
+      className="w-full h-full flex items-center justify-center"
+    >
+      <div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={() => onSelect(arena.id)}
+        style={{
+          transform: isHovered
+            ? `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`
+            : isSelected
+            ? 'rotateX(0deg) rotateY(0deg) translateY(-2px)'
+            : 'rotateX(0deg) rotateY(0deg)',
+          transformStyle: 'preserve-3d',
+        }}
+        className={`relative group rounded-3xl p-6 lg:p-7 bg-[#09090e] cursor-pointer transition-all duration-200 ease-out flex flex-col justify-between select-none min-h-[580px] w-full border ${
+          isHovered
+            ? 'z-30 border-[#E32124] shadow-[0_0_40px_rgba(227,33,36,0.35)] ring-1 ring-[#E32124]/50'
+            : isSelected
+            ? 'z-20 border-[#E32124]/80 shadow-[0_0_25px_rgba(227,33,36,0.2)] ring-1 ring-[#E32124]/30'
+            : 'border-white/[0.08] hover:border-white/20 shadow-xl'
+        }`}
+      >
+        
+        {/* Aceternity Glowing Effect Border Trail */}
+        <GlowingEffect
+          spread={25}
+          glow={isHovered || isSelected}
+          borderWidth={1.5}
+        />
+
+        {/* Soft, Delicate Specular Glare Sheen */}
+        <div
+          className="pointer-events-none absolute inset-0 rounded-3xl transition-opacity duration-300 z-30"
+          style={{
+            opacity: glare.opacity,
+            background: `radial-gradient(circle 350px at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.18), rgba(227,33,36,0.12) 30%, transparent 70%)`,
+          }}
+        />
+
+        {/* Top glowing neon edge strip */}
+        <div className={`absolute top-0 left-8 right-8 h-[2px] transition-all duration-300 ${
+          isHovered || isSelected
+            ? 'bg-gradient-to-r from-transparent via-[#E32124] to-transparent opacity-100'
+            : 'opacity-0'
+        }`} />
+
+        <div className="relative z-20">
+          
+          {/* Category Badge & Rating Row */}
+          <div className="flex items-center justify-between gap-1.5 mb-4">
+            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-widest uppercase transition-all ${
+              isFlagship 
+                ? 'bg-[#E32124] text-white shadow-md shadow-red-600/40' 
+                : isEvropa
+                ? 'bg-red-950/80 text-red-300 border border-red-500/30'
+                : 'bg-zinc-800 text-zinc-300 border border-white/10'
+            }`}>
+              {isFlagship ? (
+                <>
+                  <Flame className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+                  <span>ФЛАГМАН // ЦЕНТР</span>
+                </>
+              ) : isEvropa ? (
+                <>
+                  <Sparkle className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                  <span>НЕФТЯНИКИ</span>
+                </>
+              ) : (
+                <>
+                  <ShieldCheck className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                  <span>ОКТЯБРЬ</span>
+                </>
+              )}
+            </span>
+
+            <div className="flex items-center gap-1 text-amber-400 text-xs font-mono font-bold bg-amber-400/10 px-2.5 py-0.5 rounded-full border border-amber-400/20 shrink-0">
+              <Star className="w-3.5 h-3.5 fill-amber-400" />
+              <span>{arena.rating.toFixed(1)}</span>
+            </div>
+          </div>
+
+          {/* Club Title */}
+          <h3 className="font-display font-black text-xl lg:text-2xl text-white tracking-tight group-hover:text-[#E32124] transition-colors">
+            {arena.name.split('//')[0].trim()}
+          </h3>
+
+          {/* Address */}
+          <div className="flex items-center gap-1.5 text-xs text-zinc-400 mt-1 mb-5">
+            <MapPin className="w-3.5 h-3.5 text-[#E32124] shrink-0" />
+            <span className="truncate">{arena.address}</span>
+          </div>
+
+          {/* Tall, High-Resolution Photo Container */}
+          <div className="relative h-56 lg:h-60 w-full rounded-2xl overflow-hidden mb-5 border border-white/10 group-hover:border-[#E32124]/50 transition-all shadow-lg bg-black">
+            <img
+              src={arena.image}
+              alt={arena.name}
+              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-black/20 to-transparent" />
+
+            {/* Badges on image */}
+            <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+              <span className="px-2.5 py-1 rounded-lg bg-[#000000]/85 backdrop-blur-md border border-white/15 text-[10px] font-mono font-bold text-white">
+                {arena.rigsCount} ПК
+              </span>
+              <span className="px-2.5 py-1 rounded-lg bg-[#E32124] text-[10px] font-mono font-bold text-white shadow-md shadow-red-600/40">
+                {arena.ps5RoomsCount} PS5
+              </span>
+            </div>
+
+            <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-xs font-mono bg-black/80 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-white/10">
+              <span className="text-zinc-200 truncate font-medium">
+                {isFlagship ? '2 Premium + 2 Автосима' : isEvropa ? 'Solo Ryzen 7800X3D' : 'Solo & Trio Rooms'}
+              </span>
+              <span className="text-emerald-400 font-bold flex items-center gap-1 shrink-0">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                24/7
+              </span>
+            </div>
+          </div>
+
+          {/* Specs & Hardware Chips */}
+          <div className="space-y-2 mb-6">
+            <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center gap-2.5 text-xs font-mono text-zinc-300">
+              <Gauge className="w-4 h-4 text-[#E32124] shrink-0" />
+              <span className="truncate">{isFlagship ? 'BenQ 600Hz & ASUS 480Hz' : 'BenQ 600Hz Extreme Speed'}</span>
+            </div>
+            <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center gap-2.5 text-xs font-mono text-zinc-300">
+              <Gamepad2 className="w-4 h-4 text-[#E32124] shrink-0" />
+              <span className="truncate">{isFlagship ? 'RTX 5070 Ti / 3060 Ti' : 'RTX 5070 Ti DLSS 3.5'}</span>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Bottom Row: Price & Action Button */}
+        <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-3 relative z-20">
+          <div>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase block">Стартовый тариф</span>
+            <span className="text-lg lg:text-xl font-display font-black text-white whitespace-nowrap">
+              от {arena.id === 'cyberx-arena' ? 130 : arena.id === 'cyberx-evropa' ? 70 : 100} ₽<span className="text-xs font-mono font-normal text-zinc-400">/час</span>
+            </span>
+          </div>
+
+          {/* Action Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(arena.id);
+            }}
+            className={`px-4 py-2.5 rounded-xl font-display font-black text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-md shrink-0 ${
+              isHovered || isSelected
+                ? 'bg-[#E32124] text-white shadow-red-600/40 scale-105'
+                : 'bg-white/10 text-white hover:bg-[#E32124] hover:text-white'
+            }`}
+          >
+            <span>Обзор</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        </div>
+
+      </div>
+    </div>
   );
 };

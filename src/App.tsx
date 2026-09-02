@@ -8,6 +8,7 @@ import { SimRacingBanner } from './components/SimRacingBanner';
 import { HardwareVisualizer } from './components/HardwareVisualizer';
 import { TournamentCard } from './components/TournamentCard';
 import { PromoSection } from './components/PromoSection';
+import { LocationMapSection } from './components/LocationMapSection';
 import { Footer } from './components/Footer';
 import { BookingModal } from './components/BookingModal';
 import { TournamentModal } from './components/TournamentModal';
@@ -25,8 +26,8 @@ export function App() {
 
   const [adminOpen, setAdminOpen] = useState(false);
 
-  // Selected arena in the ecosystem
-  const [selectedArenaId, setSelectedArenaId] = useState<string>('cyberx-lenina');
+  // Selected arena in the ecosystem (Default to CyberX Arena - Flagship)
+  const [selectedArenaId, setSelectedArenaId] = useState<string>('cyberx-arena');
 
   // Dynamic state for live editing by owner
   const [liveTournament, setLiveTournament] = useState(UPCOMING_TOURNAMENT);
@@ -95,7 +96,7 @@ export function App() {
         }}
       />
 
-      {/* Top Header */}
+      {/* Top Header with Retractable Navigation Drawer */}
       <Header
         onOpenBooking={() => handleOpenBooking()}
         onOpenTournaments={() => handleOpenTournaments()}
@@ -112,23 +113,25 @@ export function App() {
           tournamentData={liveTournament}
         />
 
-        {/* 2. Three Arenas Ecosystem (Ленина, Мира, Серова) */}
+        {/* 2. Three Arenas Ecosystem (Европа, CyberX Arena [в центре], Октябрь) */}
         <ArenaEcosystem
           onOpenBooking={(arenaId) => handleOpenBooking(arenaId)}
           selectedArenaId={selectedArenaId}
         />
 
-        {/* 3. Spaces & Rooms (Premium 5 ПК + PS5, Кино-Лаунж с проектором 150", PS5 залы, Общий зал) */}
+        {/* 3. Spaces & Rooms Bento Showcase with In-Card Photos & Dynamic Expansion */}
         <ZonesShowcase
           onOpenBooking={(arenaId, zoneId) => handleOpenBooking(arenaId, zoneId)}
         />
 
         {/* 4. Dedicated Sim-Racing Banner (2 Кокпита на Ленина) */}
-        <SimRacingBanner
-          onOpenBooking={(arenaId, zoneId) => handleOpenBooking(arenaId, zoneId)}
-        />
+        <div id="sim-racing">
+          <SimRacingBanner
+            onOpenBooking={(arenaId, zoneId) => handleOpenBooking(arenaId, zoneId)}
+          />
+        </div>
 
-        {/* 5. Interactive Hardware & Peripherals Visualizer (540Hz, Wooting Rapid Trigger, 4000Hz Mouse) */}
+        {/* 5. Interactive Hardware & Peripherals Visualizer (BenQ 600Hz, Ryzen 7800X3D, RTX 5070 Ti) */}
         <HardwareVisualizer />
 
         {/* 6. Standalone Upcoming Tournament Spotlight Card */}
@@ -143,12 +146,18 @@ export function App() {
           onOpenBooking={() => handleOpenBooking()}
           promotionsList={livePromos}
         />
+
+        {/* 8. Interactive 2GIS Navigation Map Section ("Как до нас добраться?") */}
+        <LocationMapSection
+          onOpenBooking={(arenaId) => handleOpenBooking(arenaId)}
+        />
       </main>
 
-      {/* Footer */}
+      {/* Footer with subtle CMS link */}
       <Footer
         onOpenBooking={() => handleOpenBooking()}
         onOpenTournaments={() => handleOpenTournaments()}
+        onOpenAdmin={() => setAdminOpen(true)}
       />
 
       {/* Interactive Booking Modal */}

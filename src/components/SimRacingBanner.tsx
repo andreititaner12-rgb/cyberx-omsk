@@ -108,9 +108,9 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
             {/* Right Card / CTA (Rounded) */}
             <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-[#09090f]/90 border border-white/[0.08] relative font-mono">
               
-              <div className="relative h-44 rounded-2xl overflow-hidden mb-6 group border border-white/10">
+              <div className="relative h-48 rounded-2xl overflow-hidden mb-6 group border border-white/10">
                 <img
-                  src="https://images.unsplash.com/photo-1547394765-185e1e68f34e?auto=format&fit=crop&w=1000&q=80"
+                  src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1000&q=80"
                   alt="CyberX Sim Racing"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />

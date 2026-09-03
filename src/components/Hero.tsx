@@ -33,7 +33,7 @@ export const Hero: React.FC = () => {
   return (
     <section 
       id="hero" 
-      className="relative h-screen min-h-[680px] w-full flex flex-col justify-between overflow-hidden select-none bg-[#020204]"
+      className="relative h-screen min-h-[680px] w-full overflow-hidden select-none bg-[#020204]"
     >
       {/* 1. Full-Screen Background Video (1080p 60fps) */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -50,45 +50,40 @@ export const Hero: React.FC = () => {
         />
         
         {/* Soft Vignettes */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#020204] via-transparent to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#020204]/90 via-transparent to-black/40" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_45%,_rgba(0,0,0,0.6)_100%)]" />
       </div>
 
-      {/* Top spacer for the global Header */}
-      <div className="relative z-10 w-full pt-20" />
-
-      {/* 2. Elevated & Enlarged Navigation Categories positioned between CYBER and OMSK */}
-      <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 w-full text-center mt-auto mb-10 sm:mb-14">
-        
+      {/* 2. Elevated & Enlarged Navigation Categories positioned directly under CYBER letters */}
+      <div className="absolute top-[54%] sm:top-[57%] left-1/2 -translate-x-1/2 w-full max-w-5xl px-4 text-center z-20">
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.25 }}
-          className="inline-flex items-center justify-center flex-wrap gap-x-6 sm:gap-x-10 md:gap-x-12 gap-y-3 px-6 py-3 rounded-2xl bg-black/40 backdrop-blur-md border border-white/[0.08] shadow-[0_8px_30px_rgba(0,0,0,0.7)]"
+          className="flex items-center justify-center flex-wrap gap-x-6 sm:gap-x-10 md:gap-x-12 gap-y-2 font-mono text-sm sm:text-base md:text-lg font-bold tracking-[0.25em] sm:tracking-[0.3em] uppercase text-zinc-100 drop-shadow-[0_4px_18px_rgba(0,0,0,0.95)]"
         >
           {navItems.map((item, index) => (
             <React.Fragment key={item.target}>
               <button
                 onClick={() => scrollTo(item.target)}
                 onMouseEnter={() => sound.playHover()}
-                className="hover:text-white text-zinc-200 font-mono text-xs sm:text-sm md:text-base font-bold tracking-[0.25em] sm:tracking-[0.3em] uppercase transition-all duration-200 py-1 relative group cursor-pointer drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]"
+                className="hover:text-white text-zinc-200 transition-colors duration-200 py-1.5 relative group cursor-pointer"
               >
-                <span className="group-hover:text-white group-hover:drop-shadow-[0_0_12px_rgba(227,33,36,0.8)] transition-all">
+                <span className="group-hover:text-white group-hover:drop-shadow-[0_0_15px_rgba(227,33,36,0.9)] transition-all">
                   {item.label}
                 </span>
-                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#E32124] group-hover:w-full transition-all duration-300 ease-out shadow-[0_0_8px_#E32124]" />
+                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#E32124] group-hover:w-full transition-all duration-300 ease-out shadow-[0_0_10px_#E32124]" />
               </button>
               {index < navItems.length - 1 && (
-                <span className="text-white/20 select-none font-light text-xs sm:text-sm">|</span>
+                <span className="text-white/30 select-none font-light text-sm sm:text-base">|</span>
               )}
             </React.Fragment>
           ))}
         </motion.div>
-
       </div>
 
       {/* 3. Bottom Screen: Downward Scroll Trigger */}
-      <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 w-full pb-8 sm:pb-12 flex flex-col items-center">
+      <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2">
         <motion.div 
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -98,7 +93,7 @@ export const Hero: React.FC = () => {
           <button
             onClick={() => scrollTo('manifesto')}
             onMouseEnter={() => sound.playHover()}
-            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/70 hover:bg-[#E32124] text-white border border-white/20 hover:border-[#E32124] backdrop-blur-md flex items-center justify-center shadow-[0_4px_25px_rgba(0,0,0,0.7)] hover:shadow-[0_0_30px_rgba(227,33,36,0.6)] transition-all duration-300 group active:scale-95 cursor-pointer"
+            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/80 hover:bg-[#E32124] text-white border border-white/20 hover:border-[#E32124] backdrop-blur-md flex items-center justify-center shadow-[0_4px_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_30px_rgba(227,33,36,0.7)] transition-all duration-300 group active:scale-95 cursor-pointer"
             aria-label="Начать знакомство"
           >
             <ArrowDown className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-300 group-hover:text-white group-hover:translate-y-0.5 transition-all duration-200" />

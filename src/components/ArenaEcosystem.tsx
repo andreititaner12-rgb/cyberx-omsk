@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ARENAS } from '../data/arenaData';
 import { 
   MapPin, 
@@ -16,10 +16,12 @@ import {
   ShieldCheck, 
   Zap, 
   Users,
-  Sparkle
+  Sparkle,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { sound } from '../utils/sound';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { GlowingEffect } from './ui/glowing-effect';
 
 interface ArenaEcosystemProps {
@@ -35,7 +37,28 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
   const [activeId, setActiveId] = useState<string>(selectedArenaId || 'cyberx-arena');
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
+  // Gallery slider state for deep-dive section
+  const [galleryIndex, setGalleryIndex] = useState<number>(0);
+  const [isHoveringGallery, setIsHoveringGallery] = useState<boolean>(false);
+
   const currentArena = ARENAS.find((a) => a.id === activeId) || ARENAS[1];
+  const galleryPhotos = currentArena.gallery && currentArena.gallery.length > 0 
+    ? currentArena.gallery 
+    : [currentArena.image];
+
+  // Reset gallery to first photo when switching arenas
+  useEffect(() => {
+    setGalleryIndex(0);
+  }, [activeId]);
+
+  // Auto-slide gallery every 4.5 seconds when not hovered
+  useEffect(() => {
+    if (isHoveringGallery || galleryPhotos.length <= 1) return;
+    const timer = setInterval(() => {
+      setGalleryIndex((prev) => (prev + 1) % galleryPhotos.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [galleryPhotos.length, isHoveringGallery]);
 
   const handleSelectArena = (arenaId: string) => {
     sound.playClick();
@@ -46,6 +69,16 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
     if (detailsEl) {
       detailsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  };
+
+  const nextPhoto = () => {
+    sound.playClick();
+    setGalleryIndex((prev) => (prev + 1) % galleryPhotos.length);
+  };
+
+  const prevPhoto = () => {
+    sound.playClick();
+    setGalleryIndex((prev) => (prev - 1 + galleryPhotos.length) % galleryPhotos.length);
   };
 
   return (
@@ -76,7 +109,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
             Три флагманских пространства в Омске: <strong className="text-white font-medium">CyberX Arena</strong> (Ленина, 19), <strong className="text-white font-medium">CyberX Европа</strong> (Мира, 42к1) и <strong className="text-white font-medium">CyberX Октябрь</strong> (Серова, 19А). 182 игровых ПК, BenQ 600Hz, Premium Squad сьюты и 2 автосимулятора Sim-Racing.
           </p>
           <p className="mt-2 text-zinc-500 text-xs sm:text-sm font-mono">
-            Нажмите на карточку клуба для просмотра детального оснащения, фотографий и мгновенного бронирования.
+            Нажмите на карточку клуба для просмотра детального оснащения, галереи фото и бронирования.
           </p>
         </motion.div>
 
@@ -113,7 +146,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
           })}
         </div>
 
-        {/* Selected Arena Deep Dive Details & Walkthrough Section (Smooth rounded geometry) */}
+        {/* Selected Arena Deep Dive Details & Walkthrough Section with Auto-Sliding Photo Gallery */}
         <motion.div 
           id="arena-deep-dive" 
           initial={{ opacity: 0, y: 40 }}
@@ -122,50 +155,119 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
           transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           className="scroll-mt-28"
         >
-          <div className="glass-card rounded-3xl border border-white/[0.12] overflow-hidden shadow-2xl relative">
+          <div className="glass-card rounded-3xl border border-white/[0.12] overflow-hidden shadow-2xl relative bg-[#09090f]/95">
             
             {/* Top red laser neon strip */}
             <div className="h-1 w-full bg-gradient-to-r from-transparent via-[#E32124] to-transparent" />
 
             <div className="grid grid-cols-1 lg:grid-cols-12">
               
-              {/* Left Photo & Visual Atmosphere */}
-              <div className="lg:col-span-6 relative min-h-[420px] lg:min-h-full">
-                <img
-                  src={currentArena.image}
-                  alt={currentArena.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#000000] via-[#000000]/60 to-transparent" />
+              {/* Left Column: Interactive Auto-Sliding Photo Gallery */}
+              <div 
+                className="lg:col-span-6 relative min-h-[460px] lg:min-h-full overflow-hidden bg-black flex flex-col justify-between"
+                onMouseEnter={() => setIsHoveringGallery(true)}
+                onMouseLeave={() => setIsHoveringGallery(false)}
+              >
+                {/* Crossfading Gallery Image */}
+                <div className="absolute inset-0">
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={`${activeId}-${galleryIndex}`}
+                      src={galleryPhotos[galleryIndex]}
+                      alt={`${currentArena.name} - Фото ${galleryIndex + 1}`}
+                      initial={{ opacity: 0, scale: 1.05 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.6, ease: 'easeOut' }}
+                      className="w-full h-full object-cover object-center"
+                    />
+                  </AnimatePresence>
+                  
+                  {/* Subtle Gradient Overlays */}
+                  <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#000000] via-[#000000]/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
+                </div>
 
-                {/* Badges on image (Rounded) */}
-                <div className="absolute top-6 left-6 flex flex-wrap gap-2">
-                  <span className="px-3 py-1.5 rounded-xl bg-[#000000]/80 backdrop-blur-md border border-white/15 text-xs font-mono text-white flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-emerald-400" />
-                    {currentArena.workingHours}
-                  </span>
-                  <span className="px-3 py-1.5 rounded-xl bg-[#E32124] text-white text-xs font-mono font-bold shadow-lg shadow-red-600/30">
-                    {currentArena.rigsCount} Игровых ПК
-                  </span>
-                  <span className="px-3 py-1.5 rounded-xl bg-black/80 border border-white/15 text-white text-xs font-mono font-bold">
-                    {currentArena.ps5RoomsCount} PS5 залов
+                {/* Top Info Bar on Image */}
+                <div className="relative z-20 p-6 flex items-start justify-between gap-3">
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1.5 rounded-xl bg-[#000000]/80 backdrop-blur-md border border-white/15 text-xs font-mono text-white flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-emerald-400" />
+                      {currentArena.workingHours}
+                    </span>
+                    <span className="px-3 py-1.5 rounded-xl bg-[#E32124] text-white text-xs font-mono font-bold shadow-lg shadow-red-600/30">
+                      {currentArena.rigsCount} Игровых ПК
+                    </span>
+                    <span className="px-3 py-1.5 rounded-xl bg-black/80 border border-white/15 text-white text-xs font-mono font-bold">
+                      {currentArena.ps5RoomsCount} PS5 залов
+                    </span>
+                  </div>
+
+                  {/* Photo Counter */}
+                  <span className="px-3 py-1 rounded-lg bg-black/80 border border-white/15 text-xs font-mono text-zinc-300 backdrop-blur-md shrink-0">
+                    {galleryIndex + 1} / {galleryPhotos.length}
                   </span>
                 </div>
 
-                <div className="absolute bottom-6 left-6 right-6">
-                  <span className="text-xs font-mono font-bold tracking-wider text-[#E32124] uppercase">
-                    Подробный обзор клуба
-                  </span>
-                  <div className="text-3xl font-display font-black text-white mt-1">
-                    {currentArena.name}
+                {/* Navigation Arrows on Image */}
+                <div className="relative z-20 px-4 flex items-center justify-between pointer-events-none">
+                  <button
+                    onClick={prevPhoto}
+                    className="w-10 h-10 rounded-full bg-black/70 hover:bg-[#E32124] text-white border border-white/20 hover:border-[#E32124] backdrop-blur-md flex items-center justify-center transition-all pointer-events-auto active:scale-90 shadow-lg cursor-pointer"
+                    aria-label="Предыдущее фото"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={nextPhoto}
+                    className="w-10 h-10 rounded-full bg-black/70 hover:bg-[#E32124] text-white border border-white/20 hover:border-[#E32124] backdrop-blur-md flex items-center justify-center transition-all pointer-events-auto active:scale-90 shadow-lg cursor-pointer"
+                    aria-label="Следующее фото"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Bottom Title & Interactive Thumbnail Dots */}
+                <div className="relative z-20 p-6 space-y-3">
+                  <div>
+                    <span className="text-xs font-mono font-bold tracking-wider text-[#E32124] uppercase">
+                      Галерея и обзор клуба в Омске
+                    </span>
+                    <div className="text-2xl sm:text-3xl font-display font-black text-white mt-1 uppercase">
+                      {currentArena.name}
+                    </div>
+                    <p className="text-xs sm:text-sm text-zinc-300 mt-1 font-light">
+                      {currentArena.tagline}
+                    </p>
                   </div>
-                  <p className="text-xs sm:text-sm text-zinc-300 mt-1 font-light">
-                    {currentArena.tagline}
-                  </p>
+
+                  {/* Interactive Thumbnail Carousel Dots */}
+                  <div className="flex items-center gap-2 pt-1 overflow-x-auto scrollbar-none">
+                    {galleryPhotos.map((photo, pIdx) => (
+                      <button
+                        key={pIdx}
+                        onClick={() => {
+                          sound.playClick();
+                          setGalleryIndex(pIdx);
+                        }}
+                        className={`h-10 w-16 rounded-lg overflow-hidden border transition-all shrink-0 cursor-pointer ${
+                          galleryIndex === pIdx
+                            ? 'border-[#E32124] ring-2 ring-[#E32124]/50 scale-105'
+                            : 'border-white/20 opacity-60 hover:opacity-100'
+                        }`}
+                      >
+                        <img
+                          src={photo}
+                          alt={`Превью ${pIdx + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Right Details, Infrastructure & Booking Action */}
+              {/* Right Column: Details, Infrastructure & Booking Action */}
               <div className="lg:col-span-6 p-6 sm:p-10 flex flex-col justify-between">
                 <div>
                   
@@ -248,9 +350,9 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
                 </div>
 
                 {/* Direct Action Button (Rounded) */}
-                <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 font-mono">
                   <div>
-                    <div className="text-[10px] font-mono text-zinc-500 uppercase">Стартовый тариф</div>
+                    <div className="text-[10px] text-zinc-500 uppercase">Стартовый тариф</div>
                     <div className="text-xl font-display font-black text-white">
                       от {currentArena.id === 'cyberx-arena' ? 130 : currentArena.id === 'cyberx-evropa' ? 70 : 100} ₽ <span className="text-xs font-mono font-normal text-zinc-400">/ час</span>
                     </div>
@@ -262,7 +364,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
                       onOpenBooking(currentArena.id);
                     }}
                     onMouseEnter={() => sound.playHover()}
-                    className="py-3.5 px-8 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.2em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                    className="py-3.5 px-8 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.2em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Zap className="w-4 h-4" />
                     <span>Забронировать в {currentArena.name.split('//')[0].trim()}</span>
@@ -496,7 +598,7 @@ const HoloCardItem: React.FC<HoloCardItemProps> = ({
               e.stopPropagation();
               onSelect(arena.id);
             }}
-            className={`px-4 py-2.5 rounded-xl font-mono font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-md shrink-0 ${
+            className={`px-4 py-2.5 rounded-xl font-mono font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-md shrink-0 cursor-pointer ${
               isHovered || isSelected
                 ? 'bg-[#E32124] text-white shadow-red-600/40'
                 : 'bg-white/10 text-white hover:bg-[#E32124] hover:text-white'

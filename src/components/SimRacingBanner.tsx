@@ -105,18 +105,19 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
 
             </div>
 
-            {/* Right Card / CTA (Rounded) */}
+            {/* Right Card / CTA with Real Sim-Racing Photo from CyberX Lenina 19 */}
             <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-[#09090f]/90 border border-white/[0.08] relative font-mono">
               
-              <div className="relative h-48 rounded-2xl overflow-hidden mb-6 group border border-white/10">
+              <div className="relative h-48 rounded-2xl overflow-hidden mb-6 group border border-white/10 shadow-xl bg-black">
                 <img
-                  src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1000&q=80"
-                  alt="CyberX Sim Racing"
+                  src="/images/sim-racing-real.jpg"
+                  alt="CyberX Sim Racing Омск Ленина 19"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#09090f] via-transparent to-transparent" />
-                <span className="absolute bottom-3 left-3 text-[11px] font-mono text-white font-bold bg-[#000000]/80 px-2.5 py-1 rounded-lg border border-white/10">
-                  📍 ул. Ленина, 19
+                
+                <span className="absolute bottom-3 left-3 text-[11px] font-mono text-white font-bold bg-[#000000]/80 px-2.5 py-1 rounded-lg border border-white/10 backdrop-blur-md">
+                  📍 CyberX Arena // ул. Ленина, 19
                 </span>
               </div>
 
@@ -125,7 +126,7 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
                   <div>
                     <span className="text-[10px] text-zinc-500 uppercase block">Стоимость заезда</span>
                     <div className="font-display font-black text-2xl text-white">
-                      500 ₽ <span className="text-xs font-normal text-zinc-400">/ час</span>
+                      400 ₽ <span className="text-xs font-normal text-zinc-400">/ час</span>
                     </div>
                   </div>
                   <div className="text-right text-[11px] text-zinc-400">
@@ -139,7 +140,7 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
                     onOpenBooking('cyberx-arena', 'sim-racing');
                   }}
                   onMouseEnter={() => sound.playHover()}
-                  className="w-full py-3.5 px-6 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.15em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3.5 px-6 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.15em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Zap className="w-4 h-4" />
                   <span>Забронировать автосимулятор</span>

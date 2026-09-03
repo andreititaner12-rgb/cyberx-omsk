@@ -14,6 +14,7 @@ export interface ArenaLocation {
   rating: number;
   reviewsCount: number;
   image: string;
+  gallery?: string[];
   features: string[];
   status: 'ONLINE' | 'MAINTENANCE';
   coordinates: { x: number; y: number };

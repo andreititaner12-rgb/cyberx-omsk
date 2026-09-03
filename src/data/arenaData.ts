@@ -9,14 +9,22 @@ export const ARENAS: ArenaLocation[] = [
     metro: 'Ост. «Технический университет» / «Кристалл»',
     area: '480 м²',
     rigsCount: 46,
-    vipRoomsCount: 0, // Нет Premium залов
-    ps5RoomsCount: 3, // 3 PS5 зала
+    vipRoomsCount: 0,
+    ps5RoomsCount: 3,
     phone: '+7 (951) 400-77-77',
     telegram: '@cyberx_omsk_mira',
     workingHours: '24/7 Круглосуточно',
     rating: 5.0,
     reviewsCount: 1040,
-    image: 'https://langame.ru/storage/clubs/2025/Dec/18/17660550716943dc9fa9702.webp',
+    image: '/images/arena-evropa-card.jpg',
+    gallery: [
+      '/images/arena-evropa-card.jpg',
+      'https://langame.ru/storage/clubs/2025/Dec/18/17660550716943dc9fa9702.webp',
+      'https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1560253023-3ec5d502959f?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80'
+    ],
     features: [
       '46 игровых ПК (Super VIP, VIP, Duo Room и Solo Room)',
       'Solo Стримерская на AMD Ryzen 7 7800X3D + BenQ 600Hz',
@@ -35,14 +43,22 @@ export const ARENAS: ArenaLocation[] = [
     metro: 'Ост. «Драмтеатр» / «КДЦ Маяковский»',
     area: '540 м²',
     rigsCount: 86,
-    vipRoomsCount: 2, // 2 Premium зала
-    ps5RoomsCount: 4, // 4 PS5 зала + кино-лаунж
+    vipRoomsCount: 2,
+    ps5RoomsCount: 4,
     phone: '+7 (908) 110-97-77',
     telegram: '@cyberxcommunityomsklenina',
     workingHours: '24/7 Круглосуточно',
     rating: 5.0,
     reviewsCount: 1280,
-    image: 'https://langame.ru/storage/clubs/2023/Jul/05/168857344564a59605677bb.webp',
+    image: '/images/arena-lenina-card.jpg',
+    gallery: [
+      '/images/arena-lenina-card.jpg',
+      '/images/sim-racing-real.jpg',
+      'https://langame.ru/storage/clubs/2023/Jul/05/168857344564a59605677bb.webp',
+      'https://langame.ru/storage/clubs/2023/Dec/04/1701698312656ddb081b9d7.webp',
+      'https://langame.ru/storage/clubs/2023/Dec/04/1701698369656ddb4188c28.webp',
+      'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80'
+    ],
     features: [
       '86 мощных игровых ПК (RTX 5070 Ti / i5-14600KF / BenQ 600Hz & 400Hz)',
       '2 эксклюзивных Premium зала (5 ПК + PS5 + Большой стол для команды)',
@@ -61,14 +77,21 @@ export const ARENAS: ArenaLocation[] = [
     metro: 'Ост. «Улица Серова» / «Ленинский рынок»',
     area: '430 м²',
     rigsCount: 50,
-    vipRoomsCount: 0, // Нет Premium залов
-    ps5RoomsCount: 3, // 3 PS5 зала
+    vipRoomsCount: 0,
+    ps5RoomsCount: 3,
     phone: '+7 (950) 950-33-33',
     telegram: '@cyberx_omsk_serova',
     workingHours: '24/7 Круглосуточно',
     rating: 5.0,
     reviewsCount: 890,
-    image: 'https://langame.ru/storage/clubs/2025/Dec/18/17660551636943dcfbb97a9.webp',
+    image: '/images/arena-oktyabr-card.jpg',
+    gallery: [
+      '/images/arena-oktyabr-card.jpg',
+      'https://langame.ru/storage/clubs/2025/Dec/18/17660551636943dcfbb97a9.webp',
+      'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80'
+    ],
     features: [
       '50 игровых ПК (Общий зал, VIP 1-3, Trio Rooms, Duo Room, Solo Room)',
       'Solo Room на AMD Ryzen 7 7800X3D + BenQ 600Hz',
@@ -131,7 +154,7 @@ export const ZONES: ZoneType[] = [
     ],
     pricePerHour: 400,
     priceNight: 2000,
-    image: 'https://langame.ru/storage/clubs/2023/Dec/04/1701698341656ddb25d49cb.webp',
+    image: '/images/sim-racing-real.jpg',
     badge: '2 автосима на Ленина',
   },
   {
@@ -228,7 +251,7 @@ export const ZONES: ZoneType[] = [
     ],
     pricePerHour: 130,
     priceNight: 700,
-    image: 'https://langame.ru/storage/clubs/2023/Jul/05/168857344564a59605677bb.webp',
+    image: '/images/arena-lenina-card.jpg',
     badge: 'от 70-130 ₽/час',
   }
 ];

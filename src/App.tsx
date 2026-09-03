@@ -14,8 +14,10 @@ import { Footer } from './components/Footer';
 import { BookingModal } from './components/BookingModal';
 import { TournamentModal } from './components/TournamentModal';
 import { OwnerAdminModal } from './components/OwnerAdminModal';
+import { OwnerSecurityGate, MASTER_SECRET_KEY } from './components/OwnerSecurityGate';
 import { Preloader } from './components/Preloader';
 import { UPCOMING_TOURNAMENT, PROMOTIONS } from './data/arenaData';
+import { Shield } from 'lucide-react';
 
 export function App() {
   const [loading, setLoading] = useState(true);
@@ -28,7 +30,10 @@ export function App() {
   const [tournamentsOpen, setTournamentsOpen] = useState(false);
   const [targetTournamentId, setTargetTournamentId] = useState<string | undefined>(undefined);
 
+  // Security Gate & Owner Dashboard State
+  const [gateOpen, setGateOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
+  const [isOwnerAuth, setIsOwnerAuth] = useState(false);
 
   // Selected arena in the ecosystem (Default to CyberX Arena - Flagship)
   const [selectedArenaId] = useState<string>('cyberx-arena');
@@ -36,6 +41,29 @@ export function App() {
   // Dynamic state for live editing by owner
   const [liveTournament, setLiveTournament] = useState(UPCOMING_TOURNAMENT);
   const [livePromos, setLivePromos] = useState(PROMOTIONS);
+
+  // Check URL hash & session for secret admin access
+  useEffect(() => {
+    const isAuthed = localStorage.getItem('cyberx_owner_session') === 'authenticated';
+    setIsOwnerAuth(isAuthed);
+
+    const checkSecretUrl = () => {
+      const hash = window.location.hash || '';
+      const search = window.location.search || '';
+      
+      if (hash.includes('admin') || search.includes(MASTER_SECRET_KEY) || hash.includes(MASTER_SECRET_KEY)) {
+        if (isAuthed) {
+          setAdminOpen(true);
+        } else {
+          setGateOpen(true);
+        }
+      }
+    };
+
+    checkSecretUrl();
+    window.addEventListener('hashchange', checkSecretUrl);
+    return () => window.removeEventListener('hashchange', checkSecretUrl);
+  }, []);
 
   // Smooth scroll using Lenis
   useEffect(() => {
@@ -60,7 +88,7 @@ export function App() {
     };
   }, [loading]);
 
-  // Mouse spotlight coordinates (Full-screen radial without square clipping)
+  // Mouse spotlight coordinates
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
 
   useEffect(() => {
@@ -82,13 +110,21 @@ export function App() {
     setTournamentsOpen(true);
   };
 
+  const handleOwnerLogout = () => {
+    localStorage.removeItem('cyberx_owner_session');
+    setIsOwnerAuth(false);
+    setAdminOpen(false);
+    setGateOpen(false);
+    window.location.hash = '';
+  };
+
   return (
     <div className="relative min-h-screen bg-[#030305] text-[#FEFEFE] selection:bg-[#E32124] selection:text-white">
       
       {/* 1. CyberX Sleek Loading Screen */}
       {loading && <Preloader onComplete={() => setLoading(false)} />}
 
-      {/* 2. Global Fluid Mouse Glow Spotlight (Full Screen Radial - Never Clips) */}
+      {/* 2. Global Fluid Mouse Glow Spotlight */}
       <div
         className="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300"
         style={{
@@ -96,25 +132,24 @@ export function App() {
         }}
       />
 
-      {/* 3. Top Header with Retractable Navigation Drawer (Always present & perfectly aligned) */}
+      {/* 3. Top Header with Retractable Navigation Drawer */}
       <Header
         onOpenBooking={() => handleOpenBooking()}
         onOpenTournaments={() => handleOpenTournaments()}
-        onOpenAdmin={() => setAdminOpen(true)}
       />
 
-      {/* 4. Full-Screen Sticky Hero Canvas (100vh - Stays pinned under the curtain) */}
+      {/* 4. Full-Screen Sticky Hero Canvas */}
       <div className="sticky top-0 z-0 h-screen w-full overflow-hidden bg-[#020204]">
         <Hero />
       </div>
 
-      {/* 5. Smooth Layered Content Container that rolls smoothly OVER the Hero (Curtain Effect) */}
+      {/* 5. Smooth Layered Content Container that rolls smoothly OVER the Hero */}
       <div 
         id="content-curtain"
         className="relative z-10 rounded-t-[36px] sm:rounded-t-[50px] border-t border-white/[0.1] shadow-[0_-30px_90px_rgba(0,0,0,0.98)] overflow-hidden bg-gradient-to-b from-[#07070B] via-[#050508] via-30% via-[#0A0507] via-65% to-[#030305]"
       >
         
-        {/* Ambient Crimson Nebula Glow Accents (CSS-only, completely artifact-free) */}
+        {/* Ambient Crimson Nebula Glow Accents */}
         <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-[#E32124]/[0.08] rounded-full blur-[180px]" />
         <div className="pointer-events-none absolute top-1/3 right-0 w-[700px] h-[700px] bg-[#930E10]/[0.05] rounded-full blur-[200px]" />
         <div className="pointer-events-none absolute top-2/3 left-0 w-[800px] h-[800px] bg-[#E32124]/[0.04] rounded-full blur-[220px]" />
@@ -167,14 +202,26 @@ export function App() {
           />
         </main>
 
-        {/* Footer with subtle CMS link */}
+        {/* Footer */}
         <Footer
           onOpenBooking={() => handleOpenBooking()}
           onOpenTournaments={() => handleOpenTournaments()}
-          onOpenAdmin={() => setAdminOpen(true)}
         />
 
       </div>
+
+      {/* Floating Owner Badge (Only visible when authenticated as owner) */}
+      {isOwnerAuth && (
+        <div className="fixed bottom-6 right-6 z-40">
+          <button
+            onClick={() => setAdminOpen(true)}
+            className="px-4 py-2.5 rounded-2xl bg-[#E32124] hover:bg-[#FF2A2E] text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-[0_0_30px_rgba(227,33,36,0.7)] hover:scale-105 active:scale-95 transition-all cursor-pointer border border-white/20"
+          >
+            <Shield className="w-4 h-4" />
+            <span>⚡ РЕЖИМ ВЛАДЕЛЬЦА // CMS</span>
+          </button>
+        </div>
+      )}
 
       {/* Interactive Booking Modal */}
       <BookingModal
@@ -191,12 +238,28 @@ export function App() {
         targetTournamentId={targetTournamentId}
       />
 
+      {/* Owner Security Gate Terminal (Triggered by Secret URL) */}
+      {gateOpen && (
+        <OwnerSecurityGate
+          onSuccessAuth={() => {
+            setIsOwnerAuth(true);
+            setGateOpen(false);
+            setAdminOpen(true);
+          }}
+          onCancel={() => {
+            setGateOpen(false);
+            window.location.hash = '';
+          }}
+        />
+      )}
+
       {/* Owner Management Live CMS Panel */}
       <OwnerAdminModal
         isOpen={adminOpen}
         onClose={() => setAdminOpen(false)}
         onSaveLiveTournament={(updated) => setLiveTournament(updated)}
         onSaveLivePromos={(updated) => setLivePromos(updated)}
+        onLogout={handleOwnerLogout}
       />
 
     </div>

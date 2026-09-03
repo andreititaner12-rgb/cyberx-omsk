@@ -13,16 +13,17 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { sound } from '../utils/sound';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { Dynamic2GisMap } from './Dynamic2GisMap';
 
 interface LocationMapSectionProps {
   onOpenBooking: (arenaId: string) => void;
 }
 
 export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBooking }) => {
-  const [selectedArenaId, setSelectedArenaId] = useState<string>(ARENAS[0].id);
+  const [selectedArenaId, setSelectedArenaId] = useState<string>(ARENAS[1].id); // Default to CyberX Arena Flagship
 
-  const activeArena = ARENAS.find((a) => a.id === selectedArenaId) || ARENAS[0];
+  const activeArena = ARENAS.find((a) => a.id === selectedArenaId) || ARENAS[1];
 
   const arenaLocationDetails: Record<string, {
     gisUrl: string;
@@ -101,7 +102,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
             КАК ДО НАС <span className="text-[#E32124]">//</span> ДОБРАТЬСЯ?
           </h2>
           <p className="mt-3 text-zinc-400 text-sm sm:text-base leading-relaxed">
-            Выберите интересующий клуб CyberX в Омске, постройте удобный пеший или автомобильный маршрут в 2ГИС или свяжитесь с администратором.
+            Интерактивная карта клубов CyberX в Омске. Выберите клуб, и камера плавно переместится на его локацию с маршрутом в 2ГИС.
           </p>
         </motion.div>
 
@@ -123,7 +124,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
                   setSelectedArenaId(arena.id);
                 }}
                 onMouseEnter={() => sound.playHover()}
-                className={`p-4 sm:p-5 rounded-2xl text-left transition-all duration-300 border backdrop-blur-xl relative ${
+                className={`p-4 sm:p-5 rounded-2xl text-left transition-all duration-300 border backdrop-blur-xl relative cursor-pointer ${
                   isSelected
                     ? 'bg-[#151522] border-[#E32124] shadow-xl shadow-red-950/40 translate-y-[-2px]'
                     : 'bg-[#0a0a0f]/80 hover:bg-[#101018] border-white/[0.08] hover:border-white/20'
@@ -156,191 +157,138 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
           })}
         </motion.div>
 
-        {/* Main Map & Route Card (Rounded) */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeArena.id}
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.3 }}
-            className="glass-card rounded-3xl border border-white/[0.1] overflow-hidden shadow-2xl"
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-12">
-              
-              {/* Left Route & Navigation Info */}
-              <div className="lg:col-span-6 p-6 sm:p-10 flex flex-col justify-between space-y-6">
-                <div>
-                  
-                  {/* Top Arena Info */}
-                  <div className="flex items-start justify-between gap-4 border-b border-white/[0.08] pb-6">
-                    <div>
-                      <span className="text-xs font-mono font-bold tracking-widest text-[#E32124] uppercase block mb-1">
-                        Выбранный клуб
-                      </span>
-                      <h3 className="font-display font-black text-2xl sm:text-3xl text-white uppercase">
-                        {activeArena.name}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-zinc-300 mt-1 flex items-center gap-1.5 font-mono">
-                        <MapPin className="w-4 h-4 text-[#E32124] shrink-0" />
-                        <span>{activeArena.address}</span>
-                      </p>
-                    </div>
-
-                    <div className="text-right shrink-0">
-                      <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                        Открыто 24/7
-                      </span>
-                    </div>
+        {/* Main Map & Route Card with Dynamic B&W 2GIS Vector Map */}
+        <div className="glass-card rounded-3xl border border-white/[0.1] overflow-hidden shadow-2xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12">
+            
+            {/* Left Route & Navigation Info */}
+            <div className="lg:col-span-6 p-6 sm:p-10 flex flex-col justify-between space-y-6">
+              <div>
+                
+                {/* Top Arena Info */}
+                <div className="flex items-start justify-between gap-4 border-b border-white/[0.08] pb-6">
+                  <div>
+                    <span className="text-xs font-mono font-bold tracking-widest text-[#E32124] uppercase block mb-1">
+                      Выбранный клуб
+                    </span>
+                    <h3 className="font-display font-black text-2xl sm:text-3xl text-white uppercase">
+                      {activeArena.name}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-zinc-300 mt-1 flex items-center gap-1.5 font-mono">
+                      <MapPin className="w-4 h-4 text-[#E32124] shrink-0" />
+                      <span>{activeArena.address}</span>
+                    </p>
                   </div>
 
-                  {/* Landmarks and Directions Breakdown */}
-                  <div className="space-y-4 pt-6">
-                    
-                    {/* Landmark */}
-                    <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-start gap-3">
-                      <Compass className="w-4 h-4 text-[#E32124] shrink-0 mt-0.5" />
-                      <div>
-                        <div className="text-xs font-bold text-white uppercase tracking-wider font-mono">Ориентир</div>
-                        <div className="text-xs text-zinc-300 mt-0.5">{details.landmark}</div>
-                      </div>
-                    </div>
-
-                    {/* Public Transit */}
-                    <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-start gap-3">
-                      <Bus className="w-4 h-4 text-[#E32124] shrink-0 mt-0.5" />
-                      <div className="space-y-1">
-                        <div className="text-xs font-bold text-white uppercase tracking-wider font-mono">Общественный транспорт</div>
-                        {details.publicTransport.map((stop, i) => (
-                          <div key={i} className="text-xs text-zinc-300 flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#E32124]" />
-                            <span>{stop}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Parking & Entrance */}
-                    <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-start gap-3">
-                      <Car className="w-4 h-4 text-[#E32124] shrink-0 mt-0.5" />
-                      <div>
-                        <div className="text-xs font-bold text-white uppercase tracking-wider font-mono">Парковка и вход</div>
-                        <div className="text-xs text-zinc-300 mt-0.5">{details.parking}</div>
-                        <div className="text-[11px] text-[#E32124] mt-1 flex items-center gap-1 font-mono">
-                          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                          <span>{details.entranceHint}</span>
-                        </div>
-                      </div>
-                    </div>
-
+                  <div className="text-right shrink-0">
+                    <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      Открыто 24/7
+                    </span>
                   </div>
-
                 </div>
 
-                {/* Direct Action Buttons (Rounded) */}
-                <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                {/* Landmarks and Directions Breakdown */}
+                <div className="space-y-4 pt-6">
                   
-                  {/* Primary 2GIS Route Button */}
-                  <button
-                    onClick={open2Gis}
-                    className="flex-1 py-3.5 px-6 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.1em] text-white bg-gradient-to-r from-[#20C05C] via-[#1AA64F] to-[#14803C] hover:from-[#26D969] hover:to-[#20C05C] shadow-lg shadow-emerald-600/30 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2.5"
-                  >
-                    <Navigation className="w-4 h-4" />
-                    <span>Открыть маршрут в 2ГИС</span>
-                    <ExternalLink className="w-3.5 h-3.5 opacity-80" />
-                  </button>
+                  {/* Landmark */}
+                  <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-start gap-3">
+                    <Compass className="w-4 h-4 text-[#E32124] shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-xs font-bold text-white uppercase tracking-wider font-mono">Ориентир</div>
+                      <div className="text-xs text-zinc-300 mt-0.5">{details.landmark}</div>
+                    </div>
+                  </div>
 
-                  {/* Quick Booking Button */}
-                  <button
-                    onClick={() => {
-                      sound.playTrigger();
-                      onOpenBooking(activeArena.id);
-                    }}
-                    className="py-3.5 px-5 rounded-2xl bg-[#E32124] hover:bg-[#FF2A2E] text-xs font-mono font-bold uppercase tracking-[0.1em] text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-600/30 active:scale-95"
-                  >
-                    <span>Забронировать</span>
-                  </button>
+                  {/* Public Transit */}
+                  <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-start gap-3">
+                    <Bus className="w-4 h-4 text-[#E32124] shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                      <div className="text-xs font-bold text-white uppercase tracking-wider font-mono">Общественный транспорт</div>
+                      {details.publicTransport.map((stop, i) => (
+                        <div key={i} className="text-xs text-zinc-300 flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#E32124]" />
+                          <span>{stop}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-                  {/* Phone Call */}
-                  <a
-                    href={`tel:${activeArena.phone}`}
-                    className="py-3.5 px-4 rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-mono font-semibold text-white transition-all flex items-center justify-center gap-1.5"
-                    title="Позвонить"
-                  >
-                    <PhoneCall className="w-4 h-4 text-emerald-400" />
-                  </a>
-
-                  {/* Telegram */}
-                  <a
-                    href={`https://t.me/${activeArena.telegram.replace('@', '')}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="py-3.5 px-4 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-400 transition-all flex items-center justify-center"
-                    title="Написать в Telegram"
-                  >
-                    <Send className="w-4 h-4" />
-                  </a>
+                  {/* Parking & Entrance */}
+                  <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-start gap-3">
+                    <Car className="w-4 h-4 text-[#E32124] shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-xs font-bold text-white uppercase tracking-wider font-mono">Парковка и вход</div>
+                      <div className="text-xs text-zinc-300 mt-0.5">{details.parking}</div>
+                      <div className="text-[11px] text-[#E32124] mt-1 flex items-center gap-1 font-mono">
+                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                        <span>{details.entranceHint}</span>
+                      </div>
+                    </div>
+                  </div>
 
                 </div>
 
               </div>
 
-              {/* Right Interactive 2GIS Visual Card (Rounded) */}
-              <div className="lg:col-span-6 relative min-h-[380px] lg:min-h-full bg-[#07070b] overflow-hidden border-t lg:border-t-0 lg:border-l border-white/[0.08] group">
+              {/* Direct Action Buttons (Rounded) */}
+              <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 
-                {/* Photo of the club facade/interior */}
-                <img
-                  src={activeArena.image}
-                  alt={activeArena.name}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 opacity-60"
-                />
-                
-                {/* Dark cyber overlay with grid lines */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020204] via-[#020204]/60 to-transparent" />
+                {/* Primary 2GIS Route Button */}
+                <button
+                  onClick={open2Gis}
+                  className="flex-1 py-3.5 px-6 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.1em] text-white bg-gradient-to-r from-[#20C05C] via-[#1AA64F] to-[#14803C] hover:from-[#26D969] hover:to-[#20C05C] shadow-lg shadow-emerald-600/30 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+                >
+                  <Navigation className="w-4 h-4" />
+                  <span>Открыть маршрут в 2ГИС</span>
+                  <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+                </button>
 
-                {/* Stylized Cyber Map HUD Pin Overlay (Rounded) */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                  
-                  {/* Radar Pin */}
-                  <div className="relative mb-4 cursor-pointer" onClick={open2Gis}>
-                    <div className="w-16 h-16 rounded-full bg-[#E32124]/20 border border-[#E32124] animate-ping absolute inset-0" />
-                    <div className="w-16 h-16 rounded-full bg-[#E32124] flex items-center justify-center shadow-xl shadow-red-600/60 relative z-10 hover:scale-105 transition-transform">
-                      <MapPin className="w-8 h-8 text-white" />
-                    </div>
-                  </div>
+                {/* Quick Booking Button */}
+                <button
+                  onClick={() => {
+                    sound.playTrigger();
+                    onOpenBooking(activeArena.id);
+                  }}
+                  className="py-3.5 px-5 rounded-2xl bg-[#E32124] hover:bg-[#FF2A2E] text-xs font-mono font-bold uppercase tracking-[0.1em] text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-600/30 active:scale-95 cursor-pointer"
+                >
+                  <span>Забронировать</span>
+                </button>
 
-                  <div className="bg-[#000000]/90 backdrop-blur-md px-5 py-4 rounded-2xl border border-white/15 max-w-sm shadow-2xl">
-                    <div className="text-xs font-mono font-bold text-[#E32124] uppercase">
-                      2ГИС Омск
-                    </div>
-                    <div className="text-sm font-display font-black text-white mt-0.5 uppercase">
-                      {activeArena.name.split('//')[0].trim()}
-                    </div>
-                    <div className="text-xs text-zinc-400 mt-0.5 font-mono">
-                      {activeArena.address}
-                    </div>
+                {/* Phone Call */}
+                <a
+                  href={`tel:${activeArena.phone}`}
+                  className="py-3.5 px-4 rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-mono font-semibold text-white transition-all flex items-center justify-center gap-1.5"
+                  title="Позвонить"
+                >
+                  <PhoneCall className="w-4 h-4 text-emerald-400" />
+                </a>
 
-                    <button
-                      onClick={open2Gis}
-                      className="mt-3 w-full py-2 px-4 rounded-xl bg-[#20C05C] hover:bg-[#26D969] text-white text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-md"
-                    >
-                      <span>Перейти в карточку 2ГИС →</span>
-                    </button>
-                  </div>
-
-                  <div className="mt-4 flex items-center gap-2 text-[11px] font-mono text-zinc-400 bg-black/80 px-3 py-1 rounded-full border border-white/10">
-                    <span>Координаты:</span>
-                    <span className="text-white">{activeArena.coordinates.x.toFixed(4)}, {activeArena.coordinates.y.toFixed(4)}</span>
-                  </div>
-
-                </div>
+                {/* Telegram */}
+                <a
+                  href={`https://t.me/${activeArena.telegram.replace('@', '')}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="py-3.5 px-4 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-400 transition-all flex items-center justify-center"
+                  title="Написать в Telegram"
+                >
+                  <Send className="w-4 h-4" />
+                </a>
 
               </div>
 
             </div>
-          </motion.div>
-        </AnimatePresence>
+
+            {/* Right Column: Dynamic Interactive B&W 2GIS Map with Spawning Pin & Camera Fly Animation */}
+            <div className="lg:col-span-6 relative min-h-[440px] lg:min-h-full overflow-hidden border-t lg:border-t-0 lg:border-l border-white/[0.08]">
+              <Dynamic2GisMap
+                selectedArenaId={selectedArenaId}
+                onSelectArena={(id) => setSelectedArenaId(id)}
+              />
+            </div>
+
+          </div>
+        </div>
 
       </div>
     </section>

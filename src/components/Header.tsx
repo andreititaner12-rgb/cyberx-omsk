@@ -30,18 +30,18 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 pointer-events-none">
+    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 pointer-events-auto">
       <div
-        className={`w-full transition-all duration-500 pointer-events-auto ${
+        className={`w-full transition-all duration-500 ${
           scrolled
-            ? 'bg-[#000000]/60 backdrop-blur-2xl border-b border-white/[0.08] py-3.5 shadow-[0_10px_30px_rgba(0,0,0,0.8)]'
-            : 'bg-transparent py-5 sm:py-6'
+            ? 'bg-[#050508]/85 backdrop-blur-2xl border-b border-red-950/30 py-3.5 shadow-[0_15px_35px_rgba(0,0,0,0.85)]'
+            : 'bg-transparent py-5 sm:py-6 border-b border-transparent'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-6">
             
-            {/* Left: CyberX Brandmark (Always visible with subtle red glow) */}
+            {/* Left: CyberX Brandmark */}
             <div 
               onClick={() => scrollTo('hero')} 
               className="flex items-center gap-3 cursor-pointer group select-none shrink-0"
@@ -62,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </div>
 
-            {/* Center: Navigation Links (Appears smoothly only on scroll) */}
+            {/* Center: Navigation Links (Appears smoothly on scroll) */}
             <nav 
               className={`hidden md:flex items-center gap-6 lg:gap-8 font-mono text-[11px] tracking-[0.22em] uppercase text-zinc-400 transition-all duration-500 ${
                 scrolled
@@ -73,7 +73,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 onClick={() => scrollTo('arenas')}
                 onMouseEnter={() => sound.playHover()}
-                className="hover:text-white transition-colors py-1 relative group"
+                className="hover:text-white transition-colors py-1 relative group cursor-pointer"
               >
                 <span>3 КЛУБА</span>
                 <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#E32124] group-hover:w-full transition-all duration-300" />
@@ -81,7 +81,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 onClick={() => scrollTo('zones')}
                 onMouseEnter={() => sound.playHover()}
-                className="hover:text-white transition-colors py-1 relative group"
+                className="hover:text-white transition-colors py-1 relative group cursor-pointer"
               >
                 <span>ЗОНЫ & VIP</span>
                 <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#E32124] group-hover:w-full transition-all duration-300" />
@@ -89,7 +89,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 onClick={() => scrollTo('hardware')}
                 onMouseEnter={() => sound.playHover()}
-                className="hover:text-white transition-colors py-1 relative group flex items-center gap-1.5"
+                className="hover:text-white transition-colors py-1 relative group flex items-center gap-1.5 cursor-pointer"
               >
                 <span>600HZ ЖЕЛЕЗО</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#E32124]" />
@@ -101,7 +101,7 @@ export const Header: React.FC<HeaderProps> = ({
                   onOpenTournaments();
                 }}
                 onMouseEnter={() => sound.playHover()}
-                className="hover:text-white transition-colors py-1 relative group text-zinc-300"
+                className="hover:text-white transition-colors py-1 relative group text-zinc-300 cursor-pointer"
               >
                 <span>ТУРНИРЫ</span>
                 <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#E32124] group-hover:w-full transition-all duration-300" />
@@ -109,7 +109,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 onClick={() => scrollTo('promotions')}
                 onMouseEnter={() => sound.playHover()}
-                className="hover:text-white transition-colors py-1 relative group"
+                className="hover:text-white transition-colors py-1 relative group cursor-pointer"
               >
                 <span>АКЦИИ</span>
                 <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#E32124] group-hover:w-full transition-all duration-300" />
@@ -117,30 +117,27 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 onClick={() => scrollTo('location')}
                 onMouseEnter={() => sound.playHover()}
-                className="hover:text-[#20C05C] transition-colors py-1 relative group"
+                className="hover:text-[#20C05C] transition-colors py-1 relative group cursor-pointer"
               >
                 <span>2ГИС</span>
                 <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#20C05C] group-hover:w-full transition-all duration-300" />
               </button>
             </nav>
 
-            {/* Right: Action Button (Appears smoothly only on scroll) */}
-            <div 
-              className={`flex items-center gap-3 shrink-0 transition-all duration-500 ${
-                scrolled
-                  ? 'opacity-100 translate-y-0 pointer-events-auto'
-                  : 'opacity-0 -translate-y-2 pointer-events-none'
-              }`}
-            >
+            {/* Right: Translucent Glowing Action Button */}
+            <div className="flex items-center gap-3 shrink-0">
               <button
                 onClick={() => {
                   sound.playTrigger();
                   onOpenBooking();
                 }}
                 onMouseEnter={() => sound.playHover()}
-                className="px-5 sm:px-6 py-2 rounded-xl border border-[#E32124] bg-[#E32124]/10 hover:bg-[#E32124] text-[#E32124] hover:text-white font-mono text-xs tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_0_20px_rgba(227,33,36,0.25)] hover:shadow-[0_0_30px_rgba(227,33,36,0.6)] active:scale-95"
+                className="relative group px-5 sm:px-6 py-2.5 rounded-2xl font-mono text-xs font-bold tracking-[0.2em] uppercase text-zinc-200 hover:text-white bg-white/[0.05] hover:bg-[#E32124]/20 border border-white/15 hover:border-[#E32124]/70 backdrop-blur-xl shadow-lg hover:shadow-[0_0_25px_rgba(227,33,36,0.4)] transition-all duration-300 overflow-hidden active:scale-95 cursor-pointer"
               >
-                ЗАБРОНИРОВАТЬ
+                {/* Soft crimson gradient sheen on hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#E32124]/30 via-[#A30E12]/35 to-[#E32124]/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                
+                <span className="relative z-10">ЗАБРОНИРОВАТЬ</span>
               </button>
             </div>
 

@@ -15,6 +15,7 @@ import { BookingModal } from './components/BookingModal';
 import { TournamentModal } from './components/TournamentModal';
 import { OwnerAdminModal } from './components/OwnerAdminModal';
 import { Preloader } from './components/Preloader';
+import { LivingBackground } from './components/LivingBackground';
 import { UPCOMING_TOURNAMENT, PROMOTIONS } from './data/arenaData';
 
 export function App() {
@@ -42,7 +43,7 @@ export function App() {
     if (loading) return;
 
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       smoothWheel: true,
@@ -88,54 +89,35 @@ export function App() {
       {/* 1. CyberX Sleek Loading Screen */}
       {loading && <Preloader onComplete={() => setLoading(false)} />}
 
-      {/* Global Fluid Mouse Glow Spotlight */}
+      {/* 2. Global Living Canvas: Animated Cyber Grid Beams & Glowing Orbs */}
+      <LivingBackground />
+
+      {/* 3. Global Fluid Mouse Glow Spotlight */}
       <div
-        className="pointer-events-none fixed z-40 w-[500px] h-[500px] rounded-full bg-[#E32124]/[0.035] blur-[120px] transition-transform duration-75 ease-out -translate-x-1/2 -translate-y-1/2"
+        className="pointer-events-none fixed z-40 w-[500px] h-[500px] rounded-full bg-[#E32124]/[0.04] blur-[120px] transition-transform duration-75 ease-out -translate-x-1/2 -translate-y-1/2"
         style={{
           left: `${mousePos.x}px`,
           top: `${mousePos.y}px`,
         }}
       />
 
-      {/* Top Header with Retractable Navigation Drawer (Visible on scroll) */}
+      {/* 4. Top Header with Retractable Navigation Drawer (Always present & perfectly aligned) */}
       <Header
         onOpenBooking={() => handleOpenBooking()}
         onOpenTournaments={() => handleOpenTournaments()}
         onOpenAdmin={() => setAdminOpen(true)}
       />
 
-      {/* 2. Full-Screen Sticky Hero Canvas */}
-      <div className="sticky top-0 z-0 h-screen w-full">
-        <Hero
-          onOpenBooking={() => handleOpenBooking()}
-        />
-      </div>
+      {/* 5. Full-Screen Cinematic Hero */}
+      <Hero />
 
-      {/* 3. Layered Content Container that rolls smoothly OVER the Hero */}
-      <div className="relative z-20 rounded-t-[36px] sm:rounded-t-[54px] border-t border-white/[0.12] shadow-[0_-35px_80px_rgba(0,0,0,0.95)] overflow-hidden bg-gradient-to-b from-[#090910] via-[#050508] via-35% via-[#0B0609] via-70% to-[#030306]">
+      {/* 6. Smooth Layered Content Container that rolls smoothly over the Hero */}
+      <div className="relative z-20 -mt-10 sm:-mt-14 rounded-t-[36px] sm:rounded-t-[54px] border-t border-white/[0.08] shadow-[0_-30px_70px_rgba(0,0,0,0.95)] overflow-hidden bg-gradient-to-b from-[#07070B] via-[#050508] via-35% via-[#090507] via-70% to-[#030305]">
         
-        {/* Background Atmospheric Rich Gradient Nebulas */}
-        <div 
-          className="pointer-events-none absolute inset-0 z-0 opacity-70"
-          style={{
-            backgroundImage: `
-              radial-gradient(ellipse 90% 600px at 50% 0%, rgba(227, 33, 36, 0.12), transparent 70%),
-              radial-gradient(circle 800px at 90% 25%, rgba(147, 14, 16, 0.08), transparent 60%),
-              radial-gradient(circle 900px at 10% 65%, rgba(227, 33, 36, 0.06), transparent 60%),
-              radial-gradient(circle 700px at 50% 90%, rgba(147, 14, 16, 0.09), transparent 60%)
-            `,
-          }}
-        />
-
-        {/* Subtle Cyber Dust / Grid Lines Texture */}
-        <div 
-          className="pointer-events-none absolute inset-0 z-0 opacity-[0.025] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:4rem_4rem]"
-        />
-
         {/* Top Glow Accent Bar */}
-        <div className="absolute top-0 left-1/4 right-1/4 h-[1.5px] bg-gradient-to-r from-transparent via-[#E32124]/60 to-transparent z-10" />
+        <div className="absolute top-0 left-1/4 right-1/4 h-[1.5px] bg-gradient-to-r from-transparent via-[#E32124]/70 to-transparent z-10" />
 
-        <main className="relative z-10">
+        <main className="relative z-10 space-y-12 sm:space-y-16">
           
           {/* A. Brand Manifesto & Core Pillars (CYBERX // АРЕНЫ ОМСКА) */}
           <BrandManifesto />

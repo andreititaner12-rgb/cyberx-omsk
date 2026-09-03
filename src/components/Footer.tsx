@@ -20,7 +20,7 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   return (
-    <footer className="relative bg-[#000000] border-t border-white/[0.08] pt-16 pb-12 overflow-hidden text-zinc-400">
+    <footer className="relative bg-transparent border-t border-white/[0.08] pt-16 pb-12 overflow-hidden text-zinc-400">
       
       {/* Glow highlight line */}
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#E32124]/50 to-transparent" />

@@ -53,7 +53,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
   const slotPercentage = Math.round((tournament.slotsRegistered / tournament.slotsTotal) * 100);
 
   return (
-    <section id="tournaments" className="relative py-20 bg-[#070709] overflow-hidden">
+    <section id="tournaments" className="relative py-20 bg-transparent overflow-hidden">
       
       {/* Background ambient red glow */}
       <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-red-600/[0.05] rounded-full blur-[160px]" />

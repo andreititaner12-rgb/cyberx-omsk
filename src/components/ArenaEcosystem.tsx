@@ -49,7 +49,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
   };
 
   return (
-    <section id="arenas" className="relative py-24 sm:py-32 bg-[#000000] overflow-hidden">
+    <section id="arenas" className="relative py-24 sm:py-32 bg-transparent overflow-hidden">
       
       {/* Background ambient lighting */}
       <div className="pointer-events-none absolute top-1/4 right-0 w-[550px] h-[550px] bg-[#E32124]/[0.035] rounded-full blur-[150px]" />

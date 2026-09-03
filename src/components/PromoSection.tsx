@@ -24,7 +24,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
   };
 
   return (
-    <section id="promotions" className="relative py-24 sm:py-32 bg-[#050508] overflow-hidden">
+    <section id="promotions" className="relative py-24 sm:py-32 bg-transparent overflow-hidden">
       
       {/* Background ambient lighting */}
       <div className="pointer-events-none absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-red-600/[0.04] rounded-full blur-[140px]" />

@@ -16,7 +16,7 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
   ];
 
   return (
-    <section className="relative py-20 bg-[#060609] border-t border-b border-white/[0.08] overflow-hidden">
+    <section className="relative py-20 bg-transparent overflow-hidden">
       
       {/* Background ambient lighting */}
       <div className="pointer-events-none absolute top-1/2 left-1/3 -translate-y-1/2 w-[600px] h-[400px] bg-[#E32124]/[0.05] rounded-full blur-[140px]" />

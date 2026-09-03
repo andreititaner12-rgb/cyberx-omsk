@@ -72,7 +72,10 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
           <h2 className="font-display font-black text-3xl sm:text-5xl tracking-tight uppercase text-white">
             3 КЛУБА В ОМСКЕ <span className="text-[#E32124]">//</span> АРЕНЫ
           </h2>
-          <p className="mt-3 text-zinc-400 text-sm sm:text-base leading-relaxed">
+          <p className="mt-3 text-zinc-300 text-sm sm:text-base leading-relaxed">
+            Три флагманских пространства в Омске: <strong className="text-white font-medium">CyberX Arena</strong> (Ленина, 19), <strong className="text-white font-medium">CyberX Европа</strong> (Мира, 42к1) и <strong className="text-white font-medium">CyberX Октябрь</strong> (Серова, 19А). 182 игровых ПК, BenQ 600Hz, Premium Squad сьюты и 2 автосимулятора Sim-Racing.
+          </p>
+          <p className="mt-2 text-zinc-500 text-xs sm:text-sm font-mono">
             Нажмите на карточку клуба для просмотра детального оснащения, фотографий и мгновенного бронирования.
           </p>
         </motion.div>

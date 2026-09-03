@@ -4,14 +4,34 @@ import { sound } from '../utils/sound';
 import { motion } from 'framer-motion';
 
 export const Hero: React.FC = () => {
+  const sectionRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // Handled silently
-      });
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Smart intersection observer: auto-pause video when scrolled out of view to free 100% GPU memory
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
     }
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   const scrollTo = (id: string) => {
@@ -33,9 +53,10 @@ export const Hero: React.FC = () => {
   return (
     <section 
       id="hero" 
-      className="relative h-screen min-h-[680px] w-full overflow-hidden select-none bg-[#020204]"
+      ref={sectionRef}
+      className="relative h-screen min-h-[680px] w-full overflow-hidden select-none bg-[#020204] z-10"
     >
-      {/* 1. Full-Screen Background Video (1080p 60fps) */}
+      {/* 1. Full-Screen Background Video (1080p 60fps with Auto-Pause when off-screen) */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <video
           ref={videoRef}
@@ -50,7 +71,7 @@ export const Hero: React.FC = () => {
         />
         
         {/* Soft Vignettes */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#020204]/90 via-transparent to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#030305] via-transparent to-black/40" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_45%,_rgba(0,0,0,0.6)_100%)]" />
       </div>
 

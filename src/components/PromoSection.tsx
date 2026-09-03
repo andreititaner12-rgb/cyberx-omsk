@@ -33,10 +33,10 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
         
         {/* Centered Section Header */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           className="text-center max-w-3xl mx-auto mb-14"
         >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E32124]/10 border border-[#E32124]/30 text-[#E32124] text-xs font-mono font-bold tracking-wider uppercase mb-3.5">
@@ -51,19 +51,21 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
           </p>
         </motion.div>
 
-        {/* Dynamic Card Hover Effect Grid (Rounded) */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-4"
-        >
+        {/* Dynamic Card Hover Effect Grid with Staggered Revealing */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {promos.map((promo, idx) => {
             const isCopied = copiedCode === promo.code;
             return (
-              <div
+              <motion.div
                 key={promo.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ 
+                  duration: 0.85, 
+                  delay: 0.15 * idx + 0.1, 
+                  ease: [0.16, 1, 0.3, 1] 
+                }}
                 className="relative group block p-2 h-full w-full"
                 onMouseEnter={() => {
                   sound.playHover();
@@ -170,10 +172,10 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
                     </button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </motion.div>
+        </div>
 
       </div>
     </section>

@@ -52,10 +52,10 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
         
         {/* Section Header */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E32124]/10 border border-[#E32124]/30 text-[#E32124] text-xs font-mono font-bold tracking-wider uppercase mb-3.5">
@@ -70,63 +70,111 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
           </p>
         </motion.div>
 
-        {/* Dynamic Asymmetric Bento Grid of Gaming Zones (Rounded) */}
+        {/* Dynamic Asymmetric Bento Grid of Gaming Zones with Staggered Deliberate Revealing */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 lg:gap-6 mb-10">
           
           {/* 1. PREMIUM SQUAD SUITE (Large Wide Anchor - 8 Cols) */}
-          <BentoZoneCard
-            zone={ZONES[0]}
-            className="md:col-span-12 lg:col-span-8 min-h-[320px] lg:min-h-[360px]"
-            isExpanded={expandedZoneId === ZONES[0].id}
-            onClick={() => handleCardClick(ZONES[0])}
-            accentBadge="ХИТ // ЭКСКЛЮЗИВ ARENA"
-            accentColor="#E32124"
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-span-12 lg:col-span-8"
+          >
+            <BentoZoneCard
+              zone={ZONES[0]}
+              className="w-full min-h-[320px] lg:min-h-[360px]"
+              isExpanded={expandedZoneId === ZONES[0].id}
+              onClick={() => handleCardClick(ZONES[0])}
+              accentBadge="ХИТ // ЭКСКЛЮЗИВ ARENA"
+              accentColor="#E32124"
+            />
+          </motion.div>
 
           {/* 2. SIM-RACING // 2 КОКПИТА (4 Cols) */}
-          <BentoZoneCard
-            zone={ZONES[1]}
-            className="md:col-span-6 lg:col-span-4 min-h-[320px] lg:min-h-[360px]"
-            isExpanded={expandedZoneId === ZONES[1].id}
-            onClick={() => handleCardClick(ZONES[1])}
-            accentBadge="DIRECT DRIVE"
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.85, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-span-6 lg:col-span-4"
+          >
+            <BentoZoneCard
+              zone={ZONES[1]}
+              className="w-full min-h-[320px] lg:min-h-[360px]"
+              isExpanded={expandedZoneId === ZONES[1].id}
+              onClick={() => handleCardClick(ZONES[1])}
+              accentBadge="DIRECT DRIVE"
+            />
+          </motion.div>
 
           {/* 3. SOLO ROOM // RYZEN 7800X3D + 600HZ (4 Cols) */}
-          <BentoZoneCard
-            zone={ZONES[3]}
-            className="md:col-span-6 lg:col-span-4 min-h-[300px] lg:min-h-[340px]"
-            isExpanded={expandedZoneId === ZONES[3].id}
-            onClick={() => handleCardClick(ZONES[3])}
-            accentBadge="600HZ BENQ SPEED"
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.85, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-span-6 lg:col-span-4"
+          >
+            <BentoZoneCard
+              zone={ZONES[3]}
+              className="w-full min-h-[300px] lg:min-h-[340px]"
+              isExpanded={expandedZoneId === ZONES[3].id}
+              onClick={() => handleCardClick(ZONES[3])}
+              accentBadge="600HZ BENQ SPEED"
+            />
+          </motion.div>
 
           {/* 4. КИНО-ЛАУНЖ С ПРОЕКТОРОМ 150" (4 Cols) */}
-          <BentoZoneCard
-            zone={ZONES[2]}
-            className="md:col-span-6 lg:col-span-4 min-h-[300px] lg:min-h-[340px]"
-            isExpanded={expandedZoneId === ZONES[2].id}
-            onClick={() => handleCardClick(ZONES[2])}
-            accentBadge='150" ЭКРАН + СЦЕНА'
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.85, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-span-6 lg:col-span-4"
+          >
+            <BentoZoneCard
+              zone={ZONES[2]}
+              className="w-full min-h-[300px] lg:min-h-[340px]"
+              isExpanded={expandedZoneId === ZONES[2].id}
+              onClick={() => handleCardClick(ZONES[2])}
+              accentBadge='150" ЭКРАН + СЦЕНА'
+            />
+          </motion.div>
 
           {/* 5. PS5 DELUXE ЗАЛЫ (4 Cols) */}
-          <BentoZoneCard
-            zone={ZONES[4]}
-            className="md:col-span-6 lg:col-span-4 min-h-[300px] lg:min-h-[340px]"
-            isExpanded={expandedZoneId === ZONES[4].id}
-            onClick={() => handleCardClick(ZONES[4])}
-            accentBadge="10 ЗАЛОВ // ВСЕ КЛУБЫ"
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.85, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-span-6 lg:col-span-4"
+          >
+            <BentoZoneCard
+              zone={ZONES[4]}
+              className="w-full min-h-[300px] lg:min-h-[340px]"
+              isExpanded={expandedZoneId === ZONES[4].id}
+              onClick={() => handleCardClick(ZONES[4])}
+              accentBadge="10 ЗАЛОВ // ВСЕ КЛУБЫ"
+            />
+          </motion.div>
 
           {/* 6. ОТКРЫТЫЙ ЗАЛ // SUPER VIP & STANDART (Full Width - 12 Cols) */}
-          <BentoZoneCard
-            zone={ZONES[5]}
-            className="md:col-span-12 min-h-[260px] lg:min-h-[300px]"
-            isExpanded={expandedZoneId === ZONES[5].id}
-            onClick={() => handleCardClick(ZONES[5])}
-            accentBadge="182 ИГРОВЫХ ПК В ОМСКЕ"
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.85, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-span-12"
+          >
+            <BentoZoneCard
+              zone={ZONES[5]}
+              className="w-full min-h-[260px] lg:min-h-[300px]"
+              isExpanded={expandedZoneId === ZONES[5].id}
+              onClick={() => handleCardClick(ZONES[5])}
+              accentBadge="182 ИГРОВЫХ ПК В ОМСКЕ"
+            />
+          </motion.div>
 
         </div>
 

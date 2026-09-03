@@ -59,10 +59,10 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
         
         {/* Centered Section Header */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E32124]/10 border border-[#E32124]/30 text-[#E32124] text-xs font-mono font-bold tracking-wider uppercase mb-3.5">
@@ -80,40 +80,46 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
           </p>
         </motion.div>
 
-        {/* 3 Tall, Rounded 3D Focus Cards */}
-        <motion.div 
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8 mb-20 items-stretch"
-        >
+        {/* 3 Tall, Rounded 3D Focus Cards with Staggered Deliberate Revealing */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8 mb-20 items-stretch">
           {ARENAS.map((arena, idx) => {
             const isSelected = arena.id === activeId;
             const isHovered = hoveredIndex === idx;
 
             return (
-              <HoloCardItem
+              <motion.div
                 key={arena.id}
-                arena={arena}
-                idx={idx}
-                isSelected={isSelected}
-                isHovered={isHovered}
-                onHover={(i) => setHoveredIndex(i)}
-                onLeave={() => setHoveredIndex(null)}
-                onSelect={(id) => handleSelectArena(id)}
-              />
+                initial={{ opacity: 0, y: 45 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ 
+                  duration: 0.85, 
+                  delay: 0.15 * idx + 0.1, 
+                  ease: [0.16, 1, 0.3, 1] 
+                }}
+                className="h-full"
+              >
+                <HoloCardItem
+                  arena={arena}
+                  idx={idx}
+                  isSelected={isSelected}
+                  isHovered={isHovered}
+                  onHover={(i) => setHoveredIndex(i)}
+                  onLeave={() => setHoveredIndex(null)}
+                  onSelect={(id) => handleSelectArena(id)}
+                />
+              </motion.div>
             );
           })}
-        </motion.div>
+        </div>
 
         {/* Selected Arena Deep Dive Details & Walkthrough Section (Smooth rounded geometry) */}
         <motion.div 
           id="arena-deep-dive" 
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           className="scroll-mt-28"
         >
           <div className="glass-card rounded-3xl border border-white/[0.12] overflow-hidden shadow-2xl relative">

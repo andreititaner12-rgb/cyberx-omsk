@@ -34,44 +34,64 @@ export const BrandManifesto: React.FC = () => {
     <section id="manifesto" className="relative pt-20 pb-12 sm:pt-28 sm:pb-16 overflow-hidden">
       
       {/* Background Ambient Gradient Accents */}
-      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[#E32124]/[0.05] rounded-full blur-[140px]" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[#E32124]/[0.06] rounded-full blur-[140px]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Main Title & Statement */}
         <motion.div 
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           className="text-center max-w-4xl mx-auto mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E32124]/10 border border-[#E32124]/30 text-[#E32124] text-xs font-mono font-bold tracking-wider uppercase mb-4 shadow-sm shadow-red-950/40">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E32124]/10 border border-[#E32124]/30 text-[#E32124] text-xs font-mono font-bold tracking-wider uppercase mb-4 shadow-sm shadow-red-950/40"
+          >
             <span>ЭКОСИСТЕМА CYBERX COMMUNITY OMSK</span>
-          </div>
+          </motion.div>
 
-          <h2 className="font-display font-black text-3xl sm:text-5xl md:text-6xl tracking-tight uppercase text-white leading-tight">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display font-black text-3xl sm:text-5xl md:text-6xl tracking-tight uppercase text-white leading-tight"
+          >
             CYBERX <span className="text-[#E32124]">//</span> АРЕНЫ ОМСКА
-          </h2>
+          </motion.h2>
 
-          <p className="mt-4 text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto font-normal leading-relaxed">
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.85, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-4 text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto font-normal leading-relaxed"
+          >
             Премиальные киберспортивные арены в Омске. Соревновательное железо, VIP комнаты и круглосуточный сервис 24/7.
-          </p>
+          </motion.p>
         </motion.div>
 
-        {/* 4 Key Pillars Grid */}
-        <motion.div 
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-        >
+        {/* 4 Key Pillars Grid with Staggered Deliberate Revealing */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((stat, i) => {
             const Icon = stat.icon;
             return (
-              <div
+              <motion.div
                 key={i}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ 
+                  duration: 0.8, 
+                  delay: 0.12 * i + 0.2, 
+                  ease: [0.16, 1, 0.3, 1] 
+                }}
                 className="glass-card p-6 rounded-3xl border border-white/[0.08] hover:border-[#E32124]/40 transition-all duration-300 group relative overflow-hidden"
               >
                 <div className="flex items-center justify-between mb-4">
@@ -94,10 +114,10 @@ export const BrandManifesto: React.FC = () => {
                 <div className="text-[11px] text-zinc-500 mt-1.5 font-mono leading-tight">
                   {stat.detail}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </motion.div>
+        </div>
 
       </div>
     </section>

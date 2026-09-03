@@ -9,6 +9,7 @@ import {
   Layers
 } from 'lucide-react';
 import { sound } from '../utils/sound';
+import { motion } from 'framer-motion';
 
 interface TournamentCardProps {
   onOpenRegister: (tournamentId: string) => void;
@@ -61,7 +62,13 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Main High-Impact Tournament Banner (Rounded Dark Luxury) */}
-        <div className="relative rounded-3xl border border-white/[0.12] bg-gradient-to-br from-[#12121c] via-[#0d0d14] to-[#08080c] p-6 sm:p-10 lg:p-12 overflow-hidden shadow-2xl">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          className="relative rounded-3xl border border-white/[0.12] bg-gradient-to-br from-[#12121c] via-[#0d0d14] to-[#08080c] p-6 sm:p-10 lg:p-12 overflow-hidden shadow-2xl"
+        >
           
           {/* Top subtle glow line */}
           <div className="absolute top-0 left-10 right-10 h-[2px] bg-gradient-to-r from-transparent via-[#E32124] to-transparent" />
@@ -228,7 +235,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
 
           </div>
 
-        </div>
+        </motion.div>
 
       </div>
     </section>

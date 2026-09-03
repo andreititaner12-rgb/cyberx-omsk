@@ -88,3 +88,15 @@
   border-radius: 50%;
   pointer-events: none;
 }
+
+/* Dark Monochrome B&W Tile filter for OpenStreetMap (Zero API key, zero watermarks) */
+.dark-monochrome-tiles {
+  filter: grayscale(100%) invert(92%) contrast(145%) brightness(85%) !important;
+  -webkit-filter: grayscale(100%) invert(92%) contrast(145%) brightness(85%) !important;
+}
+
+.custom-cyberx-pin {
+  background: transparent !important;
+  border: none !important;
+}
+

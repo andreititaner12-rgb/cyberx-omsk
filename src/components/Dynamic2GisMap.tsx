@@ -20,7 +20,7 @@ export const Dynamic2GisMap: React.FC<Dynamic2GisMapProps> = ({
 
   const activeArena = ARENAS.find((a) => a.id === selectedArenaId) || ARENAS[0];
 
-  // Initialize Leaflet Map with CartoDB Dark Matter B&W tiles
+  // Initialize Leaflet Map with 100% Free OpenStreetMap & Dark Mode CSS filter (Zero watermarks, Zero API key)
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
@@ -32,13 +32,14 @@ export const Dynamic2GisMap: React.FC<Dynamic2GisMapProps> = ({
       scrollWheelZoom: true,
     });
 
-    // High performance CartoDB Dark Matter (Black & White dark mode tiles)
+    // 100% Free OpenStreetMap tiles with no API key requirement
     L.tileLayer(
-      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
-        subdomains: 'abcd',
+        subdomains: ['a', 'b', 'c'],
         maxZoom: 19,
-        minZoom: 11,
+        minZoom: 10,
+        className: 'dark-monochrome-tiles',
       }
     ).addTo(map);
 
@@ -50,11 +51,11 @@ export const Dynamic2GisMap: React.FC<Dynamic2GisMapProps> = ({
 
       const markerHtml = `
         <div class="relative group cursor-pointer select-none">
-          ${isSelected ? '<div class="absolute -inset-4 rounded-full bg-[#E32124]/30 animate-ping"></div>' : ''}
+          ${isSelected ? '<div class="absolute -inset-3 rounded-full bg-[#E32124]/40 animate-ping"></div>' : ''}
           <div class="relative flex items-center justify-center w-10 h-10 rounded-full ${
             isSelected 
-              ? 'bg-[#E32124] text-white ring-4 ring-[#E32124]/40 shadow-[0_0_30px_#E32124]' 
-              : 'bg-[#181822] text-zinc-300 border border-white/20 hover:border-[#E32124] hover:bg-[#E32124] hover:text-white transition-all shadow-lg'
+              ? 'bg-[#E32124] text-white ring-4 ring-[#E32124]/40 shadow-[0_0_25px_#E32124]' 
+              : 'bg-[#12121a] text-zinc-300 border border-white/20 hover:border-[#E32124] hover:bg-[#E32124] hover:text-white transition-all shadow-lg'
           }">
             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
@@ -112,11 +113,11 @@ export const Dynamic2GisMap: React.FC<Dynamic2GisMapProps> = ({
       if (marker) {
         const markerHtml = `
           <div class="relative group cursor-pointer select-none">
-            ${isSelected ? '<div class="absolute -inset-4 rounded-full bg-[#E32124]/30 animate-ping"></div>' : ''}
+            ${isSelected ? '<div class="absolute -inset-3 rounded-full bg-[#E32124]/40 animate-ping"></div>' : ''}
             <div class="relative flex items-center justify-center w-10 h-10 rounded-full ${
               isSelected 
-                ? 'bg-[#E32124] text-white ring-4 ring-[#E32124]/40 shadow-[0_0_30px_#E32124]' 
-                : 'bg-[#181822] text-zinc-300 border border-white/20 hover:border-[#E32124] hover:bg-[#E32124] hover:text-white transition-all shadow-lg'
+                ? 'bg-[#E32124] text-white ring-4 ring-[#E32124]/40 shadow-[0_0_25px_#E32124]' 
+                : 'bg-[#12121a] text-zinc-300 border border-white/20 hover:border-[#E32124] hover:bg-[#E32124] hover:text-white transition-all shadow-lg'
             }">
               <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
@@ -179,8 +180,8 @@ export const Dynamic2GisMap: React.FC<Dynamic2GisMapProps> = ({
       <div ref={mapContainerRef} className="w-full h-full min-h-[440px] z-10" />
 
       {/* Cyber HUD Grid & Vignette Overlays */}
-      <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-black/80 via-transparent to-black/40" />
-      <div className="pointer-events-none absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,_transparent_40%,_rgba(0,0,0,0.55)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+      <div className="pointer-events-none absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,_transparent_45%,_rgba(0,0,0,0.55)_100%)]" />
 
       {/* Top Left: 2GIS Brand Indicator */}
       <div className="absolute top-4 left-4 z-30 flex items-center gap-2 font-mono">

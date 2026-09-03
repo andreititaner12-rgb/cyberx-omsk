@@ -32,7 +32,6 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
       setExpandedZoneId(null);
     } else {
       setExpandedZoneId(zone.id);
-      // Smooth scroll slightly so expanded card is nicely framed
       setTimeout(() => {
         const el = document.getElementById('expanded-zone-drawer');
         if (el) {
@@ -67,11 +66,11 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
             ЗОНЫ <span className="text-[#E32124]">//</span> И ЭКСКЛЮЗИВЫ
           </h2>
           <p className="mt-3 text-zinc-400 text-sm sm:text-base leading-relaxed">
-            Интерактивная карта игровых локаций. Нажмите на любую зону с реальным фото, чтобы раскрыть подробную спецификацию и бронирование.
+            Интерактивная карта игровых пространств. Нажмите на любую зону с реальным фото, чтобы раскрыть детальную спецификацию и бронирование.
           </p>
         </motion.div>
 
-        {/* Dynamic Asymmetric Bento Grid of Gaming Zones with in-card photos */}
+        {/* Dynamic Asymmetric Bento Grid of Gaming Zones (Rounded) */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 lg:gap-6 mb-10">
           
           {/* 1. PREMIUM SQUAD SUITE (Large Wide Anchor - 8 Cols) */}
@@ -131,14 +130,14 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
 
         </div>
 
-        {/* Smooth Expandable In-Place Drawer when a zone is clicked */}
+        {/* Smooth Expandable In-Place Drawer (Rounded) */}
         <AnimatePresence>
           {expandedZone && (
             <motion.div
               id="expanded-zone-drawer"
-              initial={{ opacity: 0, y: 25, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.98 }}
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.35, ease: 'easeOut' }}
               className="glass-card rounded-3xl border border-[#E32124]/60 overflow-hidden shadow-[0_0_50px_rgba(227,33,36,0.25)] relative mb-12 scroll-mt-28"
             >
@@ -156,20 +155,20 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
                   />
                   <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#000000] via-[#000000]/60 to-transparent" />
 
-                  <div className="absolute top-6 left-6 flex flex-wrap gap-2">
-                    <span className="px-3 py-1 rounded-full bg-[#000000]/80 backdrop-blur-md border border-white/15 text-xs font-mono text-white flex items-center gap-1.5">
+                  <div className="absolute top-6 left-6 flex flex-wrap gap-2 font-mono">
+                    <span className="px-3 py-1.5 rounded-xl bg-[#000000]/80 backdrop-blur-md border border-white/15 text-xs text-white flex items-center gap-1.5">
                       <Users className="w-3.5 h-3.5 text-[#E32124]" />
                       {expandedZone.capacity}
                     </span>
                     {expandedZone.badge && (
-                      <span className="px-3 py-1 rounded-full bg-[#E32124] text-white text-xs font-mono font-bold shadow-lg shadow-red-600/30">
+                      <span className="px-3 py-1.5 rounded-xl bg-[#E32124] text-white text-xs font-bold shadow-lg shadow-red-600/30">
                         {expandedZone.badge}
                       </span>
                     )}
                   </div>
 
                   <div className="absolute bottom-6 left-6 right-6">
-                    <div className="text-2xl lg:text-3xl font-display font-black text-white">
+                    <div className="text-2xl lg:text-3xl font-display font-black text-white uppercase">
                       {expandedZone.name}
                     </div>
                     <p className="text-xs sm:text-sm text-zinc-300 mt-1 font-light">
@@ -193,7 +192,7 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
                           sound.playClick();
                           setExpandedZoneId(null);
                         }}
-                        className="px-3 py-1 rounded-full bg-white/[0.05] hover:bg-[#E32124] text-zinc-300 hover:text-white transition-colors text-xs font-mono flex items-center gap-1"
+                        className="px-3 py-1.5 rounded-lg bg-white/[0.05] hover:bg-[#E32124] text-zinc-300 hover:text-white transition-colors text-xs font-mono flex items-center gap-1"
                       >
                         <X className="w-3.5 h-3.5" />
                         <span>Свернуть</span>
@@ -229,7 +228,7 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
                       </span>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {expandedZone.features.map((feat, i) => (
-                          <div key={i} className="flex items-start gap-2 text-xs text-zinc-400">
+                          <div key={i} className="flex items-start gap-2 text-xs text-zinc-400 font-mono">
                             <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                             <span>{feat}</span>
                           </div>
@@ -239,16 +238,16 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
 
                   </div>
 
-                  {/* Pricing & Booking CTA */}
-                  <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  {/* Pricing & Booking CTA (Rounded) */}
+                  <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono">
                     <div>
                       <div className="flex items-baseline gap-2">
                         <span className="font-display font-black text-2xl text-white">
                           {expandedZone.pricePerHour} ₽
                         </span>
-                        <span className="text-xs font-mono text-zinc-400">/ час</span>
+                        <span className="text-xs text-zinc-400">/ час</span>
                       </div>
-                      <div className="text-[11px] font-mono text-zinc-400">
+                      <div className="text-[11px] text-zinc-400">
                         Ночной пакет (10 ч): <span className="text-white font-bold">{expandedZone.priceNight} ₽</span>
                       </div>
                     </div>
@@ -264,7 +263,7 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
                         );
                       }}
                       onMouseEnter={() => sound.playHover()}
-                      className="py-3.5 px-8 rounded-xl font-display font-black text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#E32124] to-[#B30E11] hover:from-[#FF2A2E] hover:to-[#E32124] shadow-lg shadow-red-600/30 hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
+                      className="py-3.5 px-8 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.2em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
                     >
                       <Zap className="w-4 h-4" />
                       <span>Забронировать {expandedZone.name.split('//')[0].trim()}</span>
@@ -284,7 +283,7 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
   );
 };
 
-// Bento Zone Card with In-Card High-Definition Photo & Dynamic Hover
+// Bento Zone Card with Smooth Rounded Frame
 interface BentoZoneCardProps {
   zone: ZoneType;
   className?: string;
@@ -305,10 +304,10 @@ const BentoZoneCard: React.FC<BentoZoneCardProps> = ({
     <div
       onClick={onClick}
       onMouseEnter={() => sound.playHover()}
-      className={`group relative rounded-3xl overflow-hidden cursor-pointer transition-all duration-300 border backdrop-blur-md flex flex-col justify-between p-6 select-none shadow-xl ${
+      className={`group relative overflow-hidden cursor-pointer rounded-3xl transition-all duration-300 border backdrop-blur-md flex flex-col justify-between p-6 select-none shadow-xl ${
         isExpanded
-          ? 'border-[#E32124] ring-2 ring-[#E32124]/60 shadow-[0_0_35px_rgba(227,33,36,0.3)] scale-[1.01]'
-          : 'border-white/[0.1] hover:border-white/30 hover:shadow-2xl hover:scale-[1.01]'
+          ? 'border-[#E32124] ring-1 ring-[#E32124]/60 shadow-[0_0_35px_rgba(227,33,36,0.3)]'
+          : 'border-white/[0.1] hover:border-white/30 hover:shadow-2xl'
       } ${className}`}
     >
       {/* Aceternity Glowing Effect Border */}
@@ -319,7 +318,7 @@ const BentoZoneCard: React.FC<BentoZoneCardProps> = ({
       />
 
       {/* Real In-Card High-Resolution Background Photo */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 rounded-3xl overflow-hidden">
         <img
           src={zone.image}
           alt={zone.name}
@@ -328,15 +327,15 @@ const BentoZoneCard: React.FC<BentoZoneCardProps> = ({
         <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-black/50 to-transparent" />
       </div>
 
-      {/* Top Badges */}
-      <div className="relative z-10 flex items-start justify-between gap-2">
+      {/* Top Badges (Rounded) */}
+      <div className="relative z-10 flex items-start justify-between gap-2 font-mono">
         <div className="flex flex-wrap items-center gap-2">
           {accentBadge && (
-            <span className="px-2.5 py-1 rounded-full bg-[#E32124] text-white text-[9px] font-mono font-bold tracking-wider uppercase shadow-md shadow-red-600/40">
+            <span className="px-2.5 py-1 rounded-lg bg-[#E32124] text-white text-[9px] font-bold tracking-wider uppercase shadow-md shadow-red-600/40">
               {accentBadge}
             </span>
           )}
-          <span className="px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/15 text-white text-[9px] font-mono font-semibold">
+          <span className="px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md border border-white/15 text-white text-[9px] font-semibold uppercase">
             {zone.category}
           </span>
         </div>
@@ -346,11 +345,11 @@ const BentoZoneCard: React.FC<BentoZoneCardProps> = ({
         </div>
       </div>
 
-      {/* Bottom Content & Pricing */}
-      <div className="relative z-10 mt-auto pt-8">
+      {/* Bottom Content & Pricing (Rounded) */}
+      <div className="relative z-10 mt-auto pt-8 font-mono">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
           <div>
-            <h3 className="font-display font-black text-lg sm:text-xl lg:text-2xl text-white group-hover:text-[#E32124] transition-colors leading-tight">
+            <h3 className="font-display font-black text-lg sm:text-xl lg:text-2xl text-white group-hover:text-[#E32124] transition-colors leading-tight uppercase">
               {zone.name}
             </h3>
             <p className="text-xs text-zinc-300 mt-1 max-w-xl font-light line-clamp-1 sm:line-clamp-2">
@@ -360,13 +359,13 @@ const BentoZoneCard: React.FC<BentoZoneCardProps> = ({
 
           <div className="flex items-center gap-3 shrink-0 pt-2 sm:pt-0">
             <div className="text-right">
-              <span className="text-[10px] font-mono text-zinc-400 uppercase block">Тариф</span>
+              <span className="text-[10px] text-zinc-400 uppercase block">Тариф</span>
               <span className="text-base sm:text-lg font-display font-black text-white">
-                {zone.pricePerHour} ₽ <span className="text-[10px] font-mono font-normal text-zinc-400">/ час</span>
+                {zone.pricePerHour} ₽ <span className="text-[10px] font-normal text-zinc-400">/ час</span>
               </span>
             </div>
 
-            <div className={`px-3.5 py-2 rounded-xl font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md ${
+            <div className={`px-3.5 py-2 rounded-xl font-mono font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md ${
               isExpanded
                 ? 'bg-[#E32124] text-white'
                 : 'bg-white/10 group-hover:bg-[#E32124] text-white'

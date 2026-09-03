@@ -66,13 +66,13 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             sound.playClick();
             onClose();
           }}
-          className="absolute top-5 right-5 p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-400 hover:text-white transition-all"
+          className="absolute top-5 right-5 p-2 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-400 hover:text-white transition-all"
         >
           <X className="w-5 h-5" />
         </button>
 
         {isSuccess ? (
-          <div className="text-center py-10 space-y-4">
+          <div className="text-center py-10 space-y-4 font-mono">
             <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto animate-bounce">
               <Check className="w-8 h-8" />
             </div>
@@ -85,7 +85,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               Мы зарезервировали <span className="text-[#E32124] font-semibold">{currentZoneObj.name}</span> в клубе <span className="text-white font-semibold">{currentArenaObj.name.split('//')[0]}</span> ({currentArenaObj.address}) на {date} в {time}.
             </p>
 
-            <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] max-w-md mx-auto text-left text-xs font-mono space-y-2">
+            <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] max-w-md mx-auto text-left text-xs space-y-2">
               <div className="flex justify-between">
                 <span className="text-zinc-500">Гость:</span>
                 <span className="text-white">{name || 'Гость'}</span>
@@ -103,7 +103,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             <div className="pt-4">
               <button
                 onClick={handleReset}
-                className="px-8 py-3 rounded-xl font-display font-bold text-xs uppercase tracking-wider text-white bg-[#E32124] hover:bg-[#FF2A2E] transition-all shadow-lg shadow-red-600/30"
+                className="px-8 py-3 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.15em] text-white bg-[#E32124] hover:bg-[#FF2A2E] transition-all shadow-lg shadow-red-600/30 active:scale-95"
               >
                 Отлично, закрыть
               </button>
@@ -112,8 +112,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         ) : (
           <div>
             {/* Header */}
-            <div className="mb-6">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#E32124]/15 text-[#E32124] text-[10px] font-mono font-bold uppercase tracking-wider mb-2">
+            <div className="mb-6 font-mono">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E32124]/15 text-[#E32124] text-[10px] font-bold uppercase tracking-wider mb-2">
                 <Zap className="w-3 h-3" />
                 Мгновенное бронирование в Омске
               </div>
@@ -121,7 +121,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 Забронировать <span className="text-[#E32124]">Место</span>
               </h3>
               <p className="text-xs text-zinc-400 mt-1">
-                Выберите клуб CyberX (Ленина, Мира или Серова), формат пространства и удобное время.
+                Выберите клуб CyberX (Европа, Arena или Октябрь), формат пространства и удобное время.
               </p>
             </div>
 
@@ -142,7 +142,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                         sound.playClick();
                         setSelectedArena(a.id);
                       }}
-                      className={`p-3 rounded-xl text-left border text-xs transition-all ${
+                      className={`p-3.5 rounded-2xl text-left border text-xs transition-all font-mono ${
                         selectedArena === a.id
                           ? 'bg-[#181824] border-[#E32124] text-white shadow-sm shadow-red-900/40'
                           : 'bg-white/[0.02] border-white/[0.07] text-zinc-400 hover:text-white'
@@ -161,10 +161,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   <Sparkles className="w-3.5 h-3.5 text-[#E32124]" />
                   2. Выберите тип зоны / зал:
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono">
                   {ZONES.map((z) => {
-                    const isLeninaOnly = z.id.includes('premium') || z.id.includes('sim-racing') || z.id.includes('projector');
-                    const isAvailableHere = !isLeninaOnly || selectedArena === 'cyberx-lenina';
+                    const isArenaOnly = z.id.includes('premium') || z.id.includes('sim-racing') || z.id.includes('projector');
+                    const isAvailableHere = !isArenaOnly || selectedArena === 'cyberx-arena';
                     return (
                       <button
                         type="button"
@@ -174,7 +174,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                           sound.playClick();
                           setSelectedZone(z.id);
                         }}
-                        className={`p-3 rounded-xl text-left border transition-all ${
+                        className={`p-3.5 rounded-2xl text-left border transition-all ${
                           !isAvailableHere ? 'opacity-35 cursor-not-allowed bg-transparent border-white/5' :
                           selectedZone === z.id
                             ? 'bg-[#181824] border-[#E32124] text-white'
@@ -182,11 +182,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs truncate">{z.name}</span>
-                          <span className="text-[10px] font-mono text-[#E32124]">{z.pricePerHour} ₽/ч</span>
+                          <span className="font-bold text-xs truncate uppercase">{z.name}</span>
+                          <span className="text-[10px] text-[#E32124]">{z.pricePerHour} ₽/ч</span>
                         </div>
                         <div className="text-[10px] text-zinc-500 mt-1 truncate">
-                          {isLeninaOnly && selectedArena !== 'cyberx-lenina' ? 'Доступно только на Ленина' : z.tagline}
+                          {isArenaOnly && selectedArena !== 'cyberx-arena' ? 'Доступно только на Ленина, 19' : z.tagline}
                         </div>
                       </button>
                     );
@@ -195,9 +195,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               </div>
 
               {/* Step 3: Date, Time & Package */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
                 <div>
-                  <label className="text-[11px] font-mono text-zinc-400 block mb-1">Дата</label>
+                  <label className="text-[11px] text-zinc-400 block mb-1">Дата</label>
                   <input
                     type="date"
                     value={date}
@@ -207,7 +207,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-mono text-zinc-400 block mb-1">Время начала</label>
+                  <label className="text-[11px] text-zinc-400 block mb-1">Время начала</label>
                   <input
                     type="time"
                     value={time}
@@ -217,7 +217,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-mono text-zinc-400 block mb-1">Длительность</label>
+                  <label className="text-[11px] text-zinc-400 block mb-1">Длительность</label>
                   <select
                     disabled={isNightPackage}
                     value={duration}
@@ -236,14 +236,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               {/* Night Package Toggle */}
               <div 
                 onClick={() => setIsNightPackage(!isNightPackage)}
-                className={`p-3 rounded-xl border cursor-pointer transition-all flex items-center justify-between ${
+                className={`p-3.5 rounded-2xl border cursor-pointer transition-all flex items-center justify-between font-mono ${
                   isNightPackage
                     ? 'bg-[#E32124]/10 border-[#E32124] text-white'
                     : 'bg-white/[0.02] border-white/[0.06] text-zinc-400'
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <div className={`w-4 h-4 rounded border flex items-center justify-center ${isNightPackage ? 'bg-[#E32124] border-[#E32124] text-white' : 'border-white/20'}`}>
+                  <div className={`w-4 h-4 rounded-md border flex items-center justify-center ${isNightPackage ? 'bg-[#E32124] border-[#E32124] text-white' : 'border-white/20'}`}>
                     {isNightPackage && <Check className="w-3 h-3" />}
                   </div>
                   <div>
@@ -251,15 +251,15 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     <div className="text-[10px] text-zinc-400">Фиксированная выгодная цена на 10 часов игры</div>
                   </div>
                 </div>
-                <span className="text-xs font-mono font-bold text-[#E32124]">
+                <span className="text-xs font-bold text-[#E32124]">
                   {currentZoneObj.priceNight.toLocaleString()} ₽
                 </span>
               </div>
 
               {/* Step 4: Contact Info */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 font-mono">
                 <div>
-                  <label className="text-[11px] font-mono text-zinc-400 block mb-1">Ваше имя</label>
+                  <label className="text-[11px] text-zinc-400 block mb-1">Ваше имя</label>
                   <div className="relative">
                     <User className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
                     <input
@@ -274,7 +274,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-mono text-zinc-400 block mb-1">Номер телефона</label>
+                  <label className="text-[11px] text-zinc-400 block mb-1">Номер телефона</label>
                   <div className="relative">
                     <Phone className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
                     <input
@@ -290,9 +290,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               </div>
 
               {/* Pricing Summary & Submit */}
-              <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between">
+              <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between font-mono">
                 <div>
-                  <span className="text-[10px] font-mono uppercase text-zinc-500 block">К оплате при визите</span>
+                  <span className="text-[10px] uppercase text-zinc-500 block">К оплате при визите</span>
                   <div className="font-display font-black text-2xl text-white">
                     {calculateTotal().toLocaleString()} ₽
                   </div>
@@ -300,7 +300,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
                 <button
                   type="submit"
-                  className="py-3 px-8 rounded-xl font-display font-black text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#E32124] to-[#B30E11] hover:from-[#FF2A2E] hover:to-[#E32124] shadow-lg shadow-red-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  className="py-3 px-8 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.15em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 hover:scale-[1.02] active:scale-95 transition-all"
                 >
                   Подтвердить бронь
                 </button>

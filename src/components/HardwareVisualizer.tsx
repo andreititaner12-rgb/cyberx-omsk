@@ -74,7 +74,7 @@ export const HardwareVisualizer: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Category Selector Tabs */}
+        {/* Category Selector Tabs (Rounded) */}
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -93,7 +93,7 @@ export const HardwareVisualizer: React.FC = () => {
                   setActiveCategory(cat.id);
                 }}
                 onMouseEnter={() => sound.playHover()}
-                className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl font-display text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-300 border ${
+                className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl font-mono text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-300 border ${
                   isActive
                     ? 'bg-[#E32124] text-white border-[#E32124] shadow-lg shadow-red-600/30'
                     : 'bg-[#121218]/80 text-zinc-400 border-white/[0.08] hover:text-white hover:bg-white/[0.05]'
@@ -106,7 +106,7 @@ export const HardwareVisualizer: React.FC = () => {
           })}
         </motion.div>
 
-        {/* Main Hardware Interactive Visualizer Display */}
+        {/* Main Hardware Interactive Visualizer Display (Rounded Dark Glass) */}
         <AnimatePresence mode="wait">
           <motion.div 
             key={selectedItem.id}
@@ -126,7 +126,7 @@ export const HardwareVisualizer: React.FC = () => {
                   <span className="text-[11px] font-mono tracking-widest text-[#E32124] uppercase font-bold">
                     {selectedItem.categoryLabel} // СООТВЕТСТВИЕ СТАНДАРТУ
                   </span>
-                  <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-white mt-1">
+                  <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-white mt-1 uppercase">
                     {selectedItem.name}
                   </h3>
                   <p className="text-xs font-mono text-zinc-400 mt-1">
@@ -164,7 +164,7 @@ export const HardwareVisualizer: React.FC = () => {
                         <div className="w-[1px] h-full bg-white/20" />
                       </div>
 
-                      {/* Animated moving target */}
+                      {/* Animated moving target (Rounded target) */}
                       <div 
                         className="relative w-12 h-12 rounded-full border-2 border-[#E32124] bg-[#E32124]/20 flex items-center justify-center animate-bounce"
                         style={{
@@ -190,7 +190,7 @@ export const HardwareVisualizer: React.FC = () => {
                             sound.playClick();
                             setHzValue(val);
                           }}
-                          className={`flex-1 py-1.5 text-xs font-mono font-bold rounded-lg transition-all border ${
+                          className={`flex-1 py-1.5 text-xs font-mono font-bold rounded-xl transition-all border ${
                             hzValue === val
                               ? 'bg-[#E32124] text-white border-[#E32124]'
                               : 'bg-white/[0.03] text-zinc-400 border-white/[0.06] hover:bg-white/[0.08]'
@@ -338,7 +338,7 @@ export const HardwareVisualizer: React.FC = () => {
                       <div className="flex gap-1.5">
                         <button
                           onClick={() => setAudioProfile('footsteps')}
-                          className={`px-2 py-0.5 text-[10px] font-mono rounded ${
+                          className={`px-2.5 py-1 text-[10px] font-mono rounded-lg transition-all ${
                             audioProfile === 'footsteps' ? 'bg-[#E32124] text-white' : 'bg-white/10 text-zinc-400'
                           }`}
                         >
@@ -346,7 +346,7 @@ export const HardwareVisualizer: React.FC = () => {
                         </button>
                         <button
                           onClick={() => setAudioProfile('flat')}
-                          className={`px-2 py-0.5 text-[10px] font-mono rounded ${
+                          className={`px-2.5 py-1 text-[10px] font-mono rounded-lg transition-all ${
                             audioProfile === 'flat' ? 'bg-[#E32124] text-white' : 'bg-white/10 text-zinc-400'
                           }`}
                         >
@@ -402,7 +402,7 @@ export const HardwareVisualizer: React.FC = () => {
             {/* Right Column: Key Specs Grid & Photo */}
             <div className="lg:col-span-5 flex flex-col justify-between gap-4">
               
-              {/* Visual Photo Card with gradient overlay */}
+              {/* Visual Photo Card */}
               <div className="relative h-56 sm:h-64 rounded-3xl overflow-hidden border border-white/[0.08] group">
                 <img
                   src={selectedItem.image}
@@ -411,8 +411,8 @@ export const HardwareVisualizer: React.FC = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/40 to-transparent" />
                 
-                <div className="absolute bottom-4 left-4 right-4">
-                  <span className="px-2.5 py-1 rounded-lg bg-[#E32124] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+                <div className="absolute bottom-4 left-4 right-4 font-mono">
+                  <span className="px-2.5 py-1 rounded-lg bg-[#E32124] text-white text-[10px] font-bold uppercase tracking-wider">
                     ОСНАЩЕНИЕ CYBERX OMSK
                   </span>
                   <p className="text-xs text-zinc-200 mt-1.5 font-medium drop-shadow">
@@ -426,9 +426,9 @@ export const HardwareVisualizer: React.FC = () => {
                 {selectedItem.keySpecs.map((spec, i) => (
                   <div
                     key={i}
-                    className="glass-card p-4 rounded-2xl border border-white/[0.06] hover:border-[#E32124]/40 transition-colors"
+                    className="glass-card p-4 rounded-2xl border border-white/[0.06] hover:border-[#E32124]/40 transition-colors font-mono"
                   >
-                    <div className="text-[11px] font-mono text-zinc-400">
+                    <div className="text-[11px] text-zinc-400">
                       {spec.label}
                     </div>
                     <div className="text-base sm:text-lg font-display font-extrabold text-white mt-0.5">

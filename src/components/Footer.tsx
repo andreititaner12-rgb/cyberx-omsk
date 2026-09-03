@@ -23,7 +23,7 @@ export const Footer: React.FC<FooterProps> = ({
     <footer className="relative bg-[#000000] border-t border-white/[0.08] pt-16 pb-12 overflow-hidden text-zinc-400">
       
       {/* Glow highlight line */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-[#E32124]/50 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#E32124]/50 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -41,7 +41,7 @@ export const Footer: React.FC<FooterProps> = ({
                   (e.target as HTMLElement).style.display = 'none';
                 }}
               />
-              <span className="font-display font-black text-xl tracking-tight text-white">
+              <span className="font-display font-black text-xl tracking-tight text-white uppercase">
                 CYBERX<span className="text-[#E32124]">.</span>OMSK
               </span>
             </div>
@@ -56,18 +56,18 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
           </div>
 
-          {/* 3 Arena Locations Quick Info */}
+          {/* 3 Arena Locations Quick Info (Rounded) */}
           <div className="lg:col-span-5 space-y-4">
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-white block">
               3 Клуба в Омске (Arena, Европа, Октябрь)
             </span>
 
-            <div className="space-y-3 text-xs">
+            <div className="space-y-3 text-xs font-mono">
               {ARENAS.map((arena) => (
-                <div key={arena.id} className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-white/15 transition-colors">
+                <div key={arena.id} className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:border-white/15 transition-colors">
                   <div className="flex items-center justify-between text-white font-semibold">
                     <span>{arena.name.split('//')[0].trim()}</span>
-                    <span className="text-[10px] font-mono text-[#E32124]">{arena.rigsCount} ПК</span>
+                    <span className="text-[10px] text-[#E32124] px-2 py-0.5 rounded-md bg-[#E32124]/10">{arena.rigsCount} ПК</span>
                   </div>
                   <div className="text-zinc-400 mt-0.5 flex items-center gap-1.5">
                     <MapPin className="w-3 h-3 text-[#E32124]" />
@@ -84,7 +84,7 @@ export const Footer: React.FC<FooterProps> = ({
               Быстрый доступ
             </span>
 
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-2 text-xs font-mono">
               <li>
                 <button
                   onClick={onOpenBooking}
@@ -161,7 +161,7 @@ export const Footer: React.FC<FooterProps> = ({
             <span className="hover:text-zinc-300 transition-colors cursor-pointer">Правила посещения</span>
             <button
               onClick={scrollToTop}
-              className="text-[#E32124] hover:text-white transition-colors"
+              className="text-[#E32124] hover:text-white transition-colors uppercase"
             >
               Наверх ↑
             </button>

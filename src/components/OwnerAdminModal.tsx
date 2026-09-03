@@ -47,7 +47,7 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportData, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', 'nexus_arena_cms_data.json');
+    downloadAnchor.setAttribute('download', 'cyberx_omsk_cms_data.json');
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
@@ -65,16 +65,16 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
             sound.playClick();
             onClose();
           }}
-          className="absolute top-5 right-5 p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-400 hover:text-white transition-all"
+          className="absolute top-5 right-5 p-2 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-400 hover:text-white transition-all"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
-        <div className="mb-6">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#FF1E27]/15 text-[#FF1E27] text-[10px] font-mono font-bold uppercase tracking-wider mb-2">
+        <div className="mb-6 font-mono">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E32124]/15 text-[#E32124] text-[10px] font-bold uppercase tracking-wider mb-2">
             <Sliders className="w-3 h-3" />
-            Панель управления владельца (Owner CMS)
+            Панель управления владельца (CyberX Omsk CMS)
           </div>
           <h3 className="font-display font-black text-2xl uppercase tracking-tight text-white">
             Управление контентом и акциями
@@ -85,11 +85,11 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
         </div>
 
         {/* Tab switchers */}
-        <div className="flex items-center gap-2 border-b border-white/10 pb-3 mb-6">
+        <div className="flex items-center gap-2 border-b border-white/10 pb-3 mb-6 font-mono">
           <button
             onClick={() => setActiveTab('tournaments')}
-            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
-              activeTab === 'tournaments' ? 'bg-[#FF1E27] text-white' : 'bg-white/[0.04] text-zinc-400 hover:text-white'
+            className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              activeTab === 'tournaments' ? 'bg-[#E32124] text-white' : 'bg-white/[0.04] text-zinc-400 hover:text-white'
             }`}
           >
             <Trophy className="w-3.5 h-3.5" />
@@ -97,8 +97,8 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('promos')}
-            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
-              activeTab === 'promos' ? 'bg-[#FF1E27] text-white' : 'bg-white/[0.04] text-zinc-400 hover:text-white'
+            className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              activeTab === 'promos' ? 'bg-[#E32124] text-white' : 'bg-white/[0.04] text-zinc-400 hover:text-white'
             }`}
           >
             <Tag className="w-3.5 h-3.5" />
@@ -108,58 +108,58 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
 
         {/* Tournaments tab */}
         {activeTab === 'tournaments' && (
-          <div className="space-y-4">
+          <div className="space-y-4 font-mono">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-mono text-zinc-300 block mb-1">Название турнира</label>
+                <label className="text-xs text-zinc-300 block mb-1">Название турнира</label>
                 <input
                   type="text"
                   value={tournamentState.title}
                   onChange={(e) => setTournamentState({ ...tournamentState, title: e.target.value })}
-                  className="w-full bg-[#14141e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#FF1E27]"
+                  className="w-full bg-[#14141e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#E32124]"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-mono text-zinc-300 block mb-1">Призовой фонд</label>
+                <label className="text-xs text-zinc-300 block mb-1">Призовой фонд</label>
                 <input
                   type="text"
                   value={tournamentState.prizePool}
                   onChange={(e) => setTournamentState({ ...tournamentState, prizePool: e.target.value })}
-                  className="w-full bg-[#14141e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#FF1E27]"
+                  className="w-full bg-[#14141e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#E32124]"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-mono text-zinc-300 block mb-1">Дата проведения</label>
+                <label className="text-xs text-zinc-300 block mb-1">Дата проведения</label>
                 <input
                   type="text"
                   value={tournamentState.date}
                   onChange={(e) => setTournamentState({ ...tournamentState, date: e.target.value })}
-                  className="w-full bg-[#14141e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#FF1E27]"
+                  className="w-full bg-[#14141e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#E32124]"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-mono text-zinc-300 block mb-1">Занято слотов (из 16)</label>
+                <label className="text-xs text-zinc-300 block mb-1">Занято слотов (из 16)</label>
                 <input
                   type="number"
                   min="0"
                   max="16"
                   value={tournamentState.slotsRegistered}
                   onChange={(e) => setTournamentState({ ...tournamentState, slotsRegistered: parseInt(e.target.value) || 0 })}
-                  className="w-full bg-[#14141e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#FF1E27]"
+                  className="w-full bg-[#14141e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#E32124]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-mono text-zinc-300 block mb-1">Краткое описание турнира</label>
+              <label className="text-xs text-zinc-300 block mb-1">Краткое описание турнира</label>
               <textarea
                 rows={3}
                 value={tournamentState.description}
                 onChange={(e) => setTournamentState({ ...tournamentState, description: e.target.value })}
-                className="w-full bg-[#14141e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#FF1E27]"
+                className="w-full bg-[#14141e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#E32124]"
               />
             </div>
           </div>
@@ -167,17 +167,17 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
 
         {/* Promos tab */}
         {activeTab === 'promos' && (
-          <div className="space-y-4">
+          <div className="space-y-4 font-mono">
             {promosState.map((promo, idx) => (
               <div key={promo.id} className="p-4 rounded-2xl bg-[#14141e] border border-white/10 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold text-[#FF1E27]">АКЦИЯ #{idx + 1}</span>
-                  <span className="text-[10px] font-mono text-zinc-500">Код: {promo.code}</span>
+                  <span className="text-xs font-bold text-[#E32124]">АКЦИЯ #{idx + 1}</span>
+                  <span className="text-[10px] text-zinc-500">Код: {promo.code}</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[11px] font-mono text-zinc-400 block mb-1">Заголовок</label>
+                    <label className="text-[11px] text-zinc-400 block mb-1">Заголовок</label>
                     <input
                       type="text"
                       value={promo.title}
@@ -191,7 +191,7 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
                   </div>
 
                   <div>
-                    <label className="text-[11px] font-mono text-zinc-400 block mb-1">Скидка / Бейдж</label>
+                    <label className="text-[11px] text-zinc-400 block mb-1">Скидка / Бейдж</label>
                     <input
                       type="text"
                       value={promo.discount}
@@ -206,7 +206,7 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-mono text-zinc-400 block mb-1">Описание</label>
+                  <label className="text-[11px] text-zinc-400 block mb-1">Описание</label>
                   <input
                     type="text"
                     value={promo.description}
@@ -224,25 +224,25 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
         )}
 
         {/* Footer Actions */}
-        <div className="mt-8 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+        <div className="mt-8 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 font-mono">
           <button
             onClick={handleExportJSON}
-            className="px-4 py-2.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-xs font-mono text-zinc-300 hover:text-white transition-all flex items-center gap-1.5"
+            className="px-4 py-2.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-xs text-zinc-300 hover:text-white transition-all flex items-center gap-1.5"
           >
-            <Download className="w-4 h-4 text-[#FF1E27]" />
+            <Download className="w-4 h-4 text-[#E32124]" />
             <span>Скачать JSON конфигурацию</span>
           </button>
 
           <div className="flex items-center gap-2">
             {savedSuccess && (
-              <span className="text-xs font-mono text-emerald-400 flex items-center gap-1">
+              <span className="text-xs text-emerald-400 flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4" />
                 Сохранено в реальном времени!
               </span>
             )}
             <button
               onClick={handleSave}
-              className="py-2.5 px-6 rounded-xl font-display font-bold text-xs uppercase tracking-wider text-white bg-[#FF1E27] hover:bg-[#FF2E36] transition-all shadow-lg shadow-red-600/30 flex items-center gap-1.5"
+              className="py-2.5 px-6 rounded-2xl font-bold text-xs uppercase tracking-[0.15em] text-white bg-[#E32124] hover:bg-[#FF2A2E] transition-all shadow-lg shadow-red-600/30 flex items-center gap-1.5 active:scale-95"
             >
               <Save className="w-4 h-4" />
               <span>Применить изменения</span>

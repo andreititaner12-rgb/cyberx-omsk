@@ -77,7 +77,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
           </p>
         </motion.div>
 
-        {/* 3 Tall, Solid 3D Focus Cards (100% Crisp, Sharp, No Blurring artifacts, Flagship in Center) */}
+        {/* 3 Tall, Rounded 3D Focus Cards */}
         <motion.div 
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -104,7 +104,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
           })}
         </motion.div>
 
-        {/* Selected Arena Deep Dive Details & Walkthrough Section */}
+        {/* Selected Arena Deep Dive Details & Walkthrough Section (Smooth rounded geometry) */}
         <motion.div 
           id="arena-deep-dive" 
           initial={{ opacity: 0, y: 30 }}
@@ -129,16 +129,16 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#000000] via-[#000000]/60 to-transparent" />
 
-                {/* Badges on image */}
+                {/* Badges on image (Rounded) */}
                 <div className="absolute top-6 left-6 flex flex-wrap gap-2">
-                  <span className="px-3 py-1 rounded-full bg-[#000000]/80 backdrop-blur-md border border-white/15 text-xs font-mono text-white flex items-center gap-1.5">
+                  <span className="px-3 py-1.5 rounded-xl bg-[#000000]/80 backdrop-blur-md border border-white/15 text-xs font-mono text-white flex items-center gap-1.5">
                     <Clock className="w-3.5 h-3.5 text-emerald-400" />
                     {currentArena.workingHours}
                   </span>
-                  <span className="px-3 py-1 rounded-full bg-[#E32124] text-white text-xs font-mono font-bold shadow-lg shadow-red-600/30">
+                  <span className="px-3 py-1.5 rounded-xl bg-[#E32124] text-white text-xs font-mono font-bold shadow-lg shadow-red-600/30">
                     {currentArena.rigsCount} Игровых ПК
                   </span>
-                  <span className="px-3 py-1 rounded-full bg-black/80 border border-white/15 text-white text-xs font-mono font-bold">
+                  <span className="px-3 py-1.5 rounded-xl bg-black/80 border border-white/15 text-white text-xs font-mono font-bold">
                     {currentArena.ps5RoomsCount} PS5 залов
                   </span>
                 </div>
@@ -197,7 +197,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
                     <div className="space-y-2.5">
                       {currentArena.features.map((feat, idx) => (
                         <div key={idx} className="flex items-start gap-3">
-                          <div className="w-5 h-5 rounded-full bg-[#E32124]/15 border border-[#E32124]/30 flex items-center justify-center shrink-0 mt-0.5 text-[#E32124]">
+                          <div className="w-5 h-5 rounded-lg bg-[#E32124]/15 border border-[#E32124]/30 flex items-center justify-center shrink-0 mt-0.5 text-[#E32124]">
                             <Check className="w-3 h-3" />
                           </div>
                           <span className="text-xs sm:text-sm text-zinc-300">
@@ -208,7 +208,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
                     </div>
                   </div>
 
-                  {/* Exclusive Features Banner */}
+                  {/* Exclusive Features Banner (Rounded) */}
                   {currentArena.id === 'cyberx-arena' && (
                     <div className="p-3.5 rounded-2xl bg-[#E32124]/10 border border-[#E32124]/30 mb-6 flex items-center gap-3">
                       <Tv className="w-5 h-5 text-[#E32124] shrink-0" />
@@ -238,7 +238,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
 
                 </div>
 
-                {/* Direct Action Button */}
+                {/* Direct Action Button (Rounded) */}
                 <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                   <div>
                     <div className="text-[10px] font-mono text-zinc-500 uppercase">Стартовый тариф</div>
@@ -253,7 +253,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
                       onOpenBooking(currentArena.id);
                     }}
                     onMouseEnter={() => sound.playHover()}
-                    className="py-3.5 px-8 rounded-xl font-display font-black text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#E32124] to-[#B30E11] hover:from-[#FF2A2E] hover:to-[#E32124] shadow-lg shadow-red-600/30 hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
+                    className="py-3.5 px-8 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.2em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
                   >
                     <Zap className="w-4 h-4" />
                     <span>Забронировать в {currentArena.name.split('//')[0].trim()}</span>
@@ -272,7 +272,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
   );
 };
 
-// Tall, Solid 3D Holographic Card (Sharp, Crisp, Never Blurry!)
+// Tall, Smooth Rounded 3D Card
 interface HoloCardItemProps {
   arena: typeof ARENAS[0];
   idx: number;
@@ -306,7 +306,7 @@ const HoloCardItem: React.FC<HoloCardItemProps> = ({
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // Gentle, natural 3D tilt
+    // Gentle 3D tilt
     const rX = -((y - rect.height / 2) / 22);
     const rY = (x - rect.width / 2) / 22;
 
@@ -350,7 +350,7 @@ const HoloCardItem: React.FC<HoloCardItemProps> = ({
             : 'rotateX(0deg) rotateY(0deg)',
           transformStyle: 'preserve-3d',
         }}
-        className={`relative group rounded-3xl p-6 lg:p-7 bg-[#09090e] cursor-pointer transition-all duration-200 ease-out flex flex-col justify-between select-none min-h-[580px] w-full border ${
+        className={`relative group p-6 lg:p-7 rounded-3xl bg-[#09090e] cursor-pointer transition-all duration-200 ease-out flex flex-col justify-between select-none min-h-[580px] w-full border ${
           isHovered
             ? 'z-30 border-[#E32124] shadow-[0_0_40px_rgba(227,33,36,0.35)] ring-1 ring-[#E32124]/50'
             : isSelected
@@ -359,14 +359,14 @@ const HoloCardItem: React.FC<HoloCardItemProps> = ({
         }`}
       >
         
-        {/* Aceternity Glowing Effect Border Trail */}
+        {/* Aceternity Glowing Effect Border */}
         <GlowingEffect
           spread={25}
           glow={isHovered || isSelected}
           borderWidth={1.5}
         />
 
-        {/* Soft, Delicate Specular Glare Sheen */}
+        {/* Soft Specular Glare Sheen */}
         <div
           className="pointer-events-none absolute inset-0 rounded-3xl transition-opacity duration-300 z-30"
           style={{
@@ -384,7 +384,7 @@ const HoloCardItem: React.FC<HoloCardItemProps> = ({
 
         <div className="relative z-20">
           
-          {/* Category Badge & Rating Row */}
+          {/* Category Badge & Rating Row (Rounded) */}
           <div className="flex items-center justify-between gap-1.5 mb-4">
             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-widest uppercase transition-all ${
               isFlagship 
@@ -418,17 +418,17 @@ const HoloCardItem: React.FC<HoloCardItemProps> = ({
           </div>
 
           {/* Club Title */}
-          <h3 className="font-display font-black text-xl lg:text-2xl text-white tracking-tight group-hover:text-[#E32124] transition-colors">
+          <h3 className="font-display font-black text-xl lg:text-2xl text-white tracking-tight group-hover:text-[#E32124] transition-colors uppercase">
             {arena.name.split('//')[0].trim()}
           </h3>
 
           {/* Address */}
-          <div className="flex items-center gap-1.5 text-xs text-zinc-400 mt-1 mb-5">
+          <div className="flex items-center gap-1.5 text-xs text-zinc-400 mt-1 mb-5 font-mono">
             <MapPin className="w-3.5 h-3.5 text-[#E32124] shrink-0" />
             <span className="truncate">{arena.address}</span>
           </div>
 
-          {/* Tall, High-Resolution Photo Container */}
+          {/* Tall High-Res Photo Container (Rounded) */}
           <div className="relative h-56 lg:h-60 w-full rounded-2xl overflow-hidden mb-5 border border-white/10 group-hover:border-[#E32124]/50 transition-all shadow-lg bg-black">
             <img
               src={arena.image}
@@ -437,7 +437,7 @@ const HoloCardItem: React.FC<HoloCardItemProps> = ({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-black/20 to-transparent" />
 
-            {/* Badges on image */}
+            {/* Badges on image (Rounded) */}
             <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
               <span className="px-2.5 py-1 rounded-lg bg-[#000000]/85 backdrop-blur-md border border-white/15 text-[10px] font-mono font-bold text-white">
                 {arena.rigsCount} ПК
@@ -447,7 +447,7 @@ const HoloCardItem: React.FC<HoloCardItemProps> = ({
               </span>
             </div>
 
-            <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-xs font-mono bg-black/80 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-white/10">
+            <div className="absolute bottom-2.5 left-2.5 right-2.5 rounded-xl flex items-center justify-between text-xs font-mono bg-black/80 backdrop-blur-sm px-3 py-1.5 border border-white/10">
               <span className="text-zinc-200 truncate font-medium">
                 {isFlagship ? '2 Premium + 2 Автосима' : isEvropa ? 'Solo Ryzen 7800X3D' : 'Solo & Trio Rooms'}
               </span>
@@ -458,7 +458,7 @@ const HoloCardItem: React.FC<HoloCardItemProps> = ({
             </div>
           </div>
 
-          {/* Specs & Hardware Chips */}
+          {/* Specs & Hardware Chips (Rounded) */}
           <div className="space-y-2 mb-6">
             <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center gap-2.5 text-xs font-mono text-zinc-300">
               <Gauge className="w-4 h-4 text-[#E32124] shrink-0" />
@@ -472,10 +472,10 @@ const HoloCardItem: React.FC<HoloCardItemProps> = ({
 
         </div>
 
-        {/* Bottom Row: Price & Action Button */}
-        <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-3 relative z-20">
+        {/* Bottom Row: Price & Action Button (Rounded) */}
+        <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-3 relative z-20 font-mono">
           <div>
-            <span className="text-[10px] font-mono text-zinc-500 uppercase block">Стартовый тариф</span>
+            <span className="text-[10px] text-zinc-500 uppercase block">Стартовый тариф</span>
             <span className="text-lg lg:text-xl font-display font-black text-white whitespace-nowrap">
               от {arena.id === 'cyberx-arena' ? 130 : arena.id === 'cyberx-evropa' ? 70 : 100} ₽<span className="text-xs font-mono font-normal text-zinc-400">/час</span>
             </span>
@@ -487,9 +487,9 @@ const HoloCardItem: React.FC<HoloCardItemProps> = ({
               e.stopPropagation();
               onSelect(arena.id);
             }}
-            className={`px-4 py-2.5 rounded-xl font-display font-black text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-md shrink-0 ${
+            className={`px-4 py-2.5 rounded-xl font-mono font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-md shrink-0 ${
               isHovered || isSelected
-                ? 'bg-[#E32124] text-white shadow-red-600/40 scale-105'
+                ? 'bg-[#E32124] text-white shadow-red-600/40'
                 : 'bg-white/10 text-white hover:bg-[#E32124] hover:text-white'
             }`}
           >

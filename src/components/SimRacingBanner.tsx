@@ -38,12 +38,12 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
             {/* Left Content */}
             <div className="lg:col-span-7 space-y-6">
               
-              <div className="flex flex-wrap items-center gap-2.5">
-                <span className="px-3 py-1 rounded-full bg-[#E32124] text-white text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-red-600/30">
+              <div className="flex flex-wrap items-center gap-2.5 font-mono">
+                <span className="px-3.5 py-1.5 rounded-full bg-[#E32124] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-red-600/30">
                   <Gauge className="w-3.5 h-3.5" />
                   ЭКСКЛЮЗИВ // ТОЛЬКО НА ЛЕНИНА, 19
                 </span>
-                <span className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.1] text-xs font-mono text-zinc-300">
+                <span className="px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.1] text-xs text-zinc-300">
                   2 ГОНОЧНЫХ КОКПИТА
                 </span>
               </div>
@@ -57,28 +57,28 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
                 </p>
               </div>
 
-              {/* Specs & Hardware pills */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-                  <span className="text-[10px] font-mono uppercase text-zinc-500 block">Базы руля</span>
+              {/* Specs & Hardware pills (Rounded) */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
+                <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+                  <span className="text-[10px] uppercase text-zinc-500 block">Базы руля</span>
                   <div className="text-xs font-bold text-white mt-1">Direct Drive</div>
                   <div className="text-[10px] text-[#E32124] mt-0.5">Мгновенный Force Feedback</div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-                  <span className="text-[10px] font-mono uppercase text-zinc-500 block">Педальный узел</span>
+                <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+                  <span className="text-[10px] uppercase text-zinc-500 block">Педальный узел</span>
                   <div className="text-xs font-bold text-white mt-1">Load Cell Brake</div>
                   <div className="text-[10px] text-zinc-400 mt-0.5">Тензодатчик давления</div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-                  <span className="text-[10px] font-mono uppercase text-zinc-500 block">Режим гонки</span>
+                <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+                  <span className="text-[10px] uppercase text-zinc-500 block">Режим гонки</span>
                   <div className="text-xs font-bold text-white mt-1">Парные дуэли 1v1</div>
                   <div className="text-[10px] text-emerald-400 mt-0.5">Синхронизация заездов</div>
                 </div>
               </div>
 
-              {/* Game Switcher */}
+              {/* Game Switcher (Rounded) */}
               <div>
                 <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 block mb-2">
                   Доступные гоночные дисциплины:
@@ -105,10 +105,10 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
 
             </div>
 
-            {/* Right Card / CTA */}
-            <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-[#09090f]/90 border border-white/[0.08] relative">
+            {/* Right Card / CTA (Rounded) */}
+            <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-[#09090f]/90 border border-white/[0.08] relative font-mono">
               
-              <div className="relative h-44 rounded-2xl overflow-hidden mb-6 group">
+              <div className="relative h-44 rounded-2xl overflow-hidden mb-6 group border border-white/10">
                 <img
                   src="https://images.unsplash.com/photo-1547394765-185e1e68f34e?auto=format&fit=crop&w=1000&q=80"
                   alt="CyberX Sim Racing"
@@ -123,12 +123,12 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
               <div className="space-y-3">
                 <div className="flex items-baseline justify-between border-b border-white/[0.08] pb-3">
                   <div>
-                    <span className="text-[10px] font-mono uppercase text-zinc-500 block">Стоимость заезда</span>
+                    <span className="text-[10px] text-zinc-500 uppercase block">Стоимость заезда</span>
                     <div className="font-display font-black text-2xl text-white">
-                      500 ₽ <span className="text-xs font-mono font-normal text-zinc-400">/ час</span>
+                      500 ₽ <span className="text-xs font-normal text-zinc-400">/ час</span>
                     </div>
                   </div>
-                  <div className="text-right text-[11px] font-mono text-zinc-400">
+                  <div className="text-right text-[11px] text-zinc-400">
                     2 кокпита готовы к дуэли
                   </div>
                 </div>
@@ -139,7 +139,7 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
                     onOpenBooking('cyberx-arena', 'sim-racing');
                   }}
                   onMouseEnter={() => sound.playHover()}
-                  className="w-full py-3.5 px-6 rounded-xl font-display font-black text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#E32124] to-[#B30E11] hover:from-[#FF2A2E] hover:to-[#E32124] shadow-lg shadow-red-600/30 hover:scale-[1.01] transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3.5 px-6 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.15em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2"
                 >
                   <Zap className="w-4 h-4" />
                   <span>Забронировать автосимулятор</span>

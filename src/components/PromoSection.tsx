@@ -51,7 +51,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
           </p>
         </motion.div>
 
-        {/* Aceternity Dynamic Card Hover Effect Grid */}
+        {/* Dynamic Card Hover Effect Grid (Rounded) */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -71,7 +71,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
                 }}
                 onMouseLeave={() => setHoveredIndex(null)}
               >
-                {/* Aceternity Fluid Glowing Hover Background */}
+                {/* Fluid Glowing Hover Background (Rounded) */}
                 <AnimatePresence>
                   {hoveredIndex === idx && (
                     <motion.span
@@ -90,15 +90,15 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
                   )}
                 </AnimatePresence>
 
-                <div className={`rounded-2xl h-full w-full p-6 sm:p-7 flex flex-col justify-between relative z-20 transition-all duration-300 border backdrop-blur-xl ${
+                <div className={`h-full w-full p-6 sm:p-7 rounded-3xl flex flex-col justify-between relative z-20 transition-all duration-300 border backdrop-blur-xl ${
                   promo.colorScheme === 'red'
                     ? 'bg-[#120a0c]/90 border-[#E32124]/40 shadow-xl shadow-red-950/40'
                     : 'bg-[#08080e]/90 border-white/[0.08] group-hover:border-[#E32124]/40'
                 }`}>
                   <div>
-                    {/* Badge & Discount */}
-                    <div className="flex items-center justify-between gap-2 mb-4">
-                      <span className="text-[10px] font-mono uppercase font-bold tracking-wider px-2.5 py-1 rounded-lg bg-white/[0.06] text-[#E32124] border border-white/[0.08]">
+                    {/* Badge & Discount (Rounded) */}
+                    <div className="flex items-center justify-between gap-2 mb-4 font-mono">
+                      <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-lg bg-white/[0.06] text-[#E32124] border border-white/[0.08]">
                         {promo.tag}
                       </span>
                       <span className="font-display font-black text-xs text-white px-3 py-1 rounded-full bg-[#E32124] shadow-md shadow-red-600/30">
@@ -106,7 +106,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
                       </span>
                     </div>
 
-                    <h3 className="font-display font-black text-xl text-white group-hover:text-[#E32124] transition-colors">
+                    <h3 className="font-display font-black text-xl text-white group-hover:text-[#E32124] transition-colors uppercase">
                       {promo.title}
                     </h3>
 
@@ -121,7 +121,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
                     {/* Perks list */}
                     <div className="space-y-2 mb-6 pt-4 border-t border-white/[0.06]">
                       {promo.perks.map((perk, i) => (
-                        <div key={i} className="flex items-start gap-2 text-xs text-zinc-300">
+                        <div key={i} className="flex items-start gap-2 text-xs text-zinc-300 font-mono">
                           <Check className="w-3.5 h-3.5 text-[#E32124] shrink-0 mt-0.5" />
                           <span>{perk}</span>
                         </div>
@@ -129,19 +129,19 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
                     </div>
                   </div>
 
-                  {/* Promo Code & Action */}
-                  <div className="pt-4 border-t border-white/[0.06] space-y-3">
-                    <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#000000]/80 border border-white/[0.08]">
+                  {/* Promo Code & Action (Rounded) */}
+                  <div className="pt-4 border-t border-white/[0.06] space-y-3 font-mono">
+                    <div className="flex items-center justify-between p-2.5 rounded-2xl bg-[#000000]/80 border border-white/[0.08]">
                       <div className="truncate pr-2">
-                        <span className="text-[9px] font-mono text-zinc-500 uppercase block">Промокод акции</span>
-                        <span className="text-xs font-mono font-bold text-white tracking-widest">{promo.code}</span>
+                        <span className="text-[9px] text-zinc-500 uppercase block">Промокод акции</span>
+                        <span className="text-xs font-bold text-white tracking-widest">{promo.code}</span>
                       </div>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           copyCode(promo.code);
                         }}
-                        className="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-xs font-mono text-zinc-300 hover:text-white transition-all flex items-center gap-1 shrink-0"
+                        className="px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-xs text-zinc-300 hover:text-white transition-all flex items-center gap-1 shrink-0"
                       >
                         {isCopied ? (
                           <>
@@ -163,7 +163,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
                         onOpenBooking();
                       }}
                       onMouseEnter={() => sound.playHover()}
-                      className="w-full py-2.5 rounded-xl font-display font-black text-xs uppercase tracking-wider text-white bg-white/[0.06] hover:bg-[#E32124] border border-white/[0.08] hover:border-[#E32124] transition-all flex items-center justify-center gap-1.5 shadow-md"
+                      className="w-full py-2.5 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.15em] text-white bg-white/[0.06] hover:bg-[#E32124] border border-white/[0.08] hover:border-[#E32124] transition-all flex items-center justify-center gap-1.5 shadow-md active:scale-95"
                     >
                       <span>Активировать пакет</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />

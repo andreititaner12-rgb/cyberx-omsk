@@ -105,7 +105,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
           </p>
         </motion.div>
 
-        {/* Interactive Arena Switcher Tabs */}
+        {/* Interactive Arena Switcher Tabs (Rounded) */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -144,10 +144,10 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
                   </div>
                 </div>
 
-                <div className="font-display font-black text-base sm:text-lg text-white">
+                <div className="font-display font-black text-base sm:text-lg text-white uppercase">
                   {arena.name.split('//')[0].trim()}
                 </div>
-                <div className="text-xs text-zinc-400 mt-1 flex items-center gap-1.5 truncate">
+                <div className="text-xs text-zinc-400 mt-1 flex items-center gap-1.5 truncate font-mono">
                   <MapPin className="w-3.5 h-3.5 text-[#E32124] shrink-0" />
                   <span>{arena.address}</span>
                 </div>
@@ -156,7 +156,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
           })}
         </motion.div>
 
-        {/* Main Map & Route Card */}
+        {/* Main Map & Route Card (Rounded) */}
         <AnimatePresence mode="wait">
           <motion.div
             key={activeArena.id}
@@ -178,10 +178,10 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
                       <span className="text-xs font-mono font-bold tracking-widest text-[#E32124] uppercase block mb-1">
                         Выбранный клуб
                       </span>
-                      <h3 className="font-display font-black text-2xl sm:text-3xl text-white">
+                      <h3 className="font-display font-black text-2xl sm:text-3xl text-white uppercase">
                         {activeArena.name}
                       </h3>
-                      <p className="text-xs sm:text-sm text-zinc-300 mt-1 flex items-center gap-1.5">
+                      <p className="text-xs sm:text-sm text-zinc-300 mt-1 flex items-center gap-1.5 font-mono">
                         <MapPin className="w-4 h-4 text-[#E32124] shrink-0" />
                         <span>{activeArena.address}</span>
                       </p>
@@ -214,7 +214,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
                         <div className="text-xs font-bold text-white uppercase tracking-wider font-mono">Общественный транспорт</div>
                         {details.publicTransport.map((stop, i) => (
                           <div key={i} className="text-xs text-zinc-300 flex items-center gap-1.5">
-                            <span className="w-1 h-1 rounded-full bg-[#E32124]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#E32124]" />
                             <span>{stop}</span>
                           </div>
                         ))}
@@ -227,7 +227,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
                       <div>
                         <div className="text-xs font-bold text-white uppercase tracking-wider font-mono">Парковка и вход</div>
                         <div className="text-xs text-zinc-300 mt-0.5">{details.parking}</div>
-                        <div className="text-[11px] text-[#E32124] mt-1 flex items-center gap-1">
+                        <div className="text-[11px] text-[#E32124] mt-1 flex items-center gap-1 font-mono">
                           <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                           <span>{details.entranceHint}</span>
                         </div>
@@ -238,13 +238,13 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
 
                 </div>
 
-                {/* Direct Action Buttons */}
+                {/* Direct Action Buttons (Rounded) */}
                 <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   
                   {/* Primary 2GIS Route Button */}
                   <button
                     onClick={open2Gis}
-                    className="flex-1 py-4 px-6 rounded-xl font-display font-black text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#20C05C] via-[#1AA64F] to-[#14803C] hover:from-[#26D969] hover:to-[#20C05C] shadow-lg shadow-emerald-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2.5"
+                    className="flex-1 py-3.5 px-6 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.1em] text-white bg-gradient-to-r from-[#20C05C] via-[#1AA64F] to-[#14803C] hover:from-[#26D969] hover:to-[#20C05C] shadow-lg shadow-emerald-600/30 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2.5"
                   >
                     <Navigation className="w-4 h-4" />
                     <span>Открыть маршрут в 2ГИС</span>
@@ -257,7 +257,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
                       sound.playTrigger();
                       onOpenBooking(activeArena.id);
                     }}
-                    className="py-4 px-5 rounded-xl bg-[#E32124] hover:bg-[#FF2A2E] text-xs font-display font-black uppercase text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-600/30"
+                    className="py-3.5 px-5 rounded-2xl bg-[#E32124] hover:bg-[#FF2A2E] text-xs font-mono font-bold uppercase tracking-[0.1em] text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-600/30 active:scale-95"
                   >
                     <span>Забронировать</span>
                   </button>
@@ -265,7 +265,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
                   {/* Phone Call */}
                   <a
                     href={`tel:${activeArena.phone}`}
-                    className="py-4 px-4 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-mono font-semibold text-white transition-all flex items-center justify-center gap-1.5"
+                    className="py-3.5 px-4 rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-mono font-semibold text-white transition-all flex items-center justify-center gap-1.5"
                     title="Позвонить"
                   >
                     <PhoneCall className="w-4 h-4 text-emerald-400" />
@@ -276,7 +276,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
                     href={`https://t.me/${activeArena.telegram.replace('@', '')}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="py-4 px-4 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-400 transition-all flex items-center justify-center"
+                    className="py-3.5 px-4 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-400 transition-all flex items-center justify-center"
                     title="Написать в Telegram"
                   >
                     <Send className="w-4 h-4" />
@@ -286,7 +286,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
 
               </div>
 
-              {/* Right Interactive 2GIS Visual Interactive Card */}
+              {/* Right Interactive 2GIS Visual Card (Rounded) */}
               <div className="lg:col-span-6 relative min-h-[380px] lg:min-h-full bg-[#07070b] overflow-hidden border-t lg:border-t-0 lg:border-l border-white/[0.08] group">
                 
                 {/* Photo of the club facade/interior */}
@@ -299,37 +299,37 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
                 {/* Dark cyber overlay with grid lines */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#020204] via-[#020204]/60 to-transparent" />
 
-                {/* Stylized Cyber Map HUD Pin Overlay */}
+                {/* Stylized Cyber Map HUD Pin Overlay (Rounded) */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                   
-                  {/* Pulsing Radar Pin */}
+                  {/* Radar Pin */}
                   <div className="relative mb-4 cursor-pointer" onClick={open2Gis}>
                     <div className="w-16 h-16 rounded-full bg-[#E32124]/20 border border-[#E32124] animate-ping absolute inset-0" />
-                    <div className="w-16 h-16 rounded-full bg-[#E32124] flex items-center justify-center shadow-xl shadow-red-600/60 relative z-10 hover:scale-110 transition-transform">
+                    <div className="w-16 h-16 rounded-full bg-[#E32124] flex items-center justify-center shadow-xl shadow-red-600/60 relative z-10 hover:scale-105 transition-transform">
                       <MapPin className="w-8 h-8 text-white" />
                     </div>
                   </div>
 
-                  <div className="bg-[#000000]/85 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/15 max-w-sm shadow-2xl">
+                  <div className="bg-[#000000]/90 backdrop-blur-md px-5 py-4 rounded-2xl border border-white/15 max-w-sm shadow-2xl">
                     <div className="text-xs font-mono font-bold text-[#E32124] uppercase">
                       2ГИС Омск
                     </div>
-                    <div className="text-sm font-display font-black text-white mt-0.5">
+                    <div className="text-sm font-display font-black text-white mt-0.5 uppercase">
                       {activeArena.name.split('//')[0].trim()}
                     </div>
-                    <div className="text-xs text-zinc-400 mt-0.5">
+                    <div className="text-xs text-zinc-400 mt-0.5 font-mono">
                       {activeArena.address}
                     </div>
 
                     <button
                       onClick={open2Gis}
-                      className="mt-3 w-full py-2 px-4 rounded-xl bg-[#20C05C] hover:bg-[#26D969] text-white text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all shadow-md"
+                      className="mt-3 w-full py-2 px-4 rounded-xl bg-[#20C05C] hover:bg-[#26D969] text-white text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-md"
                     >
                       <span>Перейти в карточку 2ГИС →</span>
                     </button>
                   </div>
 
-                  <div className="mt-4 flex items-center gap-2 text-[11px] font-mono text-zinc-400 bg-black/60 px-3 py-1 rounded-full border border-white/10">
+                  <div className="mt-4 flex items-center gap-2 text-[11px] font-mono text-zinc-400 bg-black/80 px-3 py-1 rounded-full border border-white/10">
                     <span>Координаты:</span>
                     <span className="text-white">{activeArena.coordinates.x.toFixed(4)}, {activeArena.coordinates.y.toFixed(4)}</span>
                   </div>

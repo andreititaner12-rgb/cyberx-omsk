@@ -6,7 +6,9 @@ import {
   MapPin, 
   Users, 
   Flame, 
-  Layers
+  Layers,
+  Trophy,
+  Sparkles
 } from 'lucide-react';
 import { sound } from '../utils/sound';
 import { motion } from 'framer-motion';
@@ -54,19 +56,33 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
   const slotPercentage = Math.round((tournament.slotsRegistered / tournament.slotsTotal) * 100);
 
   return (
-    <section id="tournaments" className="relative py-20 bg-transparent overflow-hidden">
+    <section id="tournaments" className="relative py-20 bg-transparent overflow-hidden scroll-mt-24 select-none">
       
       {/* Background ambient red glow */}
-      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-red-600/[0.05] rounded-full blur-[160px]" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[#E32124]/[0.05] rounded-full blur-[160px]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Main High-Impact Tournament Banner (Rounded Dark Luxury) */}
+        {/* 1. Unified Section Header (Вынесенный заголовок блока) */}
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E32124]/10 border border-[#E32124]/30 text-[#E32124] text-xs font-mono uppercase tracking-widest mb-4">
+            <Trophy className="w-3.5 h-3.5 animate-pulse" />
+            <span>КИБЕРСПОРТИВНАЯ LAN СЦЕНА // ОМСКИЕ БИТВЫ</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white uppercase font-sans">
+            БЛИЖАЙШИЙ <span className="text-[#E32124] drop-shadow-[0_0_20px_rgba(227,33,36,0.6)]">ТУРНИР</span>
+          </h2>
+          <p className="mt-3 text-zinc-400 text-sm sm:text-base">
+            Собирай команду, регистрируйся и сражайся за чемпионский кубок и реальный призовой фонд на соревновательной сцене CyberX.
+          </p>
+        </div>
+
+        {/* 2. Main High-Impact Tournament Banner (Rounded Dark Luxury) */}
         <motion.div 
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
           className="relative rounded-3xl border border-white/[0.12] bg-gradient-to-br from-[#12121c] via-[#0d0d14] to-[#08080c] p-6 sm:p-10 lg:p-12 overflow-hidden shadow-2xl"
         >
           
@@ -86,7 +102,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
               <div className="flex flex-wrap items-center gap-2.5 font-mono">
                 <span className="px-3.5 py-1.5 rounded-full bg-[#E32124] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-red-600/30">
                   <Flame className="w-3.5 h-3.5" />
-                  БЛИЖАЙШИЙ LAN ТУРНИР
+                  ГЛАВНЫЙ LAN СЕЗОНА
                 </span>
                 {tournament.gameTag && (
                   <span className="px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.1] text-xs text-zinc-300">
@@ -167,8 +183,9 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
                 <div className="font-display font-black text-4xl sm:text-5xl text-white tracking-tight drop-shadow-[0_0_25px_rgba(227,33,36,0.6)]">
                   {tournament.prizePool}
                 </div>
-                <div className="text-xs text-[#E32124] mt-1">
-                  + Кубок CyberX Omsk и часы в Premium
+                <div className="text-xs text-[#E32124] mt-1 flex items-center justify-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>+ Кубок CyberX Omsk и часы в Premium</span>
                 </div>
               </div>
 
@@ -213,7 +230,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
                     onOpenRegister(tournament.id);
                   }}
                   onMouseEnter={() => sound.playHover()}
-                  className="w-full py-3.5 px-6 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.2em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 active:scale-95 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3.5 px-6 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.2em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Зарегистрировать команду</span>
                 </button>
@@ -224,7 +241,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
                     onOpenAllTournaments();
                   }}
                   onMouseEnter={() => sound.playHover()}
-                  className="w-full py-2.5 px-4 rounded-xl font-mono text-xs text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-all flex items-center justify-center gap-1.5"
+                  className="w-full py-2.5 px-4 rounded-xl font-mono text-xs text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <Layers className="w-3.5 h-3.5" />
                   <span>Все турниры сезона (Dota 2, Valorant, FC 25) →</span>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
@@ -8,6 +8,7 @@ import { ZonesShowcase } from './components/ZonesShowcase';
 import { SimRacingBanner } from './components/SimRacingBanner';
 import { HardwareVisualizer } from './components/HardwareVisualizer';
 import { TournamentCard } from './components/TournamentCard';
+import { PriceSection } from './components/PriceSection';
 import { PromoSection } from './components/PromoSection';
 import { LocationMapSection } from './components/LocationMapSection';
 import { Footer } from './components/Footer';
@@ -22,6 +23,8 @@ import { Shield } from 'lucide-react';
 
 export function App() {
   const [loading, setLoading] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
+  const audioPlayedRef = useRef(false);
 
   // Modal states
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -42,6 +45,21 @@ export function App() {
   // Dynamic state for live editing by owner
   const [liveTournament, setLiveTournament] = useState(UPCOMING_TOURNAMENT);
   const [livePromos, setLivePromos] = useState(PROMOTIONS);
+
+  // Voice Intro Welcome audio
+  const playWelcomeVoice = () => {
+    if (audioPlayedRef.current || isMuted) return;
+    audioPlayedRef.current = true;
+    try {
+      const audio = new Audio('/audio/welcome-cyberx.mp3');
+      audio.volume = 0.75;
+      audio.play().catch(() => {
+        // Handled silently if autoplay restricted by browser until user click
+      });
+    } catch {
+      // Handled silently
+    }
+  };
 
   // Check URL hash & session for secret admin access
   useEffect(() => {
@@ -108,22 +126,38 @@ export function App() {
     window.location.hash = '';
   };
 
+  const handlePreloaderComplete = () => {
+    setLoading(false);
+    setTimeout(() => {
+      playWelcomeVoice();
+    }, 400);
+  };
+
   return (
-    <div className="relative min-h-screen bg-[#030305] text-[#FEFEFE] selection:bg-[#E32124] selection:text-white cursor-default">
+    <div 
+      onClick={() => {
+        if (!audioPlayedRef.current && !loading) {
+          playWelcomeVoice();
+        }
+      }}
+      className="relative min-h-screen bg-[#030305] text-[#FEFEFE] selection:bg-[#E32124] selection:text-white cursor-default"
+    >
       
       {/* 1. CyberX CS2 Tactical Crosshair Reticle Cursor */}
       <CustomCrosshairCursor />
 
       {/* 2. CyberX Sleek Loading Screen */}
-      {loading && <Preloader onComplete={() => setLoading(false)} />}
+      {loading && <Preloader onComplete={handlePreloaderComplete} />}
 
-      {/* 3. Top Header with Retractable Navigation Drawer */}
+      {/* 3. Top Header with macOS Blurry Mask & Retractable Navigation */}
       <Header
         onOpenBooking={() => handleOpenBooking()}
         onOpenTournaments={() => handleOpenTournaments()}
+        isMuted={isMuted}
+        onToggleMute={() => setIsMuted(!isMuted)}
       />
 
-      {/* 4. Full-Screen Cinematic Hero */}
+      {/* 4. Full-Screen Cinematic Hero (Video without text, new capsule trigger, updated nav order) */}
       <Hero />
 
       {/* 5. Smooth Flowing Content Container (Zero Tearing, 100% Solid Hardware Composition) */}
@@ -173,13 +207,18 @@ export function App() {
             tournamentData={liveTournament}
           />
 
-          {/* G. Exclusive Offers & Promos */}
+          {/* G. NEW: Interactive Price List Section (Strictly between Tournament and Promotions) */}
+          <PriceSection
+            onOpenBooking={(arenaId, zoneId) => handleOpenBooking(arenaId, zoneId)}
+          />
+
+          {/* H. Exclusive Offers & Promos */}
           <PromoSection
             onOpenBooking={() => handleOpenBooking()}
             promotionsList={livePromos}
           />
 
-          {/* H. Interactive 2GIS Navigation Map Section ("Как до нас добраться?") */}
+          {/* I. Interactive 2GIS Navigation Map Section ("Как добраться?") */}
           <LocationMapSection
             onOpenBooking={(arenaId) => handleOpenBooking(arenaId)}
           />

@@ -16,14 +16,16 @@ export const ARENAS: ArenaLocation[] = [
     workingHours: '24/7 Круглосуточно',
     rating: 5.0,
     reviewsCount: 1040,
-    image: '/images/arena-evropa-card.jpg',
+    image: '/images/evropa/02-bar.jpg',
     gallery: [
-      '/images/arena-evropa-card.jpg',
-      'https://langame.ru/storage/clubs/2025/Dec/18/17660550716943dc9fa9702.webp',
-      'https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1560253023-3ec5d502959f?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80'
+      '/images/evropa/01-facade.jpg',
+      '/images/evropa/02-bar.jpg',
+      '/images/evropa/03-pc-hall.jpg',
+      '/images/evropa/04-pc-closeup.jpg',
+      '/images/evropa/05-mural-solo.jpg',
+      '/images/evropa/06-desk.jpg',
+      '/images/evropa/07-entrance.jpg',
+      '/images/evropa/08-pc-room.jpg'
     ],
     features: [
       '46 игровых ПК (Super VIP, VIP, Duo Room и Solo Room)',
@@ -50,14 +52,18 @@ export const ARENAS: ArenaLocation[] = [
     workingHours: '24/7 Круглосуточно',
     rating: 5.0,
     reviewsCount: 1280,
-    image: '/images/arena-lenina-card.jpg',
+    image: '/images/arena/02-bar.jpg',
     gallery: [
-      '/images/arena-lenina-card.jpg',
-      '/images/sim-racing-real.jpg',
-      'https://langame.ru/storage/clubs/2023/Jul/05/168857344564a59605677bb.webp',
-      'https://langame.ru/storage/clubs/2023/Dec/04/1701698312656ddb081b9d7.webp',
-      'https://langame.ru/storage/clubs/2023/Dec/04/1701698369656ddb4188c28.webp',
-      'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80'
+      '/images/arena/01-facade.jpg',
+      '/images/arena/02-bar.jpg',
+      '/images/arena/04-escalator.jpg',
+      '/images/arena/05-stair-top.jpg',
+      '/images/arena/06-pc-blue.jpg',
+      '/images/arena/07-pink-dragon.jpg',
+      '/images/arena/10-purple-girl.jpg',
+      '/images/arena/11-nhl-console.jpg',
+      '/images/arena/12-pink-girl-console.jpg',
+      '/images/arena/15-bar-lounge.jpg'
     ],
     features: [
       '86 мощных игровых ПК (RTX 5070 Ti / i5-14600KF / BenQ 600Hz & 400Hz)',
@@ -84,13 +90,16 @@ export const ARENAS: ArenaLocation[] = [
     workingHours: '24/7 Круглосуточно',
     rating: 5.0,
     reviewsCount: 890,
-    image: '/images/arena-oktyabr-card.jpg',
+    image: '/images/oktyabr/06-stairs.jpg',
     gallery: [
-      '/images/arena-oktyabr-card.jpg',
-      'https://langame.ru/storage/clubs/2025/Dec/18/17660551636943dcfbb97a9.webp',
-      'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80'
+      '/images/oktyabr/01-exterior.jpg',
+      '/images/oktyabr/02-bar.jpg',
+      '/images/oktyabr/03-pc-row.jpg',
+      '/images/oktyabr/04-pc-column.jpg',
+      '/images/oktyabr/05-pc-closeup.jpg',
+      '/images/oktyabr/06-stairs.jpg',
+      '/images/oktyabr/07-lounge.jpg',
+      '/images/oktyabr/08-hall.jpg'
     ],
     features: [
       '50 игровых ПК (Общий зал, VIP 1-3, Trio Rooms, Duo Room, Solo Room)',
@@ -107,7 +116,7 @@ export const ARENAS: ArenaLocation[] = [
 export const ZONES: ZoneType[] = [
   {
     id: 'premium-squad',
-    name: 'PREMIUM SQUAD SUITE',
+    name: 'PREMIUM',
     category: 'ЭКСКЛЮЗИВ В CYBERX ARENA',
     tagline: '5 Pro ПК (RTX 5070 Ti) + PS5 + Большой стол для команды & диван',
     description: 'Эксклюзив флагмана CyberX Arena на ул. Ленина, 19! Изолированная комната премиум-класса на 5–8 человек. 5 мощнейших ПК (i5-14600KF / RTX 5070 Ti / BenQ 600Hz), отдельная зона PlayStation 5 на 85" 4K экране, мягкий диван и большой переговорно-обеденный стол для тактики и перекуса.',
@@ -128,7 +137,14 @@ export const ZONES: ZoneType[] = [
     ],
     pricePerHour: 1800,
     priceNight: 9000,
-    image: 'https://langame.ru/storage/clubs/2023/Dec/04/1701698312656ddb081b9d7.webp',
+    image: '/images/arena/03-pc-hall.jpg',
+    gallery: [
+      '/images/arena/03-pc-hall.jpg',
+      '/images/arena/08-gamer-zone.jpg',
+      '/images/arena/09-gamer-zone-tv.jpg',
+      '/images/arena/13-blue-cyber-girl.jpg',
+      '/images/arena/14-gamer-zone-blue.jpg'
+    ],
     badge: '2 зала на Ленина',
     popular: true,
   },
@@ -227,7 +243,12 @@ export const ZONES: ZoneType[] = [
     ],
     pricePerHour: 400,
     priceNight: 2000,
-    image: 'https://langame.ru/storage/clubs/2023/Dec/04/1701698373656ddb45f2330.webp',
+    image: '/images/arena/16-ps5-red-mural.jpg',
+    gallery: [
+      '/images/arena/16-ps5-red-mural.jpg',
+      '/images/arena/11-nhl-console.jpg',
+      '/images/arena/12-pink-girl-console.jpg'
+    ],
     badge: 'Все 3 клуба (10 залов)',
   },
   {

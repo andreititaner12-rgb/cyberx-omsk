@@ -32,6 +32,7 @@ export interface ZoneType {
   pricePerHour: number;
   priceNight: number;
   image: string;
+  gallery?: string[];
   badge?: string;
   popular?: boolean;
 }

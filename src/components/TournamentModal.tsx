@@ -42,6 +42,21 @@ export const TournamentModal: React.FC<TournamentModalProps> = ({
     }
   }, [targetTournamentId]);
 
+  // Lock background scroll & close on Escape while the modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const filteredTournaments = selectedGameFilter === 'ALL'
@@ -62,7 +77,7 @@ export const TournamentModal: React.FC<TournamentModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+    <div onClick={handleClose} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
       <div 
         className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto bg-[#0d0d14] border border-white/10 rounded-3xl shadow-2xl p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}

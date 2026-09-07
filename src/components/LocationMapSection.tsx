@@ -79,7 +79,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
   };
 
   return (
-    <section id="location" className="relative py-24 sm:py-32 bg-transparent overflow-hidden">
+    <section id="location" className="relative py-24 sm:py-32 bg-transparent overflow-hidden scroll-mt-24">
       
       {/* Ambient background glows */}
       <div className="pointer-events-none absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#E32124]/[0.035] rounded-full blur-[160px]" />

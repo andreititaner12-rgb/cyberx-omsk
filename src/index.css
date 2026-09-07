@@ -100,3 +100,48 @@
   border: none !important;
 }
 
+
+/* Золотой переливающийся акцент для слова «ЭКСКЛЮЗИВ» */
+.text-gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    #8a5a12 0%,
+    #f5cf5c 20%,
+    #ffe9a8 35%,
+    #ffffff 50%,
+    #ffd95e 65%,
+    #c9932a 82%,
+    #8a5a12 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gold-shimmer 2.75s linear infinite;
+}
+
+@keyframes gold-shimmer {
+  0%   { background-position: 0% center; }
+  100% { background-position: -200% center; }
+}
+
+/* Золотая переливающаяся ПЛАШКА (бейдж целиком) */
+.badge-gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    #8a5a12 0%,
+    #e6b63a 20%,
+    #ffe98a 38%,
+    #fff4c9 50%,
+    #ffdf6b 62%,
+    #e6b63a 80%,
+    #8a5a12 100%
+  );
+  background-size: 200% auto;
+  animation: gold-shimmer 2.6s linear infinite;
+  color: #241300;
+  border: 1px solid rgba(255, 228, 140, 0.7);
+  box-shadow: 0 0 16px rgba(255, 209, 0, 0.55), inset 0 0 8px rgba(255, 245, 200, 0.35);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+}

@@ -96,6 +96,21 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Lock background scroll & close on Escape while the modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const currentClub = CLUBS_BOOKING.find((c) => c.id === selectedClubId) || CLUBS_BOOKING[0];
@@ -134,7 +149,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             <Sparkles className="w-3.5 h-3.5 animate-pulse" />
             <span>ОНЛАЙН БРОНИРОВАНИЕ В 1 КЛИК // 24/7</span>
           </div>
-          <h3 className="font-sans font-black text-2xl sm:text-3xl uppercase tracking-tight text-white">
+          <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-tight text-white">
             МОБИЛЬНОЕ <span className="text-[#E32124] drop-shadow-[0_0_15px_rgba(227,33,36,0.6)]">ПРИЛОЖЕНИЕ</span>
           </h3>
           <p className="text-xs text-zinc-400 mt-1">

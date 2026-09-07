@@ -37,11 +37,21 @@ export default {
       animation: {
         'pulse-slow': 'pulse 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'radar': 'radarSweep 6s linear infinite',
+        'fadeIn': 'fadeIn 0.3s ease-out',
+        'fadeOut': 'fadeOut 0.2s ease-in',
       },
       keyframes: {
         radarSweep: {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' },
+        },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        fadeOut: {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' },
         }
       }
     },

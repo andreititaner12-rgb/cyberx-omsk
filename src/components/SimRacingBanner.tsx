@@ -39,8 +39,8 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
             <div className="lg:col-span-7 space-y-6">
               
               <div className="flex flex-wrap items-center gap-2.5 font-mono">
-                <span className="px-3.5 py-1.5 rounded-full bg-[#E32124] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-red-600/30">
-                  <Gauge className="w-3.5 h-3.5" />
+                <span className="badge-gold-shimmer px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                  <Gauge className="w-3.5 h-3.5 text-[#241300]" />
                   ЭКСКЛЮЗИВ // ТОЛЬКО НА ЛЕНИНА, 19
                 </span>
                 <span className="px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.1] text-xs text-zinc-300">

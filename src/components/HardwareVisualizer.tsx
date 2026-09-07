@@ -46,7 +46,7 @@ export const HardwareVisualizer: React.FC = () => {
   };
 
   return (
-    <section id="hardware" className="relative py-24 sm:py-32 bg-transparent overflow-hidden">
+    <section id="hardware" className="relative py-24 sm:py-32 bg-transparent overflow-hidden scroll-mt-24">
       
       {/* Background ambient lighting */}
       <div className="pointer-events-none absolute top-1/2 left-0 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/[0.04] rounded-full blur-[140px]" />

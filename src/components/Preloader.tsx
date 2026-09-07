@@ -84,7 +84,7 @@ export const Preloader: React.FC<{ onComplete: () => void }> = ({ onComplete }) 
 
             {/* Telemetry info */}
             <div className="text-[9px] font-mono tracking-widest text-zinc-600 uppercase">
-              OMSK // 3 ARENAS // LEINA • MIRA • SEROVA
+              OMSK // 3 ARENAS // LENINA • MIRA • SEROVA
             </div>
 
           </div>

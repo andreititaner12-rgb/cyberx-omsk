@@ -19,6 +19,7 @@ import { OwnerSecurityGate, MASTER_SECRET_KEY } from './components/OwnerSecurity
 import { CustomCrosshairCursor } from './components/CustomCrosshairCursor';
 import { Preloader } from './components/Preloader';
 import { UPCOMING_TOURNAMENT, PROMOTIONS } from './data/arenaData';
+import { sound } from './utils/sound';
 import { Shield } from 'lucide-react';
 
 export function App() {
@@ -136,6 +137,8 @@ export function App() {
   return (
     <div 
       onClick={() => {
+        // Enable Web-Audio UI sounds on the first user gesture (AudioContext needs one)
+        sound.setEnabled(!isMuted);
         if (!audioPlayedRef.current && !loading) {
           playWelcomeVoice();
         }
@@ -150,12 +153,16 @@ export function App() {
       {loading && <Preloader onComplete={handlePreloaderComplete} />}
 
       {/* 3. Top Header with macOS Blurry Mask & Retractable Navigation */}
-      <Header
-        onOpenBooking={() => handleOpenBooking()}
-        onOpenTournaments={() => handleOpenTournaments()}
-        isMuted={isMuted}
-        onToggleMute={() => setIsMuted(!isMuted)}
-      />
+        <Header
+          onOpenBooking={() => handleOpenBooking()}
+          onOpenTournaments={() => handleOpenTournaments()}
+          isMuted={isMuted}
+          onToggleMute={() => {
+            const next = !isMuted;
+            setIsMuted(next);
+            sound.setEnabled(!next);
+          }}
+        />
 
       {/* 4. Full-Screen Cinematic Hero (Video without text, new capsule trigger, updated nav order) */}
       <Hero />

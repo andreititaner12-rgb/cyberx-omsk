@@ -31,6 +31,20 @@ export const OwnerSecurityGate: React.FC<OwnerSecurityGateProps> = ({
     }
   }, []);
 
+  // Lock background scroll & return to site on Escape while the gate is open
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onCancel();
+    };
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [onCancel]);
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     sound.playClick();

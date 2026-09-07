@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UPCOMING_TOURNAMENT, PROMOTIONS, ARENAS } from '../data/arenaData';
 import { 
   X, 
@@ -65,6 +65,21 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
     }
   });
 
+  // Lock background scroll & close on Escape while the modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleSave = () => {
@@ -81,7 +96,22 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
   const copySecretLink = () => {
     sound.playClick();
     const url = `${window.location.origin}/#admin?key=${MASTER_SECRET_KEY}`;
-    navigator.clipboard.writeText(url);
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+    } catch {
+      // Ignore clipboard failure gracefully
+    }
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);
   };
@@ -114,7 +144,7 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-fadeIn select-none">
+    <div onClick={onClose} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-fadeIn select-none">
       <div 
         className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto bg-[#0c0c14] border border-[#E32124]/40 rounded-3xl shadow-[0_0_80px_rgba(227,33,36,0.25)] p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}

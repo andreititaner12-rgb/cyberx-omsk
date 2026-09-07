@@ -13,6 +13,15 @@ import {
 import { sound } from '../utils/sound';
 import { motion } from 'framer-motion';
 
+// Correct Russian pluralization for "слот / слота / слотов"
+const pluralSlots = (n: number): string => {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return 'слот';
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'слота';
+  return 'слотов';
+};
+
 interface TournamentCardProps {
   onOpenRegister: (tournamentId: string) => void;
   onOpenAllTournaments: () => void;
@@ -69,7 +78,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
             <Trophy className="w-3.5 h-3.5 animate-pulse" />
             <span>КИБЕРСПОРТИВНАЯ LAN СЦЕНА // ОМСКИЕ БИТВЫ</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white uppercase font-sans">
+          <h2 className="font-display font-black text-3xl sm:text-4xl md:text-5xl tracking-tight uppercase text-white">
             БЛИЖАЙШИЙ <span className="text-[#E32124] drop-shadow-[0_0_20px_rgba(227,33,36,0.6)]">ТУРНИР</span>
           </h2>
           <p className="mt-3 text-zinc-400 text-sm sm:text-base">
@@ -160,7 +169,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
                     Слоты команд: <span className="text-white font-bold">{tournament.slotsRegistered}</span> / {tournament.slotsTotal}
                   </span>
                   <span className="text-[#E32124] font-bold">
-                    Осталось всего {tournament.slotsTotal - tournament.slotsRegistered} слота!
+                    Осталось всего {tournament.slotsTotal - tournament.slotsRegistered} {pluralSlots(tournament.slotsTotal - tournament.slotsRegistered)}!
                   </span>
                 </div>
                 <div className="h-2 bg-white/10 rounded-full overflow-hidden">

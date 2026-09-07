@@ -31,7 +31,7 @@ export const BrandManifesto: React.FC = () => {
   ];
 
   return (
-    <section id="manifesto" className="relative pt-20 pb-12 sm:pt-28 sm:pb-16 overflow-hidden">
+    <section id="manifesto" className="relative pt-20 pb-12 sm:pt-28 sm:pb-16 overflow-hidden scroll-mt-24">
       
       {/* Background Ambient Gradient Accents */}
       <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[#E32124]/[0.06] rounded-full blur-[140px]" />

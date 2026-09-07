@@ -82,7 +82,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
   };
 
   return (
-    <section id="arenas" className="relative py-24 sm:py-32 bg-transparent overflow-hidden">
+    <section id="arenas" className="relative py-24 sm:py-32 bg-transparent overflow-hidden scroll-mt-24">
       
       {/* Background ambient lighting */}
       <div className="pointer-events-none absolute top-1/4 right-0 w-[550px] h-[550px] bg-[#E32124]/[0.035] rounded-full blur-[150px]" />
@@ -227,7 +227,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
                   </button>
                 </div>
 
-                {/* Bottom Title & Interactive Thumbnail Dots */}
+                {/* Bottom Title + Thumbnail Previews */}
                 <div className="relative z-20 p-6 space-y-3">
                   <div>
                     <span className="text-xs font-mono font-bold tracking-wider text-[#E32124] uppercase">
@@ -241,8 +241,8 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
                     </p>
                   </div>
 
-                  {/* Interactive Thumbnail Carousel Dots */}
-                  <div className="flex items-center gap-2 pt-1 overflow-x-auto scrollbar-none">
+                  {/* Thumbnail Previews (no scrollbar) */}
+                  <div className="flex flex-wrap gap-2 pt-1">
                     {galleryPhotos.map((photo, pIdx) => (
                       <button
                         key={pIdx}
@@ -250,7 +250,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
                           sound.playClick();
                           setGalleryIndex(pIdx);
                         }}
-                        className={`h-10 w-16 rounded-lg overflow-hidden border transition-all shrink-0 cursor-pointer ${
+                        className={`h-10 w-16 rounded-lg overflow-hidden border transition-all cursor-pointer ${
                           galleryIndex === pIdx
                             ? 'border-[#E32124] ring-2 ring-[#E32124]/50 scale-105'
                             : 'border-white/20 opacity-60 hover:opacity-100'

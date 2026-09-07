@@ -18,13 +18,28 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
 
   const copyCode = (code: string) => {
     sound.playClick();
-    navigator.clipboard.writeText(code);
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(code);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = code;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+    } catch {
+      // Ignore clipboard failure gracefully
+    }
     setCopiedCode(code);
     setTimeout(() => setCopiedCode(null), 2500);
   };
 
   return (
-    <section id="promotions" className="relative py-24 sm:py-32 bg-transparent overflow-hidden">
+    <section id="promotions" className="relative py-24 sm:py-32 bg-transparent overflow-hidden scroll-mt-24">
       
       {/* Background ambient lighting */}
       <div className="pointer-events-none absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-red-600/[0.04] rounded-full blur-[140px]" />

@@ -238,7 +238,7 @@ export const PriceSection: React.FC<{ onOpenBooking: (arenaId?: string, zoneId?:
           <Sparkles className="w-3.5 h-3.5 animate-pulse" />
           <span>ПРОЗРАЧНЫЕ ТАРИФЫ // 24/7 БРОНИРОВАНИЕ</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white uppercase font-sans">
+        <h2 className="font-display font-black text-3xl sm:text-4xl md:text-5xl tracking-tight uppercase text-white">
           ПРАЙС-<span className="text-[#E32124] drop-shadow-[0_0_20px_rgba(227,33,36,0.6)]">ЛИСТ</span> АРЕН
         </h2>
         <p className="mt-3 text-zinc-400 text-sm sm:text-base">

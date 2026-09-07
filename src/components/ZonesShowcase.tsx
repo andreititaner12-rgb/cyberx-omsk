@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { ZONES } from '../data/arenaData';
 import { ZoneType } from '../types';
-import { 
-  Users, 
-  Monitor, 
-  Check, 
-  ArrowRight, 
-  Layers, 
-  Coffee, 
-  Zap, 
+import {
+  Users,
+  Monitor,
+  Check,
+  ArrowRight,
+  Layers,
+  Coffee,
+  Zap,
   X,
   Sparkles,
-  Maximize2
+  Maximize2,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
 } from 'lucide-react';
 import { sound } from '../utils/sound';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -23,35 +26,55 @@ interface ZonesShowcaseProps {
 
 export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) => {
   const [expandedZoneId, setExpandedZoneId] = useState<string | null>(null);
+  const [origin, setOrigin] = useState<{ x: number; y: number } | null>(null);
 
   const expandedZone = ZONES.find((z) => z.id === expandedZoneId) || null;
 
-  const handleCardClick = (zone: ZoneType) => {
+  const handleCardClick = (zone: ZoneType, e: React.MouseEvent) => {
     sound.playClick();
-    if (expandedZoneId === zone.id) {
-      setExpandedZoneId(null);
-    } else {
-      setExpandedZoneId(zone.id);
-      setTimeout(() => {
-        const el = document.getElementById('expanded-zone-drawer');
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      }, 50);
+
+    // Автосимы → перенаправляем в отдельный блок SIM-RACING (#sim-racing), окно не открываем
+    if (zone.id === 'sim-racing') {
+      const el = document.getElementById('sim-racing');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
     }
+
+    // Запоминаем точку, из которой вырастает модальное окно (центр ячейки)
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setOrigin({
+      x: ((rect.left + rect.width / 2) / window.innerWidth) * 100,
+      y: ((rect.top + rect.height / 2) / window.innerHeight) * 100,
+    });
+    setExpandedZoneId((prev) => (prev === zone.id ? null : zone.id));
+  };
+
+  const closeExpanded = () => {
+    sound.playClick();
+    setExpandedZoneId(null);
+  };
+
+  // Колонки в каждой строке всегда в сумме дают 12, поэтому наложения исключены.
+  const layout = {
+    premium: 'md:col-span-2 lg:col-span-7 min-h-[400px] lg:min-h-[440px]',
+    sim: 'lg:col-span-5 min-h-[400px] lg:min-h-[440px]',
+    solo: 'lg:col-span-4 min-h-[300px] lg:min-h-[340px]',
+    cinema: 'lg:col-span-4 min-h-[300px] lg:min-h-[340px]',
+    ps5: 'lg:col-span-4 min-h-[300px] lg:min-h-[340px]',
+    open: 'lg:col-span-12 min-h-[240px] lg:min-h-[300px]',
   };
 
   return (
-    <section id="zones" className="relative py-24 sm:py-32 bg-transparent overflow-hidden">
-      
+    <section id="zones" className="relative py-24 sm:py-32 bg-transparent overflow-hidden scroll-mt-24">
+
       {/* Ambient background glows */}
       <div className="pointer-events-none absolute top-1/3 left-0 w-[550px] h-[550px] bg-[#E32124]/[0.035] rounded-full blur-[150px]" />
       <div className="pointer-events-none absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-red-600/[0.03] rounded-full blur-[140px]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* Section Header */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
@@ -66,306 +89,372 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
             ЗОНЫ <span className="text-[#E32124]">//</span> И ЭКСКЛЮЗИВЫ
           </h2>
           <p className="mt-3 text-zinc-400 text-sm sm:text-base leading-relaxed">
-            Интерактивная карта игровых пространств. Нажмите на любую зону с реальным фото, чтобы раскрыть детальную спецификацию и бронирование.
+            Интерактивная карта игровых пространств. Нажмите на любую зону, чтобы раскрыть детальную спецификацию прямо в окне. При клике на Автосимы — откроется отдельный раздел.
           </p>
         </motion.div>
 
-        {/* Dynamic Asymmetric Bento Grid of Gaming Zones with Staggered Deliberate Revealing */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 lg:gap-6 mb-10">
-          
-          {/* 1. PREMIUM SQUAD SUITE (Large Wide Anchor - 8 Cols) */}
+        {/* Creative Asymmetric Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-6 mb-10">
+
+          {/* PREMIUM — большой вертикальный герой (span 2 rows) */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="md:col-span-12 lg:col-span-8"
+            transition={{ duration: 0.85, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+            className={layout.premium}
           >
             <BentoZoneCard
               zone={ZONES[0]}
-              className="w-full min-h-[320px] lg:min-h-[360px]"
               isExpanded={expandedZoneId === ZONES[0].id}
-              onClick={() => handleCardClick(ZONES[0])}
+              onClick={(e) => handleCardClick(ZONES[0], e)}
               accentBadge="ХИТ // ЭКСКЛЮЗИВ ARENA"
               accentColor="#E32124"
+              tall
             />
           </motion.div>
 
-          {/* 2. SIM-RACING // 2 КОКПИТА (4 Cols) */}
+          {/* SIM-RACING — открывает отдельный раздел */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.85, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="md:col-span-6 lg:col-span-4"
+            transition={{ duration: 0.85, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+            className={layout.sim}
           >
             <BentoZoneCard
               zone={ZONES[1]}
-              className="w-full min-h-[320px] lg:min-h-[360px]"
-              isExpanded={expandedZoneId === ZONES[1].id}
-              onClick={() => handleCardClick(ZONES[1])}
+              isExpanded={false}
+              onClick={(e) => handleCardClick(ZONES[1], e)}
               accentBadge="DIRECT DRIVE"
+              redirectTo="sim-racing"
             />
           </motion.div>
 
-          {/* 3. SOLO ROOM // RYZEN 7800X3D + 600HZ (4 Cols) */}
+          {/* SOLO ROOM */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.85, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="md:col-span-6 lg:col-span-4"
+            transition={{ duration: 0.85, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+            className={layout.solo}
           >
             <BentoZoneCard
               zone={ZONES[3]}
-              className="w-full min-h-[300px] lg:min-h-[340px]"
               isExpanded={expandedZoneId === ZONES[3].id}
-              onClick={() => handleCardClick(ZONES[3])}
+              onClick={(e) => handleCardClick(ZONES[3], e)}
               accentBadge="600HZ BENQ SPEED"
             />
           </motion.div>
 
-          {/* 4. КИНО-ЛАУНЖ С ПРОЕКТОРОМ 150" (4 Cols) */}
+          {/* КИНО-ЛАУНЖ */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.85, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="md:col-span-6 lg:col-span-4"
+            transition={{ duration: 0.85, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+            className={layout.cinema}
           >
             <BentoZoneCard
               zone={ZONES[2]}
-              className="w-full min-h-[300px] lg:min-h-[340px]"
               isExpanded={expandedZoneId === ZONES[2].id}
-              onClick={() => handleCardClick(ZONES[2])}
+              onClick={(e) => handleCardClick(ZONES[2], e)}
               accentBadge='150" ЭКРАН + СЦЕНА'
             />
           </motion.div>
 
-          {/* 5. PS5 DELUXE ЗАЛЫ (4 Cols) */}
+          {/* PS5 DELUXE ЗАЛЫ */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.85, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="md:col-span-6 lg:col-span-4"
+            transition={{ duration: 0.85, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+            className={layout.ps5}
           >
             <BentoZoneCard
               zone={ZONES[4]}
-              className="w-full min-h-[300px] lg:min-h-[340px]"
               isExpanded={expandedZoneId === ZONES[4].id}
-              onClick={() => handleCardClick(ZONES[4])}
+              onClick={(e) => handleCardClick(ZONES[4], e)}
               accentBadge="10 ЗАЛОВ // ВСЕ КЛУБЫ"
             />
           </motion.div>
 
-          {/* 6. ОТКРЫТЫЙ ЗАЛ // SUPER VIP & STANDART (Full Width - 12 Cols) */}
+          {/* ОТКРЫТЫЙ ЗАЛ */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.85, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="md:col-span-12"
+            transition={{ duration: 0.85, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
+            className={layout.open}
           >
             <BentoZoneCard
               zone={ZONES[5]}
-              className="w-full min-h-[260px] lg:min-h-[300px]"
               isExpanded={expandedZoneId === ZONES[5].id}
-              onClick={() => handleCardClick(ZONES[5])}
+              onClick={(e) => handleCardClick(ZONES[5], e)}
               accentBadge="182 ИГРОВЫХ ПК В ОМСКЕ"
             />
           </motion.div>
 
         </div>
 
-        {/* Smooth Expandable In-Place Drawer (Rounded) */}
-        <AnimatePresence>
-          {expandedZone && (
-            <motion.div
-              id="expanded-zone-drawer"
-              initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.35, ease: 'easeOut' }}
-              className="glass-card rounded-3xl border border-[#E32124]/60 overflow-hidden shadow-[0_0_50px_rgba(227,33,36,0.25)] relative mb-12 scroll-mt-28"
-            >
-              {/* Top Red Glow Strip */}
-              <div className="h-1 w-full bg-gradient-to-r from-transparent via-[#E32124] to-transparent" />
-
-              <div className="grid grid-cols-1 lg:grid-cols-12">
-                
-                {/* Visual Media & Quick Tags */}
-                <div className="lg:col-span-5 relative min-h-[340px] lg:min-h-full">
-                  <img
-                    src={expandedZone.image}
-                    alt={expandedZone.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#000000] via-[#000000]/60 to-transparent" />
-
-                  <div className="absolute top-6 left-6 flex flex-wrap gap-2 font-mono">
-                    <span className="px-3 py-1.5 rounded-xl bg-[#000000]/80 backdrop-blur-md border border-white/15 text-xs text-white flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-[#E32124]" />
-                      {expandedZone.capacity}
-                    </span>
-                    {expandedZone.badge && (
-                      <span className="px-3 py-1.5 rounded-xl bg-[#E32124] text-white text-xs font-bold shadow-lg shadow-red-600/30">
-                        {expandedZone.badge}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <div className="text-2xl lg:text-3xl font-display font-black text-white uppercase">
-                      {expandedZone.name}
-                    </div>
-                    <p className="text-xs sm:text-sm text-zinc-300 mt-1 font-light">
-                      {expandedZone.tagline}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Information, Hardware List, Pricing & Direct Action */}
-                <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between">
-                  <div>
-                    
-                    {/* Close / Collapse button */}
-                    <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-white/[0.08]">
-                      <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#E32124] flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        Полная спецификация пространства
-                      </span>
-                      <button
-                        onClick={() => {
-                          sound.playClick();
-                          setExpandedZoneId(null);
-                        }}
-                        className="px-3 py-1.5 rounded-lg bg-white/[0.05] hover:bg-[#E32124] text-zinc-300 hover:text-white transition-colors text-xs font-mono flex items-center gap-1"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                        <span>Свернуть</span>
-                      </button>
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-6">
-                      {expandedZone.description}
-                    </p>
-
-                    {/* Hardware Specifications */}
-                    <div className="mb-6">
-                      <span className="text-xs font-mono font-bold tracking-wider text-zinc-300 uppercase block mb-3 flex items-center gap-2">
-                        <Monitor className="w-3.5 h-3.5 text-[#E32124]" />
-                        Оснащение и конфигурация:
-                      </span>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {expandedZone.hardwareBrief.map((hw, i) => (
-                          <div key={i} className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs font-mono text-zinc-300 flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#E32124] shrink-0" />
-                            <span className="truncate">{hw}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Amenities / Perks */}
-                    <div className="mb-6">
-                      <span className="text-xs font-mono font-bold tracking-wider text-zinc-300 uppercase block mb-2.5 flex items-center gap-2">
-                        <Coffee className="w-3.5 h-3.5 text-[#E32124]" />
-                        Особенности и сервис:
-                      </span>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {expandedZone.features.map((feat, i) => (
-                          <div key={i} className="flex items-start gap-2 text-xs text-zinc-400 font-mono">
-                            <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                            <span>{feat}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                  </div>
-
-                  {/* Pricing & Booking CTA (Rounded) */}
-                  <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono">
-                    <div>
-                      <div className="flex items-baseline gap-2">
-                        <span className="font-display font-black text-2xl text-white">
-                          {expandedZone.pricePerHour} ₽
-                        </span>
-                        <span className="text-xs text-zinc-400">/ час</span>
-                      </div>
-                      <div className="text-[11px] text-zinc-400">
-                        Ночной пакет (10 ч): <span className="text-white font-bold">{expandedZone.priceNight} ₽</span>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => {
-                        sound.playTrigger();
-                        onOpenBooking(
-                          expandedZone.id.includes('premium') || expandedZone.id.includes('sim-racing') || expandedZone.id.includes('projector') 
-                            ? 'cyberx-arena' 
-                            : undefined, 
-                          expandedZone.id
-                        );
-                      }}
-                      onMouseEnter={() => sound.playHover()}
-                      className="py-3.5 px-8 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.2em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
-                    >
-                      <Zap className="w-4 h-4" />
-                      <span>Забронировать {expandedZone.name.split('//')[0].trim()}</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                </div>
-
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
       </div>
+
+      {/* Full-Screen Lightbox Modal — вырастает из кликнутой ячейки */}
+      <AnimatePresence>
+        {expandedZone && (
+          <motion.div
+            className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            {/* Затемнение фона */}
+            <motion.div
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              onClick={closeExpanded}
+            />
+
+            {/* Окно */}
+            <motion.div
+              key={expandedZone.id}
+              initial={{ opacity: 0, scale: 0.6, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.6, y: 20 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 26 }}
+              style={{ transformOrigin: origin ? `${origin.x}% ${origin.y}%` : '50% 50%' }}
+              className="relative w-full max-w-6xl max-h-[92vh] overflow-hidden rounded-3xl border border-[#E32124]/50 bg-[#0a0a12] shadow-[0_0_80px_rgba(227,33,36,0.35)]"
+            >
+              <ExpandedZoneModal
+                zone={expandedZone}
+                onClose={closeExpanded}
+                onOpenBooking={onOpenBooking}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
 
-// Bento Zone Card with Smooth Rounded Frame
+// ===== Expanded Zone Modal (Full-Screen Detail) =====
+interface ExpandedZoneModalProps {
+  zone: ZoneType;
+  onClose: () => void;
+  onOpenBooking: (arenaId?: string, zoneId?: string) => void;
+}
+
+const ExpandedZoneModal: React.FC<ExpandedZoneModalProps> = ({ zone, onClose, onOpenBooking }) => {
+  const gallery = zone.gallery && zone.gallery.length > 0 ? zone.gallery : [zone.image];
+  const [activeImage, setActiveImage] = useState(0);
+
+  const image = gallery[activeImage];
+
+  const next = () => setActiveImage((i) => (i + 1) % gallery.length);
+  const prev = () => setActiveImage((i) => (i - 1 + gallery.length) % gallery.length);
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-12 h-full">
+      {/* Media Side */}
+      <div className="lg:col-span-5 relative min-h-[300px] lg:min-h-full bg-black">
+        <AnimatePresence mode="popLayout">
+          <motion.img
+            key={image}
+            src={image}
+            alt={zone.name}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#000000] via-[#000000]/50 to-transparent pointer-events-none" />
+
+        {/* Стрелки навигации по галерее */}
+        {gallery.length > 1 && (
+          <>
+            <button
+              onClick={(e) => { e.stopPropagation(); sound.playClick(); prev(); }}
+              className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-[#E32124] transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); sound.playClick(); next(); }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-[#E32124] transition-colors"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </>
+        )}
+
+        {/* Миниатюры */}
+        {gallery.length > 1 && (
+          <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
+            {gallery.map((g, i) => (
+              <button
+                key={g + i}
+                onClick={(e) => { e.stopPropagation(); sound.playClick(); setActiveImage(i); }}
+                className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${i === activeImage ? 'border-[#E32124] scale-105' : 'border-white/20 opacity-60 hover:opacity-100'}`}
+              >
+                <img src={g} alt="" className="w-full h-full object-cover" />
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Бейджи */}
+        <div className="absolute top-6 left-6 flex flex-wrap gap-2 font-mono">
+          <span className="px-3 py-1.5 rounded-xl bg-[#000000]/80 backdrop-blur-md border border-white/15 text-xs text-white flex items-center gap-1.5">
+            <Users className="w-3.5 h-3.5 text-[#E32124]" />
+            {zone.capacity}
+          </span>
+          {zone.badge && (
+            <span className="px-3 py-1.5 rounded-xl bg-[#E32124] text-white text-xs font-bold shadow-lg shadow-red-600/30">
+              {zone.badge}
+            </span>
+          )}
+        </div>
+
+        {/* Название */}
+        <div className="absolute bottom-6 left-6 right-6">
+          <div className="text-2xl lg:text-3xl font-display font-black text-white uppercase">
+            {zone.name}
+          </div>
+          <p className="text-xs sm:text-sm text-zinc-300 mt-1 font-light">
+            {zone.tagline}
+          </p>
+        </div>
+      </div>
+
+      {/* Информация */}
+      <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col max-h-[92vh] overflow-y-auto">
+        <div>
+          {/* Закрыть */}
+          <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-white/[0.08]">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#E32124] flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5" />
+              Полная спецификация пространства
+            </span>
+            <button
+              onClick={onClose}
+              className="px-3 py-1.5 rounded-lg bg-white/[0.05] hover:bg-[#E32124] text-zinc-300 hover:text-white transition-colors text-xs font-mono flex items-center gap-1"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Свернуть</span>
+            </button>
+          </div>
+
+          {/* Описание */}
+          <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-6">
+            {zone.description}
+          </p>
+
+          {/* Железо */}
+          <div className="mb-6">
+            <span className="text-xs font-mono font-bold tracking-wider text-zinc-300 uppercase block mb-3 flex items-center gap-2">
+              <Monitor className="w-3.5 h-3.5 text-[#E32124]" />
+              Оснащение и конфигурация:
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {zone.hardwareBrief.map((hw, i) => (
+                <div key={i} className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs font-mono text-zinc-300 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#E32124] shrink-0" />
+                  <span className="truncate">{hw}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Особенности */}
+          <div className="mb-6">
+            <span className="text-xs font-mono font-bold tracking-wider text-zinc-300 uppercase block mb-2.5 flex items-center gap-2">
+              <Coffee className="w-3.5 h-3.5 text-[#E32124]" />
+              Особенности и сервис:
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {zone.features.map((feat, i) => (
+                <div key={i} className="flex items-start gap-2 text-xs text-zinc-400 font-mono">
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                  <span>{feat}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Цена и CTA */}
+        <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono mt-auto">
+          <div>
+            <div className="flex items-baseline gap-2">
+              <span className="font-display font-black text-2xl text-white">
+                {zone.pricePerHour} ₽
+              </span>
+              <span className="text-xs text-zinc-400">/ час</span>
+            </div>
+            <div className="text-[11px] text-zinc-400">
+              Ночной пакет (10 ч): <span className="text-white font-bold">{zone.priceNight} ₽</span>
+            </div>
+          </div>
+
+          <button
+            onClick={() => {
+              sound.playTrigger();
+              onOpenBooking(
+                zone.id.includes('premium') || zone.id.includes('sim-racing') || zone.id.includes('projector')
+                  ? 'cyberx-arena'
+                  : undefined,
+                zone.id,
+              );
+            }}
+            onMouseEnter={() => sound.playHover()}
+            className="py-3.5 px-8 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.2em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+          >
+            <Zap className="w-4 h-4" />
+            <span>Забронировать {zone.name.split('//')[0].trim()}</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ===== Bento Zone Card =====
 interface BentoZoneCardProps {
   zone: ZoneType;
   className?: string;
   isExpanded?: boolean;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
   accentBadge?: string;
   accentColor?: string;
+  tall?: boolean;
+  redirectTo?: string;
 }
 
 const BentoZoneCard: React.FC<BentoZoneCardProps> = ({
   zone,
-  className = '',
   isExpanded = false,
   onClick,
   accentBadge,
+  tall = false,
+  redirectTo,
 }) => {
   return (
     <div
       onClick={onClick}
       onMouseEnter={() => sound.playHover()}
-      className={`group relative overflow-hidden cursor-pointer rounded-3xl transition-all duration-300 border backdrop-blur-md flex flex-col justify-between p-6 select-none shadow-xl ${
+      className={`group relative overflow-hidden cursor-pointer rounded-3xl transition-all duration-300 border backdrop-blur-md flex flex-col justify-between p-6 select-none shadow-xl h-full ${
         isExpanded
           ? 'border-[#E32124] ring-1 ring-[#E32124]/60 shadow-[0_0_35px_rgba(227,33,36,0.3)]'
           : 'border-white/[0.1] hover:border-white/30 hover:shadow-2xl'
-      } ${className}`}
+      }`}
     >
-      {/* Aceternity Glowing Effect Border */}
-      <GlowingEffect
-        spread={25}
-        glow={isExpanded}
-        borderWidth={1.5}
-      />
+      <GlowingEffect spread={25} glow={isExpanded} borderWidth={1.5} />
 
-      {/* Real In-Card High-Resolution Background Photo */}
+      {/* Фото */}
       <div className="absolute inset-0 z-0 rounded-3xl overflow-hidden">
         <img
           src={zone.image}
@@ -375,29 +464,49 @@ const BentoZoneCard: React.FC<BentoZoneCardProps> = ({
         <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-black/50 to-transparent" />
       </div>
 
-      {/* Top Badges (Rounded) */}
+      {/* Верхние бейджи */}
       <div className="relative z-10 flex items-start justify-between gap-2 font-mono">
         <div className="flex flex-wrap items-center gap-2">
           {accentBadge && (
-            <span className="px-2.5 py-1 rounded-lg bg-[#E32124] text-white text-[9px] font-bold tracking-wider uppercase shadow-md shadow-red-600/40">
-              {accentBadge}
-            </span>
+            /эксклюзив/i.test(accentBadge) ? (
+              <span className="badge-gold-shimmer px-2.5 py-1 rounded-lg text-[9px] font-extrabold tracking-wider uppercase">
+                {accentBadge}
+              </span>
+            ) : (
+              <span className="px-2.5 py-1 rounded-lg bg-[#E32124] text-white text-[9px] font-bold tracking-wider uppercase shadow-md shadow-red-600/40">
+                {accentBadge}
+              </span>
+            )
           )}
-          <span className="px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md border border-white/15 text-white text-[9px] font-semibold uppercase">
-            {zone.category}
-          </span>
+          {(!accentBadge || !/эксклюзив/i.test(accentBadge)) && (
+            /эксклюзив/i.test(zone.category) ? (
+              <span className="badge-gold-shimmer px-2.5 py-1 rounded-lg text-[9px] font-extrabold tracking-wider uppercase">
+                {zone.category}
+              </span>
+            ) : (
+              <span className="px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md border border-white/15 text-white text-[9px] font-semibold uppercase">
+                {zone.category}
+              </span>
+            )
+          )}
         </div>
 
-        <div className="p-2 rounded-xl bg-black/60 backdrop-blur-md border border-white/15 text-white group-hover:text-[#E32124] group-hover:bg-white transition-all">
-          <Maximize2 className="w-3.5 h-3.5" />
-        </div>
+        {redirectTo ? (
+          <div className="p-2 rounded-xl bg-[#E32124] text-white shadow-md shadow-red-600/40 group-hover:scale-110 transition-transform">
+            <ExternalLink className="w-3.5 h-3.5" />
+          </div>
+        ) : (
+          <div className="p-2 rounded-xl bg-black/60 backdrop-blur-md border border-white/15 text-white group-hover:text-[#E32124] group-hover:bg-white transition-all">
+            <Maximize2 className="w-3.5 h-3.5" />
+          </div>
+        )}
       </div>
 
-      {/* Bottom Content & Pricing (Rounded) */}
+      {/* Нижний контент и цена */}
       <div className="relative z-10 mt-auto pt-8 font-mono">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
           <div>
-            <h3 className="font-display font-black text-lg sm:text-xl lg:text-2xl text-white group-hover:text-[#E32124] transition-colors leading-tight uppercase">
+            <h3 className={`font-display font-black text-white group-hover:text-[#E32124] transition-colors leading-tight uppercase ${tall ? 'text-2xl sm:text-3xl' : 'text-lg sm:text-xl'}`}>
               {zone.name}
             </h3>
             <p className="text-xs text-zinc-300 mt-1 max-w-xl font-light line-clamp-1 sm:line-clamp-2">
@@ -414,12 +523,23 @@ const BentoZoneCard: React.FC<BentoZoneCardProps> = ({
             </div>
 
             <div className={`px-3.5 py-2 rounded-xl font-mono font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md ${
-              isExpanded
+              redirectTo
                 ? 'bg-[#E32124] text-white'
-                : 'bg-white/10 group-hover:bg-[#E32124] text-white'
+                : isExpanded
+                  ? 'bg-[#E32124] text-white'
+                  : 'bg-white/10 group-hover:bg-[#E32124] text-white'
             }`}>
-              <span>{isExpanded ? 'Закрыть' : 'Обзор'}</span>
-              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+              {redirectTo ? (
+                <>
+                  <span>Открыть раздел</span>
+                  <ExternalLink className="w-3 h-3" />
+                </>
+              ) : (
+                <>
+                  <span>{isExpanded ? 'Закрыть' : 'Обзор'}</span>
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                </>
+              )}
             </div>
           </div>
         </div>

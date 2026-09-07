@@ -165,7 +165,7 @@ export function App() {
         />
 
       {/* 4. Full-Screen Cinematic Hero (Video without text, new capsule trigger, updated nav order) */}
-      <Hero />
+      <Hero isReady={!loading} />
 
       {/* 5. Smooth Flowing Content Container (Zero Tearing, 100% Solid Hardware Composition) */}
       <div 

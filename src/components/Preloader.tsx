@@ -59,7 +59,7 @@ export const Preloader: React.FC<{ onComplete: () => void }> = ({ onComplete }) 
                 CYBERX<span className="text-[#E32124]">.</span>OMSK
               </div>
               <div className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.3em] text-zinc-400 mt-1">
-                ARENA ECOSYSTEM 600HZ
+                ARENA ECOSYSTEM
               </div>
             </div>
 

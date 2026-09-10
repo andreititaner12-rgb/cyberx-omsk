@@ -237,8 +237,9 @@ class SoundController {
     this.init();
     try {
       if (!this.voiceAudio) {
-        this.voiceAudio = new Audio('/audio/welcome-cyberx-female.wav');
-        this.voiceAudio.volume = 1.0;
+        // mp3 в ~60 раз легче wav — приветствие не тормозит загрузку
+        this.voiceAudio = new Audio('/audio/welcome-cyberx.mp3');
+        this.voiceAudio.volume = 0.9;
         this.voiceAudio.onended = () => {
           this.voicePlaying = false;
         };

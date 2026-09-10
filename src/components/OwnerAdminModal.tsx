@@ -201,7 +201,7 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
     >
       <div 
         data-lenis-prevent="true"
-        className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto overscroll-contain bg-[#0c0c14] border border-[#E32124]/40 rounded-3xl shadow-[0_0_80px_rgba(227,33,36,0.25)] p-5 sm:p-8"
+        className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto overscroll-contain bg-[#0c0c14] border border-[#E32124]/40 rounded-3xl  p-5 sm:p-8"
         onClick={(e) => e.stopPropagation()}
         onWheel={(e) => e.stopPropagation()}
       >

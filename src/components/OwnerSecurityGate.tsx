@@ -90,7 +90,7 @@ export const OwnerSecurityGate: React.FC<OwnerSecurityGateProps> = ({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.92, y: 20 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="relative w-full max-w-md bg-[#09090f] border border-[#E32124]/40 rounded-3xl shadow-[0_0_60px_rgba(227,33,36,0.25)] p-6 sm:p-8 overflow-hidden text-white"
+        className="relative w-full max-w-md bg-[#09090f] border border-[#E32124]/40 rounded-3xl  p-6 sm:p-8 overflow-hidden text-white"
       >
         {/* Top laser accent line */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#E32124] to-transparent" />
@@ -109,7 +109,7 @@ export const OwnerSecurityGate: React.FC<OwnerSecurityGateProps> = ({
 
         {/* Terminal Header */}
         <div className="text-center space-y-2 mb-6">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-[#E32124]/10 border border-[#E32124]/30 flex items-center justify-center text-[#E32124] shadow-[0_0_20px_rgba(227,33,36,0.3)]">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-[#E32124]/10 border border-[#E32124]/30 flex items-center justify-center text-[#E32124] ">
             <ShieldCheck className="w-7 h-7" />
           </div>
 

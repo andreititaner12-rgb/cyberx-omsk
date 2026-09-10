@@ -54,6 +54,8 @@ export interface HardwareItem {
 export interface Tournament {
   id: string;
   title: string;
+  /** ISO-дата старта (для таймера обратного отсчёта) */
+  dateISO?: string;
   game: 'CS2' | 'DOTA 2' | 'VALORANT' | 'EA FC 25' | 'TEKKEN 8';
   badge?: string;
   gameTag?: string;

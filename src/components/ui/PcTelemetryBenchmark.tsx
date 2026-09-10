@@ -120,7 +120,7 @@ export const PcTelemetryBenchmark: React.FC = () => {
                 initial={{ width: 0 }}
                 animate={{ width: `${g.targetPercent}%` }}
                 transition={{ duration: 1.2, delay: 0.1 * idx, ease: [0.16, 1, 0.3, 1] }}
-                className="h-full rounded-full bg-gradient-to-r from-[#880e10] via-[#E32124] to-[#FF3B3F] shadow-[0_0_12px_rgba(227,33,36,0.6)]"
+                className="h-full rounded-full bg-gradient-to-r from-[#880e10] via-[#E32124] to-[#FF3B3F] "
               />
             </div>
 

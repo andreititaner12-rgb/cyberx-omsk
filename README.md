@@ -1,89 +1,82 @@
-# 🚀 CYBERX OMSK // Флагманская киберспортивная экосистема
+# CYBERX OMSK — флагманская киберспортивная экосистема
 
-> **Полная веб-платформа и интерактивная экосистема 3 киберарен CyberX в г. Омск**
-> Стек: **React 18, TypeScript, Tailwind CSS, Framer Motion, Vite, Lucide Icons, Leaflet (2ГИС dark maps), Web Audio API, QR-Hub**.
-
----
-
-## 🏢 Клубы сети CyberX в Омске
-
-1. **CyberX Arena (Центральный флагман)** — `ул. Ленина, 19`
-   * 86 игровых ПК (i5-14600KF / RTX 5070 Ti & 4080 / BenQ 600Hz, ASUS 480Hz, 400Hz)
-   * 2 профессиональных автосимулятора **Sim-Racing** (Direct Drive Moza R9, педали Load Cell, ковши)
-   * 2 приватных зала **Premium Squad Suite** (5 ПК + PS5 + стол для команды)
-   * Большой **Кино-Лаунж с проектором 150"** и сценой для турниров
-   * 4 приватных PS5 зала с диванами и кальяном
-   * Бронь: `https://langame.ru/club/799452760` (QR: `/qr/qr-lenina.png`)
-
-2. **CyberX Европа** — `просп. Мира, 42к1` (Нефтяники / Студгородок)
-   * 46 игровых ПК (Super VIP, VIP, Duo Room, Solo Room)
-   * **Solo Стримерская** на AMD Ryzen 7 7800X3D + BenQ 600Hz
-   * 3 комфортных PS5 зала
-   * Бронь: `https://langame.ru/club/799457743` (QR: `/qr/qr-evropa.png`)
-
-3. **CyberX Октябрь** — `ул. Серова, 19А` (Ленинский округ)
-   * 50 игровых ПК (VIP 1-3, Trio Rooms, Duo Room, Solo Room)
-   * **Solo Room** на AMD Ryzen 7 7800X3D + BenQ 600Hz
-   * 3 PS5 зала
-   * Бронь: `https://langame.ru/club/799456444` (QR: `/qr/qr-oktyabr.png`)
+> Официальная веб-платформа сети **3 киберарен CyberX в Омске**.
+> Стек: **React 18, TypeScript, Tailwind CSS, Framer Motion, Lenis, Vite, Lucide, Leaflet (тёмные моно-тайлы), Web Audio API, Three.js (3D-модель, лениво)**, QR-Hub.
 
 ---
 
-## ⚡ Архитектура и реализованный функционал
+## 🏢 Клубы сети
 
-### 1. Навигация и визуальный стиль Hero
-* **Порядок навигации**: `КЛУБЫ | ПРАЙС | ЖЕЛЕЗО | ТУРНИРЫ | АКЦИИ`.
-* **Фоновое видео**: оригинальное 60fps видео омского клуба (`/hero-bg.mp4`), обрезанное без лишних плашек и текстов адресов.
-* **Smart Video Auto-Pause**: автоматическая остановка видео через `IntersectionObserver` при скролле вниз для 100% разгрузки GPU.
-* **macOS Blur Reveal Mask**: градиентный `backdrop-blur(16px)` под фиксированным Header при прокрутке.
-* **Акцентный триггер «НАЧАТЬ ЗНАКОМСТВО»**: алая капсула с анимированной стрелкой и световым бликом.
-* **CS2 Тактический курсор-прицел**: плавная физика движения, 4-осевой прицел, захват целей `[ + ]` при наведении и анимация отдачи при клике.
-* **ElevenLabs Голосовое приветствие**: аудио `welcome-cyberx.mp3` (*«Добро пожаловать в экосистему CyberX»*) с кнопкой Mute/Unmute в шапке.
-
-### 2. Интерактивный блок «ПРАЙС-ЛИСТ» (`src/components/PriceSection.tsx`)
-* Расположен строго между «Ближайший турнир» и «Акции».
-* Точные цены по всем тарифам Ленина 19: `STANDARD`, `STANDARD+`, `VIP`, `SUPER VIP`, `SOLO ROOM`, `SIM-RACING`, `PS5 TV`, `PREMIUM LOUNGE`, `TV PRO`.
-* Переключатели между клубами (*Ленина, Европа, Октябрь*).
-
-### 3. Мобильное бронирование и QR-Hub (`src/components/BookingModal.tsx`)
-* Автоопределение мобильного устройства:
-  * **На смартфонах**: кнопки быстрого перехода в CyberX App / Langame и App Store.
-  * **На ПК**: вывод сгенерированных QR-кодов высокого разрешения для каждого клуба в отдельности.
-
-### 4. Терминал безопасности владельца и Mini-CRM (`src/components/OwnerAdminModal.tsx`, `src/components/OwnerSecurityGate.tsx`)
-* **Вход**: секретный URL `/#admin?key=CYBERX-OMSK-ROOT-2026`
-* **PIN-код по умолчанию**: `5500`
-* **Mini-CRM**: счётчики посетителей, клики брони, конверсии по 2ГИС, звонкам и турнирам.
-* **Редактор турниров**: переключение Local LAN / Franchise League, прямая интеграция Google Forms для приёма заявок.
-* **Управление промокодами и смена PIN-кода**.
-
-### 5. Интерактивные бенчмарки (`src/components/HardwareVisualizer.tsx`)
-* 3D вращение мыши Logitech G Pro X Superlight на 360°.
-* Тестер задержки нажатия клавиш механической клавиатуры Dark Project (<1ms).
-* Стерео-тест позиционирования шагов CS2 в наушниках HyperX Cloud.
-
-### 6. 2ГИС карта (`src/components/Dynamic2GisMap.tsx`)
-* Тёмные векторные монохромные тайлы без платных API-ключей и водяных знаков с плавным `flyTo` между тремя клубами.
+1. **CyberX Arena** — `ул. Ленина, 19` · центральный флагман
+   86 ПК (i5-14600KF / RTX 5070 Ti & 4080 / BenQ 600Hz, ASUS 480Hz), 2 автосимулятора Sim-Racing (Moza Direct Drive + Load Cell), 2 Premium Squad зала (5 ПК + PS5 + стол), кино-лаунж с проектором 150", 4 PS5 зала.
+   Бронь: `https://langame.ru/club/799452760` (QR: `/qr/qr-lenina.png`)
+2. **CyberX Европа** — `просп. Мира, 42к1` · Нефтяники / Студгородок
+   46 ПК (Super VIP, VIP, Duo Room, Solo Room), Solo Стримерская на Ryzen 7 7800X3D + BenQ 600Hz, 3 PS5 зала.
+   Бронь: `https://langame.ru/club/799457743` (QR: `/qr/qr-evropa.png`)
+3. **CyberX Октябрь** — `ул. Серова, 19А` · Ленинский округ
+   50 ПК (VIP 1–3, Trio/Duo/Solo Room), Solo 600Hz на Ryzen 7 7800X3D, 3 PS5 зала.
+   Бронь: `https://langame.ru/club/799456444` (QR: `/qr/qr-oktyabr.png`)
 
 ---
 
-## 🛠️ Быстрый запуск проекта локально
+## 🎨 Дизайн-система v2 — «Obsidian & Crimson»
+
+Редизайн 2026: ушли от «нейросетевого» вида (плашки, бейджи, золотой shimmer,
+пульсирующие live-точки, неоновые свечения) к **дорогой редакционной
+типографике** с живым движением.
+
+**Франшизные ограничения (не нарушать):**
+- Алый `#E32124` (hover `#FF2A2E`) на тёмном обсидиане `#050507`.
+- Шрифты: **Tactic Sans** (display, заголовки) + **Montserrat** (текст).
+  Tactic Sans подключается через `@font-face` (local + `/fonts/tactic-sans.woff2`),
+  файлы кладёт франшиза — см. `public/fonts/README.md`. До этого
+  заголовки рендерятся на Montserrat 800/900.
+
+**Принципы v2:**
+- Плоские поверхности `#0A0A0F` с тонкими hairline-линиями вместо glass-карточек и свечений.
+- Красный акцент — дозированно: подчёркивания, активные состояния, CTA, нить сверху карточки.
+- Единая хореография: `MaskLine` (строки заголовков выезжают из-под маски), `Reveal` (подъём при скролле), `CountUp` (разгон цифр), Ken Burns на галереях, бегущая строка фактов.
+- Параллакс hero-видео и контента при скролле (Framer Motion + Lenis).
+- Пластичный скролл **Lenis**, все переходы между секциями через `scrollToSection()` (`src/utils/scroll.ts`).
+- Плёночное зерно 3% (`grain`) для фактуры, уважение к `prefers-reduced-motion`.
+
+### Компоненты
+
+| Файл | Назначение |
+|---|---|
+| `src/App.tsx` | Shell: Lenis, живые данные владельца (localStorage), модалки, секретный `#admin` |
+| `src/components/Hero.tsx` | Кинематографичный экран: видео 1080p/30fps, mask-reveal заголовок, нижняя навигация `Клубы / Прайс / Железо / Турниры / Акции` |
+| `src/components/Header.tsx` | Фиксированная шапка (blur при скролле), телефон, CTA «Бронь», мобильный лист |
+| `src/components/BrandManifesto.tsx` | Манифест + анимированная статистика (CountUp) |
+| `src/components/ArenaEcosystem.tsx` | 3 клуба: карточки + deep-dive с автогалереей (Ken Burns) |
+| `src/components/ZonesShowcase.tsx` | Bento-карта пространств, раскрывающееся окно спецификации |
+| `src/components/SimRacingBanner.tsx` | 2 кокпита Moza, выбор из 6 дисциплин |
+| `src/components/HardwareVisualizer.tsx` | Интерактивные тестеры (герцовка, свитчи, CPS, FPS, стерео, 3D-мышь) |
+| `src/components/TournamentCard.tsx` | Главный LAN: таймер от датаISO, слоты, призовой фонд |
+| `src/components/PriceSection.tsx` | Прайс 3 клубов: ПК-зоны / Lounge-симуляторы, фильтр времени |
+| `src/components/PromoSection.tsx` | Акции с копируемыми промокодами |
+| `src/components/LocationMapSection.tsx` + `Dynamic2GisMap.tsx` | Тёмная карта OSM, flyTo, маршрут в 2ГИС |
+| `src/components/BookingModal.tsx` | QR-Hub / мобильные кнопки Langame + App Store |
+| `src/components/TournamentModal.tsx` | Все турниры сезона + форма регистрации |
+| `src/components/OwnerSecurityGate.tsx` + `OwnerAdminModal.tsx` | Терминал владельца (`#admin?key=CYBERX-OMSK-ROOT-2026`, PIN `5500`) и Mini-CRM |
+| `src/components/ui/*` | Примитивы: `Reveal`, `MaskLine`, `SectionHeading`, `Marquee`, `CountUp`, тестеры |
+
+### Перформанс
+- Hero-видео перекодировано в `hero-bg-compact.mp4` (1080p/30fps, ~5.6 МБ против 19 МБ исходника).
+- `Mouse3DViewer` (three.js) — ленивый chunk через `React.lazy`.
+- Видео ставится на паузу вне вьюпорта (IntersectionObserver); canvas-тестеры не рендерятся офскрин.
+- Голосовое приветствие — mp3 (12 КБ) вместо wav.
+
+---
+
+## 🛠️ Запуск
 
 ```bash
-# 1. Установка зависимостей
 npm install
-
-# 2. Запуск локального dev-сервера
-npm run dev
-
-# 3. Сборка продакшн-версии
-npm run build
+npm run dev      # http://localhost:5173
+npm run build    # production-сборка (tsc + vite)
 ```
 
----
-
-## 🔐 Секретные ключи доступа для владельца
-
-* **Адрес входа**: `http://localhost:5173/#admin?key=CYBERX-OMSK-ROOT-2026`
-* **Master Key**: `CYBERX-OMSK-ROOT-2026`
-* **Master PIN**: `5500`
+## 🔐 Владелец
+- Вход: `http://localhost:5173/#admin?key=CYBERX-OMSK-ROOT-2026`, PIN `5500`.
+- CMS: турниры (Local LAN / Franchise League + Google Forms), акции, зоны, метрики.

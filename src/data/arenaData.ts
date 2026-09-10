@@ -194,7 +194,7 @@ export const ZONES: ZoneType[] = [
     ],
     pricePerHour: 1000,
     priceNight: 5000,
-    image: 'https://langame.ru/storage/clubs/2023/Dec/04/1701698369656ddb4188c28.webp',
+    image: '/images/arena/09-gamer-zone-tv.jpg',
     badge: '150" Экран на Ленина',
   },
   {
@@ -219,7 +219,7 @@ export const ZONES: ZoneType[] = [
     ],
     pricePerHour: 220,
     priceNight: 1100,
-    image: 'https://langame.ru/storage/clubs/2023/Dec/04/1701698424656ddb78af7b3.webp',
+    image: '/images/evropa/05-mural-solo.jpg',
     badge: 'Ryzen 7800X3D + 600Hz',
   },
   {
@@ -391,6 +391,7 @@ export const HARDWARE_LIST: HardwareItem[] = [
 export const UPCOMING_TOURNAMENT: Tournament = {
   id: 'cyberx-omsk-cup-cs2',
   title: 'CYBERX OMSK MAJOR // AUTUMN 2026',
+  dateISO: '2026-09-20T12:00:00+06:00',
   game: 'CS2',
   gameTag: 'COUNTER-STRIKE 2 // 5v5 OMSK LAN BATTLE',
   prizePool: '150 000 ₽',

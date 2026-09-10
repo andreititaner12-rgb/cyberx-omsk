@@ -2,146 +2,256 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   CYBERX OMSK — Design System v2
+   Obsidian & Crimson. Editorial, premium, alive.
+   Franchise constraints: Brand Red #E32124 on dark obsidian,
+   typefaces Tactic Sans (display) + Montserrat (text).
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. FRANCHISE DISPLAY FONT
+   Tactic Sans — поставьте файлы шрифта (woff2) в public/fonts,
+   см. public/fonts/README.md. До этого система корректно
+   отрисовывается на Montserrat (тот же стилистический регистр).
+   ------------------------------------------------------------ */
+@font-face {
+  font-family: 'Tactic Sans';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: local('Tactic Sans'), local('TacticSans-Regular'),
+       url('/fonts/tactic-sans.woff2') format('woff2');
+}
+
 @layer base {
   :root {
-    --color-cyberx-red: #E32124;
-    --color-cyberx-black: #000000;
-    --color-cyberx-white: #FEFEFE;
+    --cx-red: #e32124;
+    --cx-ink: #050507;
+    --cx-line: rgba(255, 255, 255, 0.08);
+  }
+
+  html {
+    background-color: #050507;
+    /* Lenis (плавный скролл) требует этого правила */
+    scroll-behavior: auto;
   }
 
   body {
-    background-color: #000000;
-    color: #FEFEFE;
-    font-family: 'Montserrat', sans-serif;
+    background-color: #050507;
+    color: #f4f4f6;
+    font-family: 'Montserrat', system-ui, sans-serif;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
-  /* Custom scrollbar */
+  h1, h2, h3 {
+    font-family: 'Tactic Sans', 'Montserrat', system-ui, sans-serif;
+  }
+
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
+    height: 5px;
   }
   ::-webkit-scrollbar-track {
-    background: #000000;
+    background: #050507;
   }
   ::-webkit-scrollbar-thumb {
-    background: #18181F;
+    background: #1c1c24;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #E32124;
+    background: #e32124;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  img {
+    user-select: none;
   }
 }
 
-/* CyberX Red Glows */
-.glow-cyberx {
-  box-shadow: 0 0 35px -5px rgba(227, 33, 36, 0.45);
+/* ------------------------------------------------------------
+   2. UTILITIES
+   ------------------------------------------------------------ */
+
+/* Тонкие линии вместо неоновых свечений */
+.hairline {
+  border: 1px solid var(--cx-line);
+}
+.hairline-b {
+  border-bottom: 1px solid var(--cx-line);
+}
+.hairline-t {
+  border-top: 1px solid var(--cx-line);
 }
 
-.glow-cyberx-sm {
-  box-shadow: 0 0 16px -3px rgba(227, 33, 36, 0.35);
+/* Мелкая моно-метка: 01 / КЛУБЫ / ТЕХНИКА */
+.eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
 }
 
-.text-glow-red {
-  text-shadow: 0 0 25px rgba(227, 33, 36, 0.7);
+/* Контурный текст для акцентных слов в hero */
+.text-outline {
+  -webkit-text-stroke: 1.5px rgba(244, 244, 246, 0.85);
+  color: transparent;
+}
+@media (min-width: 1024px) {
+  .text-outline {
+    -webkit-text-stroke-width: 2px;
+  }
+}
+.text-outline-red {
+  -webkit-text-stroke: 1.5px rgba(227, 33, 36, 0.9);
+  color: transparent;
 }
 
-.border-cyberx-glow {
-  border-color: rgba(227, 33, 36, 0.6);
-  box-shadow: 0 0 22px -3px rgba(227, 33, 36, 0.35);
+/* Лёгкое зерно поверх всей страницы (плёночная фактура, 3%) */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  /* над контентом (z-10), под хромом UI (шапка z-50, модалки z-60+) */
+  z-index: 15;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.028;
+  animation: grainShift 9s steps(6) infinite;
+}
+@keyframes grainShift {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -3%); }
+  60% { transform: translate(-2%, -2%); }
+  80% { transform: translate(3%, 3%); }
 }
 
-/* Glass Panels */
-.glass-panel {
-  background: rgba(11, 11, 15, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* Кнопки */
+.btn-primary,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border-radius: 9999px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.95rem 1.9rem;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--cx-red);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--cx-red-bright, #ff2a2e);
+  transform: translateY(-1px);
+}
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+.btn-ghost {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #f4f4f6;
+  background: transparent;
+}
+.btn-ghost:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.04);
+}
+.btn-ghost:active {
+  transform: scale(0.98);
 }
 
-.glass-card {
-  background: linear-gradient(145deg, rgba(17, 17, 24, 0.85) 0%, rgba(9, 9, 13, 0.95) 100%);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* Карточка-поверхность: плоская, с тонкой линией, без свечений */
+.surface {
+  background: #0a0a0f;
+  border: 1px solid var(--cx-line);
+  border-radius: 1.25rem;
+  transition: border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.surface-hover:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-3px);
 }
 
-.glass-card:hover {
-  border-color: rgba(227, 33, 36, 0.45);
-}
-
-/* CyberX Lightning Line Decoration (SVG/CSS) */
-.cyberx-lightning {
-  clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
-}
-
-/* Crosshair Reticle overlay */
-.crosshair-hud {
+/* Красная нить сверху карточки при hover */
+.top-line {
   position: relative;
 }
-.crosshair-hud::before {
-  content: "";
+.top-line::before {
+  content: '';
   position: absolute;
-  top: 50%; left: 50%;
-  width: 120px; height: 120px;
-  transform: translate(-50%, -50%);
-  border: 1px dashed rgba(227, 33, 36, 0.25);
-  border-radius: 50%;
-  pointer-events: none;
+  top: 0;
+  left: 1.25rem;
+  right: 1.25rem;
+  height: 2px;
+  background: var(--cx-red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.top-line:hover::before,
+.top-line.is-active::before {
+  transform: scaleX(1);
 }
 
-/* Dark Monochrome B&W Tile filter for OpenStreetMap (Zero API key, zero watermarks) */
+/* Маска для hero-заголовков: строки выезжают из-под маски */
+.mask-line {
+  display: block;
+  overflow: hidden;
+}
+.mask-line > span {
+  display: block;
+  will-change: transform;
+}
+
+/* Горизонтальный маркиз с затемнением по краям.
+   Внутри — два одинаковых ряда (.marquee-anim), каждый едет на -100%:
+   момент циклического сброса совпадает с позицией второго ряда. */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+.marquee-mask {
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+/* Тёмные моно-тайлы OpenStreetMap */
 .dark-monochrome-tiles {
-  filter: grayscale(100%) invert(92%) contrast(145%) brightness(85%) !important;
-  -webkit-filter: grayscale(100%) invert(92%) contrast(145%) brightness(85%) !important;
+  filter: grayscale(100%) invert(92%) contrast(140%) brightness(82%) !important;
+  -webkit-filter: grayscale(100%) invert(92%) contrast(140%) brightness(82%) !important;
 }
-
 .custom-cyberx-pin {
   background: transparent !important;
   border: none !important;
 }
 
-
-/* Золотой переливающийся акцент для слова «ЭКСКЛЮЗИВ» */
-.text-gold-shimmer {
-  background: linear-gradient(
-    90deg,
-    #8a5a12 0%,
-    #f5cf5c 20%,
-    #ffe9a8 35%,
-    #ffffff 50%,
-    #ffd95e 65%,
-    #c9932a 82%,
-    #8a5a12 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  animation: gold-shimmer 2.75s linear infinite;
+/* Лента-прорезь для бегущей строки: пауза при hover */
+.marquee-track:hover .marquee-anim {
+  animation-play-state: paused;
 }
 
-@keyframes gold-shimmer {
-  0%   { background-position: 0% center; }
-  100% { background-position: -200% center; }
-}
-
-/* Золотая переливающаяся ПЛАШКА (бейдж целиком) */
-.badge-gold-shimmer {
-  background: linear-gradient(
-    90deg,
-    #8a5a12 0%,
-    #e6b63a 20%,
-    #ffe98a 38%,
-    #fff4c9 50%,
-    #ffdf6b 62%,
-    #e6b63a 80%,
-    #8a5a12 100%
-  );
-  background-size: 200% auto;
-  animation: gold-shimmer 2.6s linear infinite;
-  color: #241300;
-  border: 1px solid rgba(255, 228, 140, 0.7);
-  box-shadow: 0 0 16px rgba(255, 209, 0, 0.55), inset 0 0 8px rgba(255, 245, 200, 0.35);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+/* Доступность: уважение к prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .grain::after,
+  .marquee-anim,
+  .animate-ken-burns {
+    animation: none !important;
+  }
+  * {
+    scroll-behavior: auto !important;
+  }
 }

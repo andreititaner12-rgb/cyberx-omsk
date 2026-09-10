@@ -3,7 +3,7 @@ import {
   X, 
   Smartphone, 
   ExternalLink, 
-  Sparkles, 
+  Zap, 
   Download, 
   ShieldCheck, 
   MapPin,
@@ -122,12 +122,15 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn select-none"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn select-none overscroll-contain"
+      data-lenis-prevent="true"
       onClick={onClose}
     >
       <div 
-        className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto bg-[#0A0A10] border border-white/10 rounded-3xl shadow-[0_20px_70px_rgba(0,0,0,0.95)] p-6 sm:p-8"
+        data-lenis-prevent="true"
+        className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto overscroll-contain bg-[#0A0A10] border border-white/10 rounded-3xl shadow-[0_20px_70px_rgba(0,0,0,0.95)] p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}
+        onWheel={(e) => e.stopPropagation()}
       >
         {/* Ambient Top Glow */}
         <div className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 w-64 h-32 bg-[#E32124]/20 rounded-full blur-3xl" />
@@ -146,7 +149,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         {/* Header Title */}
         <div className="mb-6 font-mono text-center sm:text-left">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E32124]/15 border border-[#E32124]/30 text-[#E32124] text-[10px] font-bold uppercase tracking-wider mb-2">
-            <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+            <Zap className="w-3.5 h-3.5" />
             <span>ОНЛАЙН БРОНИРОВАНИЕ В 1 КЛИК // 24/7</span>
           </div>
           <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-tight text-white">

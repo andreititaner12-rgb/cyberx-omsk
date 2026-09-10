@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { UPCOMING_TOURNAMENT, PROMOTIONS, ARENAS } from '../data/arenaData';
+import { UPCOMING_TOURNAMENT, PROMOTIONS, ARENAS, ZONES } from '../data/arenaData';
+import { ZoneType } from '../types';
 import { 
   X, 
   Save, 
@@ -14,7 +15,11 @@ import {
   CheckCheck,
   Smartphone,
   LogOut,
-  Flame
+  Flame,
+  Layers,
+  Plus,
+  Trash2,
+  Image as ImageIcon
 } from 'lucide-react';
 import { sound } from '../utils/sound';
 import { MASTER_SECRET_KEY } from './OwnerSecurityGate';
@@ -24,6 +29,10 @@ interface OwnerAdminModalProps {
   onClose: () => void;
   onSaveLiveTournament: (updated: typeof UPCOMING_TOURNAMENT) => void;
   onSaveLivePromos: (updated: typeof PROMOTIONS) => void;
+  onSaveLiveZones?: (updated: ZoneType[]) => void;
+  onSaveLivePrices?: (updated: Record<string, unknown>) => void;
+  currentZones?: ZoneType[];
+  currentPrices?: Record<string, unknown>;
   onLogout: () => void;
 }
 
@@ -32,17 +41,28 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
   onClose,
   onSaveLiveTournament,
   onSaveLivePromos,
+  onSaveLiveZones,
+  onSaveLivePrices,
+  currentZones,
+  currentPrices,
   onLogout,
 }) => {
-  const [activeTab, setActiveTab] = useState<'crm' | 'tournaments' | 'promos' | 'security'>('crm');
+  const [activeTab, setActiveTab] = useState<'crm' | 'zones' | 'prices' | 'tournaments' | 'promos' | 'security'>('crm');
   
-  // Local editable copies
+  // Local editable state for Zones & Exclusives
+  const [zonesState, setZonesState] = useState<ZoneType[]>(() => {
+    return currentZones && currentZones.length > 0 ? currentZones : ZONES;
+  });
+  const [selectedZoneIndex, setSelectedZoneIndex] = useState<number>(0);
+
+  // Local editable state for Tournament & Promos
   const [tournamentState, setTournamentState] = useState({ 
     ...UPCOMING_TOURNAMENT,
     isFranchise: false,
     googleFormUrl: 'https://forms.google.com'
   });
   const [promosState, setPromosState] = useState([...PROMOTIONS]);
+  
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -50,7 +70,7 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
   const [newPin, setNewPin] = useState('');
   const [pinChangeSuccess, setPinChangeSuccess] = useState(false);
 
-  // Simulated live CRM analytics metrics (dynamically loaded / updated)
+  // Simulated live CRM analytics metrics
   const [crmMetrics] = useState({
     todayVisits: 842,
     weekVisits: 5890,
@@ -64,6 +84,12 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
       oktyabr: 21, // %
     }
   });
+
+  useEffect(() => {
+    if (currentZones && currentZones.length > 0) {
+      setZonesState(currentZones);
+    }
+  }, [currentZones]);
 
   // Lock background scroll & close on Escape while the modal is open
   useEffect(() => {
@@ -82,15 +108,25 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
 
   if (!isOpen) return null;
 
+  const currentZone = zonesState[selectedZoneIndex] || zonesState[0];
+
   const handleSave = () => {
     sound.playTrigger();
     onSaveLiveTournament(tournamentState);
     onSaveLivePromos(promosState);
+    if (onSaveLiveZones) onSaveLiveZones(zonesState);
+    if (onSaveLivePrices && currentPrices) onSaveLivePrices(currentPrices);
+    
+    // Save to localStorage for automatic reload persistence
+    localStorage.setItem('cyberx_live_zones', JSON.stringify(zonesState));
+    localStorage.setItem('cyberx_live_tournament', JSON.stringify(tournamentState));
+    localStorage.setItem('cyberx_live_promos', JSON.stringify(promosState));
+
     setSavedSuccess(true);
     setTimeout(() => {
       setSavedSuccess(false);
       onClose();
-    }, 1500);
+    }, 1200);
   };
 
   const copySecretLink = () => {
@@ -110,7 +146,7 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
         ta.remove();
       }
     } catch {
-      // Ignore clipboard failure gracefully
+      // Handled
     }
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);
@@ -128,6 +164,8 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
   const handleExportJSON = () => {
     sound.playClick();
     const exportData = {
+      zones: zonesState,
+      prices: currentPrices,
       tournament: tournamentState,
       promotions: promosState,
       arenas: ARENAS,
@@ -137,17 +175,35 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportData, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', 'cyberx_omsk_cms_data.json');
+    downloadAnchor.setAttribute('download', 'cyberx_omsk_full_cms_data.json');
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
   };
 
+  // Helper to update current zone field
+  const updateCurrentZone = (field: keyof ZoneType, value: unknown) => {
+    setZonesState((prev) => {
+      const copy = [...prev];
+      copy[selectedZoneIndex] = {
+        ...copy[selectedZoneIndex],
+        [field]: value,
+      };
+      return copy;
+    });
+  };
+
   return (
-    <div onClick={onClose} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-fadeIn select-none">
+    <div 
+      onClick={onClose} 
+      data-lenis-prevent="true"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-xl animate-fadeIn select-none overscroll-contain"
+    >
       <div 
-        className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto bg-[#0c0c14] border border-[#E32124]/40 rounded-3xl shadow-[0_0_80px_rgba(227,33,36,0.25)] p-6 sm:p-8"
+        data-lenis-prevent="true"
+        className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto overscroll-contain bg-[#0c0c14] border border-[#E32124]/40 rounded-3xl shadow-[0_0_80px_rgba(227,33,36,0.25)] p-5 sm:p-8"
         onClick={(e) => e.stopPropagation()}
+        onWheel={(e) => e.stopPropagation()}
       >
         {/* Top neon strip */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#E32124] to-transparent" />
@@ -158,7 +214,7 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
             sound.playClick();
             onClose();
           }}
-          className="absolute top-5 right-5 p-2.5 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-400 hover:text-white transition-all cursor-pointer"
+          className="absolute top-5 right-5 p-2.5 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-400 hover:text-white transition-all cursor-pointer z-20"
         >
           <X className="w-5 h-5" />
         </button>
@@ -167,13 +223,13 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
         <div className="mb-6 font-mono">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E32124]/15 text-[#E32124] text-[10px] font-bold uppercase tracking-wider mb-2">
             <span className="w-2 h-2 rounded-full bg-[#E32124] animate-ping" />
-            <span>CYBERX ROOT CONTROL PANEL // ОМСК</span>
+            <span>CYBERX ROOT CONTROL PANEL // CMS ОМСК</span>
           </div>
           <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-tight text-white">
-            Центр управления сетью CyberX
+            Центр управления экосистемой CyberX
           </h3>
           <p className="text-xs text-zinc-400 mt-1">
-            Аналитика визитов, управление турнирами (LAN & Франшиза с Google-формами), акции и настройки безопасности.
+            Полноценное редактирование зон, фото-галерей, прайсов, турниров, промо-акций и аналитики визитов.
           </p>
         </div>
 
@@ -186,8 +242,19 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
             }`}
           >
             <BarChart3 className="w-4 h-4" />
-            <span>Мини-CRM & Аналитика</span>
+            <span>CRM & Аналитика</span>
           </button>
+
+          <button
+            onClick={() => setActiveTab('zones')}
+            className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer ${
+              activeTab === 'zones' ? 'bg-[#E32124] text-white shadow-lg shadow-red-600/30' : 'bg-white/[0.04] text-zinc-400 hover:text-white'
+            }`}
+          >
+            <Layers className="w-4 h-4" />
+            <span>Зоны & Эксклюзивы</span>
+          </button>
+
           <button
             onClick={() => setActiveTab('tournaments')}
             className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer ${
@@ -195,8 +262,9 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
             }`}
           >
             <Trophy className="w-4 h-4" />
-            <span>Управление турнирами</span>
+            <span>Турниры</span>
           </button>
+
           <button
             onClick={() => setActiveTab('promos')}
             className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer ${
@@ -206,6 +274,7 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
             <Tag className="w-4 h-4" />
             <span>Акции и скидки</span>
           </button>
+
           <button
             onClick={() => setActiveTab('security')}
             className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer ${
@@ -220,8 +289,7 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
         {/* TAB 1: MINI-CRM & ANALYTICS */}
         {activeTab === 'crm' && (
           <div className="space-y-6 font-mono">
-            
-            {/* Top KPI Cards */}
+            {/* KPI Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div className="p-4 rounded-2xl bg-[#12121e] border border-white/10">
                 <span className="text-[10px] text-zinc-400 uppercase block">Визитов сегодня</span>
@@ -248,7 +316,7 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
               </div>
             </div>
 
-            {/* Club Popularity Share */}
+            {/* Club Share */}
             <div className="p-5 rounded-2xl bg-[#12121e] border border-white/10 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase text-white flex items-center gap-2">
@@ -291,19 +359,210 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
               </div>
             </div>
 
-            {/* Quick integration hints */}
             <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 text-xs text-zinc-400 flex items-start gap-3">
               <Smartphone className="w-5 h-5 text-[#E32124] shrink-0 mt-0.5" />
               <div>
                 <span className="text-white font-bold block mb-0.5">Интеграция с Langame & QR-бронированием:</span>
-                Счётчики фиксируют каждое нажатие на бронь, звонок и 2ГИС. При подключении Яндекс.Метрики цели передаются автоматически.
+                Счётчики фиксируют каждое нажатие на бронь, звонок и 2ГИС.
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: ZONES & EXCLUSIVES (FULL CMS WITH PHOTO & DESCRIPTIONS) */}
+        {activeTab === 'zones' && (
+          <div className="space-y-6 font-mono">
+            
+            {/* Zone Selector Pills */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+              {zonesState.map((z, idx) => (
+                <button
+                  key={z.id}
+                  onClick={() => {
+                    sound.playClick();
+                    setSelectedZoneIndex(idx);
+                  }}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all border shrink-0 cursor-pointer ${
+                    selectedZoneIndex === idx
+                      ? 'bg-[#E32124] text-white border-[#E32124] shadow-md shadow-red-600/30'
+                      : 'bg-white/[0.04] text-zinc-400 border-white/[0.08] hover:text-white'
+                  }`}
+                >
+                  {z.name.split('//')[0].trim()}
+                </button>
+              ))}
+            </div>
+
+            {/* Edit Current Zone Form */}
+            <div className="p-5 rounded-2xl bg-[#12121e] border border-white/10 space-y-4">
+              
+              <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                <span className="text-xs font-bold text-[#E32124] uppercase">
+                  Редактирование зоны #{selectedZoneIndex + 1}: {currentZone.name}
+                </span>
+                <span className="text-[10px] text-zinc-500">ID: {currentZone.id}</span>
+              </div>
+
+              {/* Title, Category & Tagline */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="text-[11px] text-zinc-400 block mb-1">Название зоны</label>
+                  <input
+                    type="text"
+                    value={currentZone.name}
+                    onChange={(e) => updateCurrentZone('name', e.target.value)}
+                    className="w-full bg-[#0a0a0f] border border-white/15 rounded-xl px-3 py-2 text-xs text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] text-zinc-400 block mb-1">Категория / Бейдж</label>
+                  <input
+                    type="text"
+                    value={currentZone.category}
+                    onChange={(e) => updateCurrentZone('category', e.target.value)}
+                    className="w-full bg-[#0a0a0f] border border-white/15 rounded-xl px-3 py-2 text-xs text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] text-zinc-400 block mb-1">Вместимость (гостей)</label>
+                  <input
+                    type="text"
+                    value={currentZone.capacity}
+                    onChange={(e) => updateCurrentZone('capacity', e.target.value)}
+                    className="w-full bg-[#0a0a0f] border border-white/15 rounded-xl px-3 py-2 text-xs text-white"
+                  />
+                </div>
+              </div>
+
+              {/* Tagline & Pricing */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="text-[11px] text-zinc-400 block mb-1">Краткий подзаголовок</label>
+                  <input
+                    type="text"
+                    value={currentZone.tagline}
+                    onChange={(e) => updateCurrentZone('tagline', e.target.value)}
+                    className="w-full bg-[#0a0a0f] border border-white/15 rounded-xl px-3 py-2 text-xs text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] text-zinc-400 block mb-1">Тариф (руб / час)</label>
+                  <input
+                    type="number"
+                    value={currentZone.pricePerHour}
+                    onChange={(e) => updateCurrentZone('pricePerHour', parseInt(e.target.value) || 0)}
+                    className="w-full bg-[#0a0a0f] border border-white/15 rounded-xl px-3 py-2 text-xs text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] text-zinc-400 block mb-1">Ночной пакет (руб)</label>
+                  <input
+                    type="number"
+                    value={currentZone.priceNight}
+                    onChange={(e) => updateCurrentZone('priceNight', parseInt(e.target.value) || 0)}
+                    className="w-full bg-[#0a0a0f] border border-white/15 rounded-xl px-3 py-2 text-xs text-white"
+                  />
+                </div>
+              </div>
+
+              {/* Full Description */}
+              <div>
+                <label className="text-[11px] text-zinc-400 block mb-1">Подробное описание пространства</label>
+                <textarea
+                  rows={3}
+                  value={currentZone.description}
+                  onChange={(e) => updateCurrentZone('description', e.target.value)}
+                  className="w-full bg-[#0a0a0f] border border-white/15 rounded-xl px-3 py-2 text-xs text-white"
+                />
+              </div>
+
+              {/* Main Photo & Photo Preview */}
+              <div>
+                <label className="text-[11px] text-zinc-400 block mb-1 flex items-center gap-1.5">
+                  <ImageIcon className="w-3.5 h-3.5 text-[#E32124]" />
+                  <span>Главное фото зоны (URL или путь из /images/):</span>
+                </label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={currentZone.image}
+                    onChange={(e) => updateCurrentZone('image', e.target.value)}
+                    placeholder="/images/arena/03-pc-hall.jpg"
+                    className="w-full bg-[#0a0a0f] border border-white/15 rounded-xl px-3 py-2 text-xs text-white"
+                  />
+                  {currentZone.image && (
+                    <div className="w-12 h-10 rounded-lg overflow-hidden border border-white/20 shrink-0 bg-black">
+                      <img src={currentZone.image} alt="Preview" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Gallery Photos List */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-[11px] text-zinc-400 flex items-center gap-1.5">
+                    <ImageIcon className="w-3.5 h-3.5 text-[#E32124]" />
+                    <span>Галерея дополнительных фото ({currentZone.gallery?.length || 0} шт):</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const currentGallery = currentZone.gallery ? [...currentZone.gallery] : [currentZone.image];
+                      currentGallery.push('/images/arena/02-bar.jpg');
+                      updateCurrentZone('gallery', currentGallery);
+                    }}
+                    className="text-[10px] text-[#E32124] hover:text-white flex items-center gap-1 cursor-pointer"
+                  >
+                    <Plus className="w-3 h-3" />
+                    <span>Добавить фото</span>
+                  </button>
+                </div>
+
+                <div className="space-y-2">
+                  {(currentZone.gallery || [currentZone.image]).map((gUrl, gIdx) => (
+                    <div key={gIdx} className="flex items-center gap-2">
+                      <div className="w-9 h-8 rounded-lg overflow-hidden border border-white/10 shrink-0 bg-black">
+                        <img src={gUrl} alt="" className="w-full h-full object-cover" />
+                      </div>
+                      <input
+                        type="text"
+                        value={gUrl}
+                        onChange={(e) => {
+                          const currentGallery = currentZone.gallery ? [...currentZone.gallery] : [currentZone.image];
+                          currentGallery[gIdx] = e.target.value;
+                          updateCurrentZone('gallery', currentGallery);
+                        }}
+                        className="flex-1 bg-[#0a0a0f] border border-white/15 rounded-xl px-3 py-1.5 text-xs text-white"
+                      />
+                      {(currentZone.gallery?.length || 0) > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const currentGallery = [...(currentZone.gallery || [])];
+                            currentGallery.splice(gIdx, 1);
+                            updateCurrentZone('gallery', currentGallery);
+                          }}
+                          className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-white/5 cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
             </div>
 
           </div>
         )}
 
-        {/* TAB 2: TOURNAMENTS WITH GOOGLE FORMS */}
+        {/* TAB 3: TOURNAMENTS */}
         {activeTab === 'tournaments' && (
           <div className="space-y-5 font-mono">
             
@@ -399,7 +658,7 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
           </div>
         )}
 
-        {/* TAB 3: PROMOTIONS */}
+        {/* TAB 4: PROMOTIONS */}
         {activeTab === 'promos' && (
           <div className="space-y-4 font-mono">
             {promosState.map((promo, idx) => (
@@ -457,7 +716,7 @@ export const OwnerAdminModal: React.FC<OwnerAdminModalProps> = ({
           </div>
         )}
 
-        {/* TAB 4: SECURITY & MASTER KEYS */}
+        {/* TAB 5: SECURITY & MASTER KEYS */}
         {activeTab === 'security' && (
           <div className="space-y-6 font-mono">
             

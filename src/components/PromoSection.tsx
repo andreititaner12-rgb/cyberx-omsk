@@ -4,6 +4,8 @@ import { Promotion } from '../types';
 import { Tag, Check, Copy, CheckCheck, ArrowUpRight } from 'lucide-react';
 import { sound } from '../utils/sound';
 import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatedGroup } from './ui/AnimatedGroup';
+import { ElegantDarkPattern } from './ui/ElegantDarkPattern';
 
 interface PromoSectionProps {
   onOpenBooking: () => void;
@@ -39,12 +41,8 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
   };
 
   return (
-    <section id="promotions" className="relative py-24 sm:py-32 bg-transparent overflow-hidden scroll-mt-24">
-      
-      {/* Background ambient lighting */}
-      <div className="pointer-events-none absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-red-600/[0.04] rounded-full blur-[140px]" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <ElegantDarkPattern variant="crimson" className="py-24 sm:py-32 scroll-mt-24">
+      <div id="promotions" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Centered Section Header */}
         <motion.div 
@@ -66,22 +64,14 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
           </p>
         </motion.div>
 
-        {/* Dynamic Card Hover Effect Grid with Staggered Revealing */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Motion-Primitives AnimatedGroup Staggered Card Grid */}
+        <AnimatedGroup preset="blur-slide" staggerDelay={0.15} className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {promos.map((promo, idx) => {
             const isCopied = copiedCode === promo.code;
             return (
-              <motion.div
+              <div
                 key={promo.id}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ 
-                  duration: 0.85, 
-                  delay: 0.15 * idx + 0.1, 
-                  ease: [0.16, 1, 0.3, 1] 
-                }}
-                className="relative group block p-2 h-full w-full"
+                className="relative group block p-1 h-full w-full"
                 onMouseEnter={() => {
                   sound.playHover();
                   setHoveredIndex(idx);
@@ -158,7 +148,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
                           e.stopPropagation();
                           copyCode(promo.code);
                         }}
-                        className="px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-xs text-zinc-300 hover:text-white transition-all flex items-center gap-1 shrink-0"
+                        className="px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-xs text-zinc-300 hover:text-white transition-all flex items-center gap-1 shrink-0 cursor-pointer"
                       >
                         {isCopied ? (
                           <>
@@ -180,19 +170,19 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onOpenBooking, promo
                         onOpenBooking();
                       }}
                       onMouseEnter={() => sound.playHover()}
-                      className="w-full py-2.5 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.15em] text-white bg-white/[0.06] hover:bg-[#E32124] border border-white/[0.08] hover:border-[#E32124] transition-all flex items-center justify-center gap-1.5 shadow-md active:scale-95"
+                      className="w-full py-2.5 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.15em] text-white bg-white/[0.06] hover:bg-[#E32124] border border-white/[0.08] hover:border-[#E32124] transition-all flex items-center justify-center gap-1.5 shadow-md active:scale-95 cursor-pointer"
                     >
                       <span>Активировать пакет</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
-        </div>
+        </AnimatedGroup>
 
       </div>
-    </section>
+    </ElegantDarkPattern>
   );
 };

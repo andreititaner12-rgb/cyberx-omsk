@@ -1,36 +1,72 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export const CustomCrosshairCursor: React.FC = () => {
-  const [pos, setPos] = useState({ x: -100, y: -100 });
-  const [isHovering, setIsHovering] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-
-  const cursorRef = useRef<{ x: number; y: number }>({ x: -100, y: -100 });
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
   const targetRef = useRef<{ x: number; y: number }>({ x: -100, y: -100 });
+  const currentPos = useRef<{ x: number; y: number }>({ x: -100, y: -100 });
+  const isHoveringRef = useRef(false);
+  const isClickedRef = useRef(false);
+  const isVisibleRef = useRef(false);
   const requestRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Check if device has a fine pointer (mouse)
+    // Check if fine pointer is used (mouse)
     const mediaQuery = window.matchMedia('(pointer: fine)');
     if (!mediaQuery.matches) return;
 
+    const el = cursorRef.current;
+    const ring = ringRef.current;
+    if (!el || !ring) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       targetRef.current = { x: e.clientX, y: e.clientY };
-      if (!isVisible) setIsVisible(true);
 
-      // Check if hovering over clickable element
+      if (!isVisibleRef.current) {
+        isVisibleRef.current = true;
+        el.style.opacity = '1';
+      }
+
       const target = e.target as HTMLElement | null;
       if (target) {
         const isClickable = !!target.closest('button, a, input, textarea, select, [role="button"], .cursor-pointer');
-        setIsHovering(isClickable);
+        if (isHoveringRef.current !== isClickable) {
+          isHoveringRef.current = isClickable;
+          
+          if (isClickable) {
+            ring.style.width = '38px';
+            ring.style.height = '38px';
+            ring.style.borderColor = '#E32124';
+            ring.style.boxShadow = '0 0 16px rgba(227, 33, 36, 0.6)';
+            ring.style.backgroundColor = 'rgba(227, 33, 36, 0.08)';
+          } else {
+            ring.style.width = '24px';
+            ring.style.height = '24px';
+            ring.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+            ring.style.boxShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
+            ring.style.backgroundColor = 'transparent';
+          }
+        }
       }
     };
 
-    const handleMouseDown = () => setIsClicked(true);
-    const handleMouseUp = () => setIsClicked(false);
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseEnter = () => setIsVisible(true);
+    const handleMouseDown = () => {
+      isClickedRef.current = true;
+    };
+
+    const handleMouseUp = () => {
+      isClickedRef.current = false;
+    };
+
+    const handleMouseLeave = () => {
+      isVisibleRef.current = false;
+      el.style.opacity = '0';
+    };
+
+    const handleMouseEnter = () => {
+      isVisibleRef.current = true;
+      el.style.opacity = '1';
+    };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('mousedown', handleMouseDown);
@@ -38,11 +74,14 @@ export const CustomCrosshairCursor: React.FC = () => {
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
 
-    // Smooth lerp loop
+    // Direct 144Hz+ GPU lerp loop with 0 React state re-renders
     const render = () => {
-      cursorRef.current.x += (targetRef.current.x - cursorRef.current.x) * 0.45;
-      cursorRef.current.y += (targetRef.current.y - cursorRef.current.y) * 0.45;
-      setPos({ x: cursorRef.current.x, y: cursorRef.current.y });
+      currentPos.current.x += (targetRef.current.x - currentPos.current.x) * 0.45;
+      currentPos.current.y += (targetRef.current.y - currentPos.current.y) * 0.45;
+
+      const clickScale = isClickedRef.current ? 0.8 : 1;
+      el.style.transform = `translate3d(${currentPos.current.x}px, ${currentPos.current.y}px, 0) translate(-50%, -50%) scale(${clickScale})`;
+
       requestRef.current = requestAnimationFrame(render);
     };
 
@@ -56,68 +95,35 @@ export const CustomCrosshairCursor: React.FC = () => {
       document.removeEventListener('mouseenter', handleMouseEnter);
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
-  }, [isVisible]);
-
-  if (!isVisible) return null;
+  }, []);
 
   return (
     <div
-      className="pointer-events-none fixed z-[9999] -translate-x-1/2 -translate-y-1/2 transition-transform duration-75 ease-out select-none"
+      ref={cursorRef}
+      className="pointer-events-none fixed top-0 left-0 z-[9999] select-none opacity-0 will-change-transform flex items-center justify-center"
       style={{
-        left: `${pos.x}px`,
-        top: `${pos.y}px`,
-        transform: `translate3d(-50%, -50%, 0) scale(${isClicked ? 0.8 : isHovering ? 1.25 : 1})`,
+        transform: 'translate3d(-100px, -100px, 0) translate(-50%, -50%)',
       }}
     >
-      {/* Outer Lock-on Brackets on Hover */}
-      {isHovering && (
-        <div className="absolute -inset-3.5 border border-[#E32124]/50 rounded-lg animate-pulse" />
-      )}
+      {/* Expanding Circular Ring Outline */}
+      <div
+        ref={ringRef}
+        className="rounded-full border transition-all duration-200 ease-out flex items-center justify-center pointer-events-none"
+        style={{
+          width: '24px',
+          height: '24px',
+          borderColor: 'rgba(255, 255, 255, 0.4)',
+        }}
+      >
+        {/* Center Tactical CS2 Red Dot */}
+        <div className="w-1.5 h-1.5 rounded-full bg-[#E32124] shadow-[0_0_8px_#E32124]" />
+      </div>
 
-      {/* Center Tactical CS2 Crosshair Dot */}
-      <div className="w-1.5 h-1.5 rounded-full bg-[#E32124] shadow-[0_0_8px_#E32124]" />
-
-      {/* 4 Crosshair Lines */}
-      {/* Top */}
-      <div 
-        className="absolute w-[1.5px] bg-white/90 shadow-[0_0_4px_#E32124] transition-all duration-150"
-        style={{
-          height: isHovering ? '8px' : '6px',
-          bottom: isHovering ? '8px' : '5px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-        }}
-      />
-      {/* Bottom */}
-      <div 
-        className="absolute w-[1.5px] bg-white/90 shadow-[0_0_4px_#E32124] transition-all duration-150"
-        style={{
-          height: isHovering ? '8px' : '6px',
-          top: isHovering ? '8px' : '5px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-        }}
-      />
-      {/* Left */}
-      <div 
-        className="absolute h-[1.5px] bg-white/90 shadow-[0_0_4px_#E32124] transition-all duration-150"
-        style={{
-          width: isHovering ? '8px' : '6px',
-          right: isHovering ? '8px' : '5px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-        }}
-      />
-      {/* Right */}
-      <div 
-        className="absolute h-[1.5px] bg-white/90 shadow-[0_0_4px_#E32124] transition-all duration-150"
-        style={{
-          width: isHovering ? '8px' : '6px',
-          left: isHovering ? '8px' : '5px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-        }}
-      />
+      {/* 4 Micro Tactical Crosshair Ticks */}
+      <div className="absolute w-[1px] h-[4px] bg-white/70 -top-[14px]" />
+      <div className="absolute w-[1px] h-[4px] bg-white/70 -bottom-[14px]" />
+      <div className="absolute h-[1px] w-[4px] bg-white/70 -left-[14px]" />
+      <div className="absolute h-[1px] w-[4px] bg-white/70 -right-[14px]" />
     </div>
   );
 };

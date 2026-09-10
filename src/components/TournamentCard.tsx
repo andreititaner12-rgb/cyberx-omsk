@@ -8,7 +8,7 @@ import {
   Flame, 
   Layers,
   Trophy,
-  Sparkles
+  Award
 } from 'lucide-react';
 import { sound } from '../utils/sound';
 import { motion } from 'framer-motion';
@@ -193,7 +193,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
                   {tournament.prizePool}
                 </div>
                 <div className="text-xs text-[#E32124] mt-1 flex items-center justify-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Award className="w-3.5 h-3.5" />
                   <span>+ Кубок CyberX Omsk и часы в Premium</span>
                 </div>
               </div>

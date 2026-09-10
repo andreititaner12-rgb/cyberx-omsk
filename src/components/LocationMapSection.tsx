@@ -5,7 +5,6 @@ import {
   Navigation, 
   Car, 
   Bus, 
-  Clock, 
   PhoneCall, 
   Send, 
   ExternalLink,
@@ -46,7 +45,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
       mapQuery: 'Омск, ул. Ленина, 19',
     },
     'cyberx-evropa': {
-      gisUrl: 'https://2gis.ru/omsk/search/CyberX%20%D0%9C%D0%B8%D1%80%D0%B0%2042%D0%BA1',
+      gisUrl: 'https://2gis.ru/omsk/firm/70000001105204416',
       landmark: 'Нефтяники, студенческий кластер возле ОмГТУ (Политех)',
       publicTransport: [
         'Ост. «Технический университет (Политех)» — 3 мин пешком',
@@ -58,7 +57,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
       mapQuery: 'Омск, просп. Мира, 42к1',
     },
     'cyberx-oktyabr': {
-      gisUrl: 'https://2gis.ru/omsk/search/CyberX%20%D0%A1%D0%B5%D1%80%D0%BE%D0%B2%D0%B0%2019%D0%90',
+      gisUrl: 'https://2gis.ru/omsk/firm/70000001102629279',
       landmark: 'Ленинский округ, район Ленинского рынка и киноцентра «Галактика»',
       publicTransport: [
         'Ост. «Улица Серова» — 2 мин пешком',
@@ -66,7 +65,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
         'Ост. «Ж/д вокзал» — 10 мин пешком'
       ],
       parking: 'Удобная парковочная зона прямо перед входом',
-      entranceHint: 'Отдельный вход с ул. Серова, вывеска CyberX с подсветкой',
+      entranceHint: 'Отдельный вход с ул. Серова (ТК Октябрь, 1 этаж), вывеска CyberX с подсветкой',
       mapQuery: 'Омск, ул. Серова, 19А',
     },
   };
@@ -106,7 +105,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
           </p>
         </motion.div>
 
-        {/* Interactive Arena Switcher Tabs (Rounded) */}
+        {/* Interactive Arena Switcher Tabs (Centered & Balanced) */}
         <motion.div 
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -124,7 +123,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
                   setSelectedArenaId(arena.id);
                 }}
                 onMouseEnter={() => sound.playHover()}
-                className={`p-4 sm:p-5 rounded-2xl text-left transition-all duration-300 border backdrop-blur-xl relative cursor-pointer ${
+                className={`p-5 rounded-2xl text-center flex flex-col items-center justify-center transition-all duration-300 border backdrop-blur-xl relative cursor-pointer ${
                   isSelected
                     ? 'bg-[#151522] border-[#E32124] shadow-xl shadow-red-950/40 translate-y-[-2px]'
                     : 'bg-[#0a0a0f]/80 hover:bg-[#101018] border-white/[0.08] hover:border-white/20'
@@ -135,20 +134,15 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
                   <div className="absolute top-0 left-6 right-6 h-[2px] bg-gradient-to-r from-transparent via-[#E32124] to-transparent" />
                 )}
 
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-mono uppercase font-bold text-[#E32124]">
-                    {arena.id === 'cyberx-arena' ? 'Флагман • Центр' : arena.id === 'cyberx-evropa' ? 'Нефтяники' : 'Ленинский р-н'}
-                  </span>
-                  <div className="flex items-center gap-1 text-emerald-400 text-xs font-mono font-semibold">
-                    <Clock className="w-3 h-3" />
-                    <span>24/7</span>
-                  </div>
-                </div>
+                <span className="text-[10px] font-mono uppercase font-bold text-[#E32124] mb-1">
+                  {arena.id === 'cyberx-arena' ? 'Флагман • Центр' : arena.id === 'cyberx-evropa' ? 'Нефтяники' : 'Ленинский р-н'}
+                </span>
 
                 <div className="font-display font-black text-base sm:text-lg text-white uppercase">
                   {arena.name.split('//')[0].trim()}
                 </div>
-                <div className="text-xs text-zinc-400 mt-1 flex items-center gap-1.5 truncate font-mono">
+
+                <div className="text-xs text-zinc-400 mt-1 flex items-center justify-center gap-1.5 font-mono">
                   <MapPin className="w-3.5 h-3.5 text-[#E32124] shrink-0" />
                   <span>{arena.address}</span>
                 </div>

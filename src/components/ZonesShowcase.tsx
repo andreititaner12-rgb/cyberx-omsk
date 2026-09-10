@@ -10,7 +10,6 @@ import {
   Coffee,
   Zap,
   X,
-  Sparkles,
   Maximize2,
   ChevronLeft,
   ChevronRight,
@@ -18,17 +17,18 @@ import {
 } from 'lucide-react';
 import { sound } from '../utils/sound';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GlowingEffect } from './ui/glowing-effect';
 
 interface ZonesShowcaseProps {
   onOpenBooking: (arenaId?: string, zoneId?: string) => void;
+  zonesList?: ZoneType[];
 }
 
-export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) => {
+export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking, zonesList }) => {
   const [expandedZoneId, setExpandedZoneId] = useState<string | null>(null);
   const [origin, setOrigin] = useState<{ x: number; y: number } | null>(null);
 
-  const expandedZone = ZONES.find((z) => z.id === expandedZoneId) || null;
+  const displayZones = zonesList && zonesList.length >= 6 ? zonesList : ZONES;
+  const expandedZone = displayZones.find((z) => z.id === expandedZoneId) || null;
 
   const handleCardClick = (zone: ZoneType, e: React.MouseEvent) => {
     sound.playClick();
@@ -105,9 +105,9 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
             className={layout.premium}
           >
             <BentoZoneCard
-              zone={ZONES[0]}
-              isExpanded={expandedZoneId === ZONES[0].id}
-              onClick={(e) => handleCardClick(ZONES[0], e)}
+              zone={displayZones[0]}
+              isExpanded={expandedZoneId === displayZones[0].id}
+              onClick={(e) => handleCardClick(displayZones[0], e)}
               accentBadge="ХИТ // ЭКСКЛЮЗИВ ARENA"
               accentColor="#E32124"
               tall
@@ -123,10 +123,10 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
             className={layout.sim}
           >
             <BentoZoneCard
-              zone={ZONES[1]}
+              zone={displayZones[1]}
               isExpanded={false}
-              onClick={(e) => handleCardClick(ZONES[1], e)}
-              accentBadge="DIRECT DRIVE"
+              onClick={(e) => handleCardClick(displayZones[1], e)}
+              accentBadge="MOZA DIRECT DRIVE"
               redirectTo="sim-racing"
             />
           </motion.div>
@@ -140,9 +140,9 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
             className={layout.solo}
           >
             <BentoZoneCard
-              zone={ZONES[3]}
-              isExpanded={expandedZoneId === ZONES[3].id}
-              onClick={(e) => handleCardClick(ZONES[3], e)}
+              zone={displayZones[3]}
+              isExpanded={expandedZoneId === displayZones[3].id}
+              onClick={(e) => handleCardClick(displayZones[3], e)}
               accentBadge="600HZ BENQ SPEED"
             />
           </motion.div>
@@ -156,9 +156,9 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
             className={layout.cinema}
           >
             <BentoZoneCard
-              zone={ZONES[2]}
-              isExpanded={expandedZoneId === ZONES[2].id}
-              onClick={(e) => handleCardClick(ZONES[2], e)}
+              zone={displayZones[2]}
+              isExpanded={expandedZoneId === displayZones[2].id}
+              onClick={(e) => handleCardClick(displayZones[2], e)}
               accentBadge='150" ЭКРАН + СЦЕНА'
             />
           </motion.div>
@@ -172,9 +172,9 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
             className={layout.ps5}
           >
             <BentoZoneCard
-              zone={ZONES[4]}
-              isExpanded={expandedZoneId === ZONES[4].id}
-              onClick={(e) => handleCardClick(ZONES[4], e)}
+              zone={displayZones[4]}
+              isExpanded={expandedZoneId === displayZones[4].id}
+              onClick={(e) => handleCardClick(displayZones[4], e)}
               accentBadge="10 ЗАЛОВ // ВСЕ КЛУБЫ"
             />
           </motion.div>
@@ -188,9 +188,9 @@ export const ZonesShowcase: React.FC<ZonesShowcaseProps> = ({ onOpenBooking }) =
             className={layout.open}
           >
             <BentoZoneCard
-              zone={ZONES[5]}
-              isExpanded={expandedZoneId === ZONES[5].id}
-              onClick={(e) => handleCardClick(ZONES[5], e)}
+              zone={displayZones[5]}
+              isExpanded={expandedZoneId === displayZones[5].id}
+              onClick={(e) => handleCardClick(displayZones[5], e)}
               accentBadge="182 ИГРОВЫХ ПК В ОМСКЕ"
             />
           </motion.div>
@@ -256,9 +256,9 @@ const ExpandedZoneModal: React.FC<ExpandedZoneModalProps> = ({ zone, onClose, on
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 h-full">
-      {/* Media Side */}
-      <div className="lg:col-span-5 relative min-h-[300px] lg:min-h-full bg-black">
-        <AnimatePresence mode="popLayout">
+      {/* Media Side (Unobstructed Gallery Viewer) */}
+      <div className="lg:col-span-5 relative min-h-[260px] sm:min-h-[360px] lg:min-h-full bg-black flex flex-col justify-between">
+        <AnimatePresence mode="wait">
           <motion.img
             key={image}
             src={image}
@@ -266,85 +266,101 @@ const ExpandedZoneModal: React.FC<ExpandedZoneModalProps> = ({ zone, onClose, on
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.25 }}
             className="absolute inset-0 w-full h-full object-cover"
           />
         </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#000000] via-[#000000]/50 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#000000] via-[#000000]/40 to-transparent pointer-events-none" />
+
+        {/* Верхние бейджи и счётчик фото */}
+        <div className="relative z-20 p-5 flex items-start justify-between gap-2 font-mono">
+          <div className="flex flex-wrap gap-2">
+            <span className="px-3 py-1.5 rounded-xl bg-[#000000]/80 backdrop-blur-md border border-white/15 text-xs text-white flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5 text-[#E32124]" />
+              {zone.capacity}
+            </span>
+            {zone.badge && (
+              <span className="px-3 py-1.5 rounded-xl bg-[#E32124] text-white text-xs font-bold shadow-lg shadow-red-600/30">
+                {zone.badge}
+              </span>
+            )}
+          </div>
+
+          {gallery.length > 1 && (
+            <span className="px-3 py-1 rounded-lg bg-black/80 border border-white/15 text-xs font-mono text-zinc-300 backdrop-blur-md shrink-0">
+              {activeImage + 1} / {gallery.length}
+            </span>
+          )}
+        </div>
 
         {/* Стрелки навигации по галерее */}
         {gallery.length > 1 && (
-          <>
+          <div className="relative z-20 px-3 flex items-center justify-between pointer-events-none">
             <button
               onClick={(e) => { e.stopPropagation(); sound.playClick(); prev(); }}
-              className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-[#E32124] transition-colors"
+              className="p-2.5 rounded-full bg-black/70 hover:bg-[#E32124] text-white border border-white/20 hover:border-[#E32124] backdrop-blur-md transition-all pointer-events-auto active:scale-90 shadow-lg cursor-pointer"
+              aria-label="Предыдущее фото"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); sound.playClick(); next(); }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-[#E32124] transition-colors"
+              className="p-2.5 rounded-full bg-black/70 hover:bg-[#E32124] text-white border border-white/20 hover:border-[#E32124] backdrop-blur-md transition-all pointer-events-auto active:scale-90 shadow-lg cursor-pointer"
+              aria-label="Следующее фото"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
-          </>
+          </div>
         )}
 
-        {/* Миниатюры */}
+        {/* Нижний ряд миниатюр (без наложений текста) */}
         {gallery.length > 1 && (
-          <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
-            {gallery.map((g, i) => (
-              <button
-                key={g + i}
-                onClick={(e) => { e.stopPropagation(); sound.playClick(); setActiveImage(i); }}
-                className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${i === activeImage ? 'border-[#E32124] scale-105' : 'border-white/20 opacity-60 hover:opacity-100'}`}
-              >
-                <img src={g} alt="" className="w-full h-full object-cover" />
-              </button>
-            ))}
+          <div className="relative z-20 p-4 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
+            <div className="flex flex-wrap gap-2">
+              {gallery.map((g, i) => (
+                <button
+                  key={g + i}
+                  onClick={(e) => { e.stopPropagation(); sound.playClick(); setActiveImage(i); }}
+                  className={`w-12 h-12 rounded-xl overflow-hidden border-2 transition-all cursor-pointer ${
+                    i === activeImage 
+                      ? 'border-[#E32124] ring-2 ring-[#E32124]/50 scale-105' 
+                      : 'border-white/20 opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <img src={g} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
           </div>
         )}
-
-        {/* Бейджи */}
-        <div className="absolute top-6 left-6 flex flex-wrap gap-2 font-mono">
-          <span className="px-3 py-1.5 rounded-xl bg-[#000000]/80 backdrop-blur-md border border-white/15 text-xs text-white flex items-center gap-1.5">
-            <Users className="w-3.5 h-3.5 text-[#E32124]" />
-            {zone.capacity}
-          </span>
-          {zone.badge && (
-            <span className="px-3 py-1.5 rounded-xl bg-[#E32124] text-white text-xs font-bold shadow-lg shadow-red-600/30">
-              {zone.badge}
-            </span>
-          )}
-        </div>
-
-        {/* Название */}
-        <div className="absolute bottom-6 left-6 right-6">
-          <div className="text-2xl lg:text-3xl font-display font-black text-white uppercase">
-            {zone.name}
-          </div>
-          <p className="text-xs sm:text-sm text-zinc-300 mt-1 font-light">
-            {zone.tagline}
-          </p>
-        </div>
       </div>
 
-      {/* Информация */}
+      {/* Информация (Детали и описание) */}
       <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col max-h-[92vh] overflow-y-auto">
         <div>
-          {/* Закрыть */}
-          <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-white/[0.08]">
+          {/* Верхняя строка с кнопкой закрытия */}
+          <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-white/[0.08]">
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#E32124] flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              Полная спецификация пространства
+              <Layers className="w-3.5 h-3.5" />
+              Спецификация пространства CyberX
             </span>
             <button
               onClick={onClose}
-              className="px-3 py-1.5 rounded-lg bg-white/[0.05] hover:bg-[#E32124] text-zinc-300 hover:text-white transition-colors text-xs font-mono flex items-center gap-1"
+              className="px-3 py-1.5 rounded-lg bg-white/[0.05] hover:bg-[#E32124] text-zinc-300 hover:text-white transition-colors text-xs font-mono flex items-center gap-1 cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
               <span>Свернуть</span>
             </button>
+          </div>
+
+          {/* Заголовок и подзаголовок зоны */}
+          <div className="mb-6">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-display font-black text-white uppercase tracking-tight">
+              {zone.name}
+            </h3>
+            <p className="text-xs sm:text-sm text-zinc-300 mt-1 font-light">
+              {zone.tagline}
+            </p>
           </div>
 
           {/* Описание */}
@@ -410,7 +426,7 @@ const ExpandedZoneModal: React.FC<ExpandedZoneModalProps> = ({ zone, onClose, on
               );
             }}
             onMouseEnter={() => sound.playHover()}
-            className="py-3.5 px-8 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.2em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+            className="py-3.5 px-8 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.2em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <Zap className="w-4 h-4" />
             <span>Забронировать {zone.name.split('//')[0].trim()}</span>
@@ -446,22 +462,20 @@ const BentoZoneCard: React.FC<BentoZoneCardProps> = ({
     <div
       onClick={onClick}
       onMouseEnter={() => sound.playHover()}
-      className={`group relative overflow-hidden cursor-pointer rounded-3xl transition-all duration-300 border backdrop-blur-md flex flex-col justify-between p-6 select-none shadow-xl h-full ${
+      className={`group relative overflow-hidden cursor-pointer rounded-3xl transition-all duration-300 border backdrop-blur-md flex flex-col justify-between p-5 sm:p-6 select-none shadow-xl h-full ${
         isExpanded
           ? 'border-[#E32124] ring-1 ring-[#E32124]/60 shadow-[0_0_35px_rgba(227,33,36,0.3)]'
-          : 'border-white/[0.1] hover:border-white/30 hover:shadow-2xl'
+          : 'border-white/[0.1] hover:border-[#E32124]/50 hover:shadow-2xl'
       }`}
     >
-      <GlowingEffect spread={25} glow={isExpanded} borderWidth={1.5} />
-
       {/* Фото */}
-      <div className="absolute inset-0 z-0 rounded-3xl overflow-hidden">
+      <div className="absolute inset-0 z-0 rounded-3xl overflow-hidden isolate transform-gpu">
         <img
           src={zone.image}
           alt={zone.name}
-          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out brightness-[0.65] group-hover:brightness-[0.75]"
+          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out brightness-[0.65] group-hover:brightness-[0.75] will-change-transform"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-black/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-black/50 to-transparent pointer-events-none" />
       </div>
 
       {/* Верхние бейджи */}

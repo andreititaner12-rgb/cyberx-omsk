@@ -168,8 +168,8 @@ export const Dynamic2GisMap: React.FC<Dynamic2GisMapProps> = ({
     const gisUrl = selectedArenaId === 'cyberx-arena'
       ? 'https://2gis.ru/omsk/search/CyberX%20%D0%9B%D0%B5%D0%BD%D0%B8%D0%BD%D0%B0%2019'
       : selectedArenaId === 'cyberx-evropa'
-      ? 'https://2gis.ru/omsk/search/CyberX%20%D0%9C%D0%B8%D1%80%D0%B0%2042%D0%BA1'
-      : 'https://2gis.ru/omsk/search/CyberX%20%D0%A1%D0%B5%D1%80%D0%BE%D0%B2%D0%B0%2019%D0%90';
+      ? 'https://2gis.ru/omsk/firm/70000001105204416'
+      : 'https://2gis.ru/omsk/firm/70000001102629279';
     window.open(gisUrl, '_blank', 'noopener,noreferrer');
   };
 

@@ -12,7 +12,7 @@ export const ARENAS: ArenaLocation[] = [
     vipRoomsCount: 0,
     ps5RoomsCount: 3,
     phone: '+7 (951) 400-77-77',
-    telegram: '@cyberx_omsk_mira',
+    telegram: '@cyberxcommunityomsklenina',
     workingHours: '24/7 Круглосуточно',
     rating: 5.0,
     reviewsCount: 1040,
@@ -35,7 +35,7 @@ export const ARENAS: ArenaLocation[] = [
       'Кальян, бар, гигабитный интернет >1 Гбит/с'
     ],
     status: 'ONLINE',
-    coordinates: { x: 55.028412, y: 73.284310 },
+    coordinates: { x: 55.028508, y: 73.287744 },
   },
   {
     id: 'cyberx-arena',
@@ -68,7 +68,7 @@ export const ARENAS: ArenaLocation[] = [
     features: [
       '86 мощных игровых ПК (RTX 5070 Ti / i5-14600KF / BenQ 600Hz & 400Hz)',
       '2 эксклюзивных Premium зала (5 ПК + PS5 + Большой стол для команды)',
-      '2 профессиональных автосимулятора Sim-Racing с рулями Direct Drive',
+      '2 профессиональных автосимулятора Sim-Racing с рулевой базой Moza и педалями Moza Load Cell',
       'Большой кино-лаунж с проектором 150" для трансляций и турниров',
       '4 приватных PS5 зала с диванами, кальян и бар'
     ],
@@ -86,7 +86,7 @@ export const ARENAS: ArenaLocation[] = [
     vipRoomsCount: 0,
     ps5RoomsCount: 3,
     phone: '+7 (950) 950-33-33',
-    telegram: '@cyberx_omsk_serova',
+    telegram: '@cyberxcommunityomsklenina',
     workingHours: '24/7 Круглосуточно',
     rating: 5.0,
     reviewsCount: 890,
@@ -109,7 +109,7 @@ export const ARENAS: ArenaLocation[] = [
       'Кальян, напитки, удобная парковка у входа'
     ],
     status: 'ONLINE',
-    coordinates: { x: 54.945120, y: 73.385410 },
+    coordinates: { x: 54.940795, y: 73.382982 },
   },
 ];
 
@@ -152,21 +152,21 @@ export const ZONES: ZoneType[] = [
     id: 'sim-racing',
     name: 'SIM-RACING // 2 АВТОСИМУЛЯТОРА',
     category: 'ЭКСКЛЮЗИВ В CYBERX ARENA',
-    tagline: '2 кокпита с рулями Direct Drive и педалями Load Cell',
-    description: 'Эксклюзив CyberX Arena на Ленина, 19 с двумя профессиональными гоночными кокпитами. Прямой привод руля (Direct Drive Force Feedback), педали Load Cell с тензодатчиками, изогнутые экраны. Идеально для парных дуэлей в Assetto Corsa, Forza Horizon 5, F1 24 и City Car Driving.',
+    tagline: '2 кокпита на рулевой базе Moza и педальном узле Moza Load Cell',
+    description: 'Эксклюзив CyberX Arena на Ленина, 19 с двумя профессиональными гоночными кокпитами на рулевой базе Moza Direct Drive и педальном узле Moza Load Cell. Доступные соревновательные дисциплины: FORZA HORIZON 6, ASSETTO CORSA, ASSETTO CORSA COMPETIZIONE, DiRT, BEAMNG.DRIVE, CITY CAR DRIVING.',
     capacity: '1–2 пилота (CyberX Arena // Ленина, 19)',
     hardwareBrief: [
-      '2x Профессиональные базы руля Direct Drive (Force Feedback)',
-      'Спортивные анатомические ковши с регулировкой посадки',
-      'Педальные узлы Load Cell (реалистичное усилие торможения)',
+      '2x Профессиональные базы Moza Direct Drive Force Feedback',
+      'Педальные узлы Moza Load Cell (реалистичное усилие торможения)',
+      'Спортивные анатомические ковши с точной регулировкой посадки',
       'Изогнутые UltraWide 165Hz дисплеи',
-      'Парные дуэли в реальном времени'
+      'Секвентальный шифтер и подрулевые лепестки'
     ],
     features: [
       'Доступно только в CyberX Arena (2 симулятора)',
-      'Парные заезды друг против друга',
-      'Все популярные автосимы и дрифт-трассы',
-      'Секвентальный шифтер и лепестки переключения'
+      'Парные дуэли в реальном времени',
+      'Дисциплины: Forza Horizon 6, Assetto Corsa, ACC, DiRT, BeamNG, City Car Driving',
+      'Реалистичная физика управления и обратная связь FFB'
     ],
     pricePerHour: 400,
     priceNight: 2000,
@@ -285,7 +285,7 @@ export const HARDWARE_LIST: HardwareItem[] = [
     name: 'BenQ Zowie 600Hz / ASUS 480Hz / 400Hz',
     model: '600Hz / 480Hz / 400Hz / 240Hz Fast-TN & OLED // 0.03ms Response',
     tagline: 'Абсолютная рекордная частота обновления 600 кадров в секунду',
-    image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1000&q=80',
+    image: '/images/hardware/benq-monitor.png',
     keySpecs: [
       { label: 'Флагманская герцовка', value: '600 Hz', detail: 'Установлены в Super VIP и Solo Rooms' },
       { label: 'VIP мониторы', value: '480 / 400 Hz', detail: 'ASUS 27" 480Гц и ViewSonic 400Гц' },
@@ -372,18 +372,18 @@ export const HARDWARE_LIST: HardwareItem[] = [
     id: 'chairs',
     category: 'chairs',
     categoryLabel: 'Эргономика',
-    name: 'Tesoro Zone & Master Pro',
-    model: 'Стальной каркас + холодная формованная пена + 3D/4D подлокотники',
-    tagline: 'Комфортная анатомическая посадка для длительных игровых сессий',
+    name: 'Фирменные кресла CyberX Esports Pro',
+    model: 'Анатомический стальной каркас 1.5мм + Memory Foam + 3D/4D подлокотники',
+    tagline: 'Фирменная эргономика CyberX для идеальной осанки во время 10+ часовых каток',
     image: 'https://images.unsplash.com/photo-1580481077195-c3a82da91883?auto=format&fit=crop&w=1000&q=80',
     keySpecs: [
-      { label: 'Каркас', value: 'Усиленная стальная рама', detail: 'Надежность до 150 кг' },
-      { label: 'Наполнитель', value: 'High Density Foam', detail: 'Не проминается со временем' },
-      { label: 'Подлокотники', value: '3D/4D Регулировка', detail: 'Вровень со столешницей' },
-      { label: 'Механизм качания', value: 'Top Gun / Multi-Block', detail: 'Откидывание спинки до 160°' },
+      { label: 'Каркас', value: 'Усиленная сталь 1.5мм', detail: 'Газлифт 4 класса, нагрузка до 150 кг' },
+      { label: 'Обивка', value: 'Перфорированная экокожа', detail: 'Дышащая микрофибра с теплоотводом' },
+      { label: 'Подлокотники', value: '3D/4D Ergo Регулировка', detail: 'Идеально вровень со столешницей' },
+      { label: 'Механизм качания', value: 'Мультиблок 90° — 165°', detail: 'Фиксация спинки в любом положении' },
     ],
-    description: 'Каждое место оснащено креслами Tesoro с поясничными и шейными подушками для правильной осанки и снятия нагрузки со спины.',
-    proAdvantage: 'Минимум усталости и максимальная концентрация на протяжении всей игровой ночи.',
+    description: 'Каждое место в наших клубах оснащено фирменными киберспортивными креслами CyberX с поясничными и шейными подушками Memory Foam для сохранения идеальной осанки.',
+    proAdvantage: 'Полное отсутствие усталости в спине и максимальная концентрация на протяжении всей игровой ночи.',
     interactiveType: 'ergonomics',
   }
 ];

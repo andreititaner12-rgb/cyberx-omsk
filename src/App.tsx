@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Lenis from 'lenis';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { BrandManifesto } from './components/BrandManifesto';
@@ -18,7 +19,9 @@ import { OwnerAdminModal } from './components/OwnerAdminModal';
 import { OwnerSecurityGate, MASTER_SECRET_KEY } from './components/OwnerSecurityGate';
 import { CustomCrosshairCursor } from './components/CustomCrosshairCursor';
 import { Preloader } from './components/Preloader';
-import { UPCOMING_TOURNAMENT, PROMOTIONS } from './data/arenaData';
+import { CyberSectionDivider } from './components/ui/CyberSectionDivider';
+import { UPCOMING_TOURNAMENT, PROMOTIONS, ZONES } from './data/arenaData';
+import { ZoneType } from './types';
 import { sound } from './utils/sound';
 import { Shield } from 'lucide-react';
 
@@ -26,6 +29,7 @@ export function App() {
   const [loading, setLoading] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const audioPlayedRef = useRef(false);
+  const lenisRef = useRef<Lenis | null>(null);
 
   // Modal states
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -43,23 +47,44 @@ export function App() {
   // Selected arena in the ecosystem (Default to CyberX Arena - Flagship)
   const [selectedArenaId] = useState<string>('cyberx-arena');
 
-  // Dynamic state for live editing by owner
-  const [liveTournament, setLiveTournament] = useState(UPCOMING_TOURNAMENT);
-  const [livePromos, setLivePromos] = useState(PROMOTIONS);
-
-  // Voice Intro Welcome audio
-  const playWelcomeVoice = () => {
-    if (audioPlayedRef.current || isMuted) return;
-    audioPlayedRef.current = true;
+  // Dynamic state for live editing by owner with localStorage persistence
+  const [liveTournament, setLiveTournament] = useState(() => {
     try {
-      const audio = new Audio('/audio/welcome-cyberx.mp3');
-      audio.volume = 0.75;
-      audio.play().catch(() => {
-        // Handled silently if autoplay restricted by browser until user click
-      });
+      const saved = localStorage.getItem('cyberx_live_tournament');
+      return saved ? JSON.parse(saved) : UPCOMING_TOURNAMENT;
     } catch {
-      // Handled silently
+      return UPCOMING_TOURNAMENT;
     }
+  });
+
+  const [livePromos, setLivePromos] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cyberx_live_promos');
+      return saved ? JSON.parse(saved) : PROMOTIONS;
+    } catch {
+      return PROMOTIONS;
+    }
+  });
+
+  const [liveZones, setLiveZones] = useState<ZoneType[]>(() => {
+    try {
+      const saved = localStorage.getItem('cyberx_live_zones');
+      return saved ? JSON.parse(saved) : ZONES;
+    } catch {
+      return ZONES;
+    }
+  });
+
+  // Scroll parallax for content curtain elevation
+  const { scrollY } = useScroll();
+  const curtainScale = useTransform(scrollY, [0, 600], [0.97, 1]);
+  const curtainBorderRadius = useTransform(scrollY, [0, 600], ['44px', '32px']);
+
+  // Voice Intro Welcome audio (Single-trigger guarantee)
+  const playWelcomeVoice = () => {
+    if (audioPlayedRef.current || isMuted || sound.hasVoiceStarted()) return;
+    audioPlayedRef.current = true;
+    sound.playVoiceGreeting().catch(() => {});
   };
 
   // Check URL hash & session for secret admin access
@@ -95,6 +120,7 @@ export function App() {
       orientation: 'vertical',
       smoothWheel: true,
     });
+    lenisRef.current = lenis;
 
     function raf(time: number) {
       lenis.raf(time);
@@ -105,8 +131,19 @@ export function App() {
 
     return () => {
       lenis.destroy();
+      lenisRef.current = null;
     };
   }, [loading]);
+
+  // Pause / Resume Lenis when any modal is opened / closed
+  useEffect(() => {
+    const isAnyModalOpen = tournamentsOpen || bookingOpen || adminOpen || gateOpen;
+    if (isAnyModalOpen) {
+      lenisRef.current?.stop();
+    } else {
+      lenisRef.current?.start();
+    }
+  }, [tournamentsOpen, bookingOpen, adminOpen, gateOpen]);
 
   const handleOpenBooking = (arenaId?: string, zoneId?: string) => {
     setBookingArenaId(arenaId);
@@ -129,21 +166,21 @@ export function App() {
 
   const handlePreloaderComplete = () => {
     setLoading(false);
-    setTimeout(() => {
+    if (!audioPlayedRef.current && !sound.hasVoiceStarted()) {
       playWelcomeVoice();
-    }, 400);
+    }
   };
 
   return (
     <div 
       onClick={() => {
-        // Enable Web-Audio UI sounds on the first user gesture (AudioContext needs one)
+        // Enable Web-Audio UI sounds on user gesture
         sound.setEnabled(!isMuted);
-        if (!audioPlayedRef.current && !loading) {
+        if (!audioPlayedRef.current && !loading && !sound.hasVoiceStarted()) {
           playWelcomeVoice();
         }
       }}
-      className="relative min-h-screen bg-[#030305] text-[#FEFEFE] selection:bg-[#E32124] selection:text-white cursor-default"
+      className="relative min-h-screen bg-[#020204] text-[#FEFEFE] selection:bg-[#E32124] selection:text-white cursor-default overflow-x-hidden"
     >
       
       {/* 1. CyberX CS2 Tactical Crosshair Reticle Cursor */}
@@ -153,27 +190,36 @@ export function App() {
       {loading && <Preloader onComplete={handlePreloaderComplete} />}
 
       {/* 3. Top Header with macOS Blurry Mask & Retractable Navigation */}
-        <Header
-          onOpenBooking={() => handleOpenBooking()}
-          onOpenTournaments={() => handleOpenTournaments()}
-          isMuted={isMuted}
-          onToggleMute={() => {
-            const next = !isMuted;
-            setIsMuted(next);
-            sound.setEnabled(!next);
-          }}
-        />
+      <Header
+        onOpenBooking={() => handleOpenBooking()}
+        onOpenTournaments={() => handleOpenTournaments()}
+        isMuted={isMuted}
+        onToggleMute={() => {
+          const next = !isMuted;
+          setIsMuted(next);
+          sound.setEnabled(!next);
+        }}
+      />
 
-      {/* 4. Full-Screen Cinematic Hero (Video without text, new capsule trigger, updated nav order) */}
+      {/* Fixed Ambient Breathing Side-Glows to eliminate black voids on wide screens */}
+      <div className="pointer-events-none fixed top-1/4 -left-48 w-[400px] sm:w-[550px] h-[700px] bg-[#E32124]/[0.035] rounded-full blur-[140px] z-0 will-change-transform" />
+      <div className="pointer-events-none fixed top-1/2 -right-48 w-[400px] sm:w-[550px] h-[700px] bg-[#E32124]/[0.03] rounded-full blur-[140px] z-0 will-change-transform" />
+
+      {/* 4. Full-Screen Cinematic Hero */}
       <Hero isReady={!loading} />
 
-      {/* 5. Smooth Flowing Content Container (Zero Tearing, 100% Solid Hardware Composition) */}
-      <div 
+      {/* 5. Parallax Scrolling Content Curtain Over Hero */}
+      <motion.div 
         id="content-curtain"
-        className="relative z-20 rounded-t-[36px] sm:rounded-t-[50px] border-t border-white/[0.1] shadow-[0_-30px_90px_rgba(0,0,0,0.98)] overflow-hidden bg-[#050508]"
+        style={{
+          scale: curtainScale,
+          borderTopLeftRadius: curtainBorderRadius,
+          borderTopRightRadius: curtainBorderRadius,
+        }}
+        className="relative z-20 border-t border-white/[0.12] shadow-[0_-30px_90px_rgba(0,0,0,0.98)] overflow-hidden bg-[#040407] transform-gpu origin-top"
       >
         
-        {/* Ambient Crimson Nebula Glow Accents */}
+        {/* Ambient Shimmering Crimson Nebula Glow Accents */}
         <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#E32124]/[0.06] rounded-full blur-[160px]" />
         <div className="pointer-events-none absolute top-1/3 right-0 w-[600px] h-[600px] bg-[#930E10]/[0.04] rounded-full blur-[180px]" />
         <div className="pointer-events-none absolute top-2/3 left-0 w-[600px] h-[600px] bg-[#E32124]/[0.035] rounded-full blur-[180px]" />
@@ -181,10 +227,13 @@ export function App() {
         {/* Top Glow Accent Bar */}
         <div className="absolute top-0 left-1/4 right-1/4 h-[1.5px] bg-gradient-to-r from-transparent via-[#E32124]/70 to-transparent z-10" />
 
-        <main className="relative z-10 space-y-12 sm:space-y-16">
+        <main className="relative z-10 space-y-6 sm:space-y-10">
           
           {/* A. Brand Manifesto & Core Pillars (CYBERX // АРЕНЫ ОМСКА) */}
           <BrandManifesto />
+
+          {/* Section Divider 01 */}
+          <CyberSectionDivider tag="01" />
 
           {/* B. Three Arenas Ecosystem (Европа, CyberX Arena [в центре], Октябрь) */}
           <ArenaEcosystem
@@ -192,10 +241,17 @@ export function App() {
             selectedArenaId={selectedArenaId}
           />
 
+          {/* Section Divider 02 */}
+          <CyberSectionDivider tag="02" />
+
           {/* C. Spaces & Rooms Bento Showcase with In-Card Photos & Dynamic Expansion */}
           <ZonesShowcase
             onOpenBooking={(arenaId, zoneId) => handleOpenBooking(arenaId, zoneId)}
+            zonesList={liveZones}
           />
+
+          {/* Section Divider 03 */}
+          <CyberSectionDivider tag="03" />
 
           {/* D. Dedicated Sim-Racing Banner (2 Кокпита на Ленина) */}
           <div id="sim-racing">
@@ -204,8 +260,14 @@ export function App() {
             />
           </div>
 
+          {/* Section Divider 04 */}
+          <CyberSectionDivider tag="04" />
+
           {/* E. Interactive Hardware & Peripherals Visualizer (BenQ 600Hz, Ryzen 7800X3D, RTX 5070 Ti) */}
           <HardwareVisualizer />
+
+          {/* Section Divider 05 */}
+          <CyberSectionDivider tag="05" />
 
           {/* F. Standalone Upcoming Tournament Spotlight Card */}
           <TournamentCard
@@ -214,16 +276,25 @@ export function App() {
             tournamentData={liveTournament}
           />
 
-          {/* G. NEW: Interactive Price List Section (Strictly between Tournament and Promotions) */}
+          {/* Section Divider 06 */}
+          <CyberSectionDivider tag="06" />
+
+          {/* G. Interactive Price List Section */}
           <PriceSection
             onOpenBooking={(arenaId, zoneId) => handleOpenBooking(arenaId, zoneId)}
           />
+
+          {/* Section Divider 07 */}
+          <CyberSectionDivider tag="07" />
 
           {/* H. Exclusive Offers & Promos */}
           <PromoSection
             onOpenBooking={() => handleOpenBooking()}
             promotionsList={livePromos}
           />
+
+          {/* Section Divider 08 */}
+          <CyberSectionDivider tag="08" />
 
           {/* I. Interactive 2GIS Navigation Map Section ("Как добраться?") */}
           <LocationMapSection
@@ -237,7 +308,7 @@ export function App() {
           onOpenTournaments={() => handleOpenTournaments()}
         />
 
-      </div>
+      </motion.div>
 
       {/* Floating Owner Badge (Only visible when authenticated as owner) */}
       {isOwnerAuth && (
@@ -288,6 +359,8 @@ export function App() {
         onClose={() => setAdminOpen(false)}
         onSaveLiveTournament={(updated) => setLiveTournament(updated)}
         onSaveLivePromos={(updated) => setLivePromos(updated)}
+        onSaveLiveZones={(updated) => setLiveZones(updated)}
+        currentZones={liveZones}
         onLogout={handleOwnerLogout}
       />
 

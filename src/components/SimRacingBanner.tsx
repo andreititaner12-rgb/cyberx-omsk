@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Gauge, Zap, ArrowRight } from 'lucide-react';
+import { Gauge, Zap, ArrowRight, Trophy } from 'lucide-react';
 import { sound } from '../utils/sound';
 
 interface SimRacingBannerProps {
@@ -7,13 +7,18 @@ interface SimRacingBannerProps {
 }
 
 export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking }) => {
-  const [selectedGame, setSelectedGame] = useState<'assetto' | 'f1' | 'forza'>('assetto');
+  const [selectedGame, setSelectedGame] = useState<string>('assetto');
 
   const games = [
-    { id: 'assetto', name: 'Assetto Corsa Pro', tag: 'Реалистичная физика & Дрифт' },
-    { id: 'f1', name: 'EA Sports F1 24', tag: 'Официальные болиды Formula 1' },
-    { id: 'forza', name: 'Forza Horizon 5', tag: 'Открытый мир & Суперкары' },
+    { id: 'forza', name: 'FORZA HORIZON 6', desc: 'Открытый мир, живописные трассы и топ-суперкары' },
+    { id: 'assetto', name: 'ASSETTO CORSA', desc: 'Эталонная физика, кастомные треки и соревновательный дрифт' },
+    { id: 'acc', name: 'ASSETTO CORSA COMPETIZIONE', desc: 'Официальный хардкорный симулятор GT3 и гонок на выносливость' },
+    { id: 'dirt', name: 'DiRT', desc: 'Раллийные спецучастки, грязь, гравий и заносы' },
+    { id: 'beamng', name: 'BEAMNG.DRIVE', desc: 'Мягкотелая физика узлов автомобиля и реалистичные краш-тесты' },
+    { id: 'citycar', name: 'CITY CAR DRIVING', desc: 'Обучение и реалистичное вождение в плотном городском трафике' },
   ];
+
+  const activeGameInfo = games.find((g) => g.id === selectedGame) || games[0];
 
   return (
     <section className="relative py-20 bg-transparent overflow-hidden">
@@ -30,7 +35,7 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
 
           {/* Watermark */}
           <div className="pointer-events-none absolute -right-10 -bottom-10 opacity-5 select-none font-display font-black text-[200px] text-white">
-            RACE
+            MOZA
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -44,7 +49,7 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
                   ЭКСКЛЮЗИВ // ТОЛЬКО НА ЛЕНИНА, 19
                 </span>
                 <span className="px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.1] text-xs text-zinc-300">
-                  2 ГОНОЧНЫХ КОКПИТА
+                  2 ГОНОЧНЫХ КОКПИТА MOZA
                 </span>
               </div>
 
@@ -53,21 +58,21 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
                   SIM-RACING <span className="text-[#E32124]">//</span> АВТОСИМУЛЯТОРЫ
                 </h3>
                 <p className="mt-3 text-xs sm:text-sm text-zinc-300 max-w-xl font-normal leading-relaxed">
-                  Почувствуйте реальный перегруз и сцепление колес с асфальтом на рулевых базах <span className="text-white font-bold">Direct Drive</span> с силой отдачи до 12 Nm, педалях с датчиками давления <span className="text-white font-bold">Load Cell</span> и изогнутых UltraWide мониторах.
+                  Почувствуйте реальный перегруз и сцепление колес с асфальтом на рулевой базе <span className="text-white font-bold">Moza Direct Drive</span> с мгновенным Force Feedback, педальном узле <span className="text-white font-bold">Moza Load Cell</span> с тензодатчиками и изогнутых UltraWide мониторах.
                 </p>
               </div>
 
               {/* Specs & Hardware pills (Rounded) */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
                 <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
-                  <span className="text-[10px] uppercase text-zinc-500 block">Базы руля</span>
-                  <div className="text-xs font-bold text-white mt-1">Direct Drive</div>
-                  <div className="text-[10px] text-[#E32124] mt-0.5">Мгновенный Force Feedback</div>
+                  <span className="text-[10px] uppercase text-zinc-500 block">База руля</span>
+                  <div className="text-xs font-bold text-white mt-1">Moza Direct Drive</div>
+                  <div className="text-[10px] text-[#E32124] mt-0.5">Чистый прямой привод FFB</div>
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
                   <span className="text-[10px] uppercase text-zinc-500 block">Педальный узел</span>
-                  <div className="text-xs font-bold text-white mt-1">Load Cell Brake</div>
+                  <div className="text-xs font-bold text-white mt-1">Moza Load Cell</div>
                   <div className="text-[10px] text-zinc-400 mt-0.5">Тензодатчик давления</div>
                 </div>
 
@@ -78,28 +83,39 @@ export const SimRacingBanner: React.FC<SimRacingBannerProps> = ({ onOpenBooking 
                 </div>
               </div>
 
-              {/* Game Switcher (Rounded) */}
+              {/* Game Switcher (All 6 requested disciplines) */}
               <div>
-                <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 block mb-2">
+                <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 block mb-2.5 flex items-center gap-1.5">
+                  <Trophy className="w-3.5 h-3.5 text-[#E32124]" />
                   Доступные гоночные дисциплины:
                 </span>
-                <div className="flex flex-wrap gap-2">
-                  {games.map((g) => (
-                    <button
-                      key={g.id}
-                      onClick={() => {
-                        sound.playClick();
-                        setSelectedGame(g.id as typeof selectedGame);
-                      }}
-                      className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all border ${
-                        selectedGame === g.id
-                          ? 'bg-[#E32124] text-white border-[#E32124]'
-                          : 'bg-white/[0.03] text-zinc-400 border-white/[0.06] hover:text-white'
-                      }`}
-                    >
-                      {g.name}
-                    </button>
-                  ))}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {games.map((g) => {
+                    const isSelected = selectedGame === g.id;
+                    return (
+                      <button
+                        key={g.id}
+                        onClick={() => {
+                          sound.playClick();
+                          setSelectedGame(g.id);
+                        }}
+                        onMouseEnter={() => sound.playHover()}
+                        className={`px-3 py-2 rounded-xl text-[11px] font-mono font-bold transition-all border text-left flex items-center justify-between cursor-pointer ${
+                          isSelected
+                            ? 'bg-[#E32124] text-white border-[#E32124] shadow-md shadow-red-600/30'
+                            : 'bg-white/[0.03] text-zinc-300 border-white/[0.06] hover:bg-white/[0.08] hover:text-white'
+                        }`}
+                      >
+                        <span className="truncate">{g.name}</span>
+                        {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white ml-1 shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Selected Game Description */}
+                <div className="mt-2.5 p-2.5 rounded-xl bg-white/[0.02] border border-white/5 text-xs text-zinc-400 font-mono">
+                  <span className="text-white font-bold">{activeGameInfo.name}:</span> {activeGameInfo.desc}
                 </div>
               </div>
 

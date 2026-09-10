@@ -33,14 +33,19 @@ export const TournamentModal: React.FC<TournamentModalProps> = ({
   const [registeredSuccess, setRegisteredSuccess] = useState<boolean>(false);
 
   useEffect(() => {
-    if (targetTournamentId) {
-      const found = ALL_TOURNAMENTS.find((t) => t.id === targetTournamentId);
-      if (found) {
-        setActiveTournament(found);
-        setIsRegistering(true);
+    if (isOpen) {
+      setRegisteredSuccess(false);
+      if (targetTournamentId) {
+        const found = ALL_TOURNAMENTS.find((t) => t.id === targetTournamentId);
+        if (found) {
+          setActiveTournament(found);
+          setIsRegistering(true);
+        }
+      } else {
+        setIsRegistering(false);
       }
     }
-  }, [targetTournamentId]);
+  }, [isOpen, targetTournamentId]);
 
   // Lock background scroll & close on Escape while the modal is open
   useEffect(() => {
@@ -48,14 +53,20 @@ export const TournamentModal: React.FC<TournamentModalProps> = ({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') handleClose();
     };
+
     const originalOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    
     document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
     window.addEventListener('keydown', onKey);
+
     return () => {
       document.body.style.overflow = originalOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
       window.removeEventListener('keydown', onKey);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -77,15 +88,21 @@ export const TournamentModal: React.FC<TournamentModalProps> = ({
   };
 
   return (
-    <div onClick={handleClose} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+    <div 
+      onClick={handleClose} 
+      data-lenis-prevent="true"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-fadeIn select-none overscroll-contain"
+    >
       <div 
-        className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto bg-[#0d0d14] border border-white/10 rounded-3xl shadow-2xl p-6 sm:p-8"
+        data-lenis-prevent="true"
+        className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto overscroll-contain bg-[#0d0d14] border border-white/10 rounded-3xl shadow-[0_25px_80px_rgba(0,0,0,0.95)] p-5 sm:p-8"
         onClick={(e) => e.stopPropagation()}
+        onWheel={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className="absolute top-5 right-5 p-2 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-400 hover:text-white transition-all z-20"
+          className="absolute top-5 right-5 p-2 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-400 hover:text-white transition-all z-20 cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -126,7 +143,7 @@ export const TournamentModal: React.FC<TournamentModalProps> = ({
                   setRegisteredSuccess(false);
                   setIsRegistering(false);
                 }}
-                className="px-8 py-3 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.15em] text-white bg-[#E32124] hover:bg-[#FF2A2E] transition-all shadow-lg shadow-red-600/30"
+                className="px-8 py-3 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.15em] text-white bg-[#E32124] hover:bg-[#FF2A2E] transition-all shadow-lg shadow-red-600/30 cursor-pointer"
               >
                 Вернуться к турнирному списку
               </button>
@@ -137,7 +154,7 @@ export const TournamentModal: React.FC<TournamentModalProps> = ({
             {/* Back Button */}
             <button
               onClick={() => setIsRegistering(false)}
-              className="text-xs font-mono text-zinc-400 hover:text-white mb-4 flex items-center gap-1"
+              className="text-xs font-mono text-zinc-400 hover:text-white mb-4 flex items-center gap-1 cursor-pointer"
             >
               ← Назад к списку турниров
             </button>
@@ -223,13 +240,13 @@ export const TournamentModal: React.FC<TournamentModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsRegistering(false)}
-                  className="px-5 py-2.5 rounded-xl text-xs text-zinc-400 hover:text-white"
+                  className="px-5 py-2.5 rounded-xl text-xs text-zinc-400 hover:text-white cursor-pointer"
                 >
                   Отмена
                 </button>
                 <button
                   type="submit"
-                  className="py-3 px-8 rounded-2xl font-bold text-xs uppercase tracking-[0.15em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 active:scale-95 transition-all"
+                  className="py-3 px-8 rounded-2xl font-bold text-xs uppercase tracking-[0.15em] text-white bg-[#E32124] hover:bg-[#FF2A2E] shadow-lg shadow-red-600/30 active:scale-95 transition-all cursor-pointer"
                 >
                   Завершить регистрацию
                 </button>
@@ -261,7 +278,7 @@ export const TournamentModal: React.FC<TournamentModalProps> = ({
                     sound.playClick();
                     setSelectedGameFilter(game);
                   }}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                     selectedGameFilter === game
                       ? 'bg-[#E32124] text-white border-[#E32124]'
                       : 'bg-white/[0.03] text-zinc-400 border-white/[0.06] hover:text-white'
@@ -319,7 +336,7 @@ export const TournamentModal: React.FC<TournamentModalProps> = ({
                         setActiveTournament(t);
                         setIsRegistering(true);
                       }}
-                      className="py-2.5 px-5 rounded-2xl font-bold text-xs uppercase tracking-[0.15em] text-white bg-[#E32124] hover:bg-[#FF2A2E] transition-all shadow-md shadow-red-600/30 flex items-center gap-1.5 active:scale-95"
+                      className="py-2.5 px-5 rounded-2xl font-bold text-xs uppercase tracking-[0.15em] text-white bg-[#E32124] hover:bg-[#FF2A2E] transition-all shadow-md shadow-red-600/30 flex items-center gap-1.5 active:scale-95 cursor-pointer"
                     >
                       <span>Регистрация</span>
                       <ChevronRight className="w-3.5 h-3.5" />

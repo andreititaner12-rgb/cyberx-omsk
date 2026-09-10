@@ -113,26 +113,6 @@
   color: transparent;
 }
 
-/* Лёгкое зерно поверх всей страницы (плёночная фактура, 3%) */
-.grain::after {
-  content: '';
-  position: fixed;
-  inset: -50%;
-  /* над контентом (z-10), под хромом UI (шапка z-50, модалки z-60+) */
-  z-index: 15;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-  opacity: 0.028;
-  animation: grainShift 9s steps(6) infinite;
-}
-@keyframes grainShift {
-  0%, 100% { transform: translate(0, 0); }
-  20% { transform: translate(-3%, 2%); }
-  40% { transform: translate(2%, -3%); }
-  60% { transform: translate(-2%, -2%); }
-  80% { transform: translate(3%, 3%); }
-}
-
 /* Кнопки */
 .btn-primary,
 .btn-ghost {
@@ -217,18 +197,6 @@
   will-change: transform;
 }
 
-/* Горизонтальный маркиз с затемнением по краям.
-   Внутри — два одинаковых ряда (.marquee-anim), каждый едет на -100%:
-   момент циклического сброса совпадает с позицией второго ряда. */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-100%); }
-}
-.marquee-mask {
-  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-}
-
 /* Тёмные моно-тайлы OpenStreetMap */
 .dark-monochrome-tiles {
   filter: grayscale(100%) invert(92%) contrast(140%) brightness(82%) !important;
@@ -239,15 +207,8 @@
   border: none !important;
 }
 
-/* Лента-прорезь для бегущей строки: пауза при hover */
-.marquee-track:hover .marquee-anim {
-  animation-play-state: paused;
-}
-
 /* Доступность: уважение к prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
-  .grain::after,
-  .marquee-anim,
   .animate-ken-burns {
     animation: none !important;
   }

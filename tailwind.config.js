@@ -46,15 +46,10 @@ export default {
         modal: '0 40px 120px -20px rgba(0,0,0,0.8)',
       },
       animation: {
-        marquee: 'marquee 42s linear infinite',
         'fade-in': 'fadeIn 0.3s ease-out',
         'ken-burns': 'kenBurns 14s ease-in-out infinite alternate',
       },
       keyframes: {
-    marquee: {
-      '0%': { transform: 'translateX(0)' },
-      '100%': { transform: 'translateX(-100%)' },
-    },
         kenBurns: {
           '0%': { transform: 'scale(1.02) translateY(0)' },
           '100%': { transform: 'scale(1.09) translateY(-1.5%)' },

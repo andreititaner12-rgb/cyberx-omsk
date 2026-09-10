@@ -19,24 +19,12 @@ import { OwnerSecurityGate, MASTER_SECRET_KEY } from './components/OwnerSecurity
 import { CustomCrosshairCursor } from './components/CustomCrosshairCursor';
 import { Preloader } from './components/Preloader';
 import { CyberSectionDivider } from './components/ui/CyberSectionDivider';
-import { Marquee } from './components/ui/Marquee';
 import { Shield } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { UPCOMING_TOURNAMENT, PROMOTIONS, ZONES } from './data/arenaData';
 import { ZoneType } from './types';
 import { sound } from './utils/sound';
 import { registerLenis } from './utils/scroll';
-
-const MARQUEE_ITEMS = [
-  '182 игровых ПК',
-  'мониторы до 600Hz',
-  '3 клуба в Омске',
-  'Sim-Racing · Moza Direct Drive',
-  'Premium-комнаты',
-  'PS5 Deluxe залы',
-  'LAN-турниры',
-  'открыты 24/7',
-];
 
 export function App() {
   const [loading, setLoading] = useState(true);
@@ -182,7 +170,7 @@ export function App() {
           playWelcomeVoice();
         }
       }}
-      className="grain relative min-h-screen bg-cyberx-ink text-cyberx-text selection:bg-[#E32124] selection:text-white overflow-x-hidden"
+      className="relative min-h-screen bg-cyberx-ink text-cyberx-text selection:bg-[#E32124] selection:text-white overflow-x-hidden"
     >
       {/* Тактический курсор */}
       <CustomCrosshairCursor />
@@ -209,9 +197,6 @@ export function App() {
 
       {/* Контент */}
       <main className="relative z-10">
-        {/* Лента фактов */}
-        <Marquee items={MARQUEE_ITEMS} />
-
         {/* Манифест */}
         <BrandManifesto />
 

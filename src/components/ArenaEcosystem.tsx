@@ -102,11 +102,11 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
 
         {/* Карточки клубов */}
         <div className="mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
-          {ARENAS.map((arena, i) => {
-            const meta = ARENA_META[arena.id];
-            const isActive = arena.id === activeId;
-            const isDimmed = hoveredId !== null && hoveredId !== arena.id && !isActive;
-            const isFlagship = arena.id === 'cyberx-arena';
+            {ARENAS.map((arena, i) => {
+              const meta = ARENA_META[arena.id];
+              const isActive = arena.id === activeId;
+              const isDimmed = hoveredId !== null && hoveredId !== arena.id;
+              const isFlagship = arena.id === 'cyberx-arena';
 
             return (
               <Reveal key={arena.id} delay={i * 0.08} y={34}>

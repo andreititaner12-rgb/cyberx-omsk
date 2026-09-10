@@ -260,3 +260,5 @@ export const Mouse3DViewer: React.FC = () => {
     </div>
   );
 };
+
+export default Mouse3DViewer;

@@ -283,25 +283,18 @@ export const DisplaySmoothnessSimulator: React.FC = () => {
       
       {/* Top Controls & Matrix Smoothness Readout */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <Zap className="w-4 h-4 text-[#E32124]" />
-          <span className="text-xs uppercase tracking-wider text-zinc-300 font-bold">
-            Симулятор плавности матрицы:
+          <span className="text-xs uppercase tracking-wider text-white/85 font-bold">
+            Плавность матрицы
           </span>
-          <span className={`text-[10px] px-2 py-0.5 rounded-full border flex items-center gap-1 font-bold ${
-            isActive 
-              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
-              : 'bg-zinc-800/80 border-white/10 text-zinc-500'
-          }`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-400 animate-ping' : 'bg-zinc-600'}`} />
-            <span>{isActive ? 'АКТИВЕН' : 'ОЖИДАНИЕ НАВЕДЕНИЯ'}</span>
+          <span className={`text-[10px] font-mono uppercase tracking-wider ${isActive ? 'text-white/70' : 'text-zinc-500'}`}>
+            {isActive ? '— активен' : '— наведи на поле'}
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-[#E32124] bg-[#E32124]/10 px-3 py-1 rounded-xl border border-[#E32124]/30 shadow-sm shadow-red-600/20">
-            {hzValue} FPS // {(1000 / hzValue).toFixed(2)} мс
-          </span>
+        <div className="text-xs font-mono font-bold text-[#E32124] tabular-nums">
+          {hzValue} FPS · {(1000 / hzValue).toFixed(2)} мс
         </div>
       </div>
 
@@ -309,10 +302,10 @@ export const DisplaySmoothnessSimulator: React.FC = () => {
       <div 
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`relative h-44 sm:h-48 rounded-3xl border transition-all duration-300 overflow-hidden shadow-2xl flex items-center justify-center ${
-          isActive 
-            ? 'bg-[#08080e] border-[#E32124]/50 shadow-[0_0_25px_rgba(227,33,36,0.2)]' 
-            : 'bg-[#06060a] border-white/10 opacity-80'
+        className={`relative h-44 sm:h-48 rounded-2xl border transition-all duration-300 overflow-hidden flex items-center justify-center ${
+          isActive
+            ? 'bg-[#08080e] border-[#E32124]/40'
+            : 'bg-[#06060a] border-white/[0.08]'
         }`}
       >
         <canvas
@@ -324,7 +317,7 @@ export const DisplaySmoothnessSimulator: React.FC = () => {
         />
 
         {/* Bottom Interactive Hint */}
-        <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-[10px] text-zinc-400 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 pointer-events-none">
+        <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-[10px] text-zinc-400 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/[0.08] pointer-events-none">
           <span className="flex items-center gap-1.5 text-zinc-200 truncate">
             <MousePointerClick className="w-3.5 h-3.5 text-[#E32124] shrink-0" />
             <span className="truncate">
@@ -354,9 +347,9 @@ export const DisplaySmoothnessSimulator: React.FC = () => {
               sound.playClick();
               setHzValue(val);
             }}
-            className={`flex-1 min-w-[70px] py-2 text-xs font-mono font-bold rounded-xl transition-all border cursor-pointer ${
+            className={`flex-1 min-w-[70px] py-2 text-xs font-mono font-bold rounded-lg transition-all border cursor-pointer ${
               hzValue === val
-                ? 'bg-[#E32124] text-white border-[#E32124] shadow-lg shadow-red-600/40 scale-105'
+                ? 'bg-[#E32124] text-white border-[#E32124]'
                 : 'bg-white/[0.04] text-zinc-400 border-white/[0.08] hover:bg-white/[0.08] hover:text-white'
             }`}
           >

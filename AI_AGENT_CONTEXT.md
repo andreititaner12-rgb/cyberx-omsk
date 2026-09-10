@@ -15,8 +15,9 @@
 ## 🎨 Дизайн-система v2 (Обязательно прочитать перед правками UI)
 См. раздел «Дизайн-система v2» в `README.md`. Ключевое:
 - **Франшиза (не нарушать):** алый `#E32124` (hover `#FF2A2E`), обсидиан `#050507`,
-  шрифты **Tactic Sans** (display) + **Montserrat** (текст). Tactic Sans подхватывается
-  из `local()` / `public/fonts/tactic-sans.woff2` (файлы кладёт франшиза).
+  шрифты **Tactic Sans** (display) + **Montserrat** (текст). Tactic Sans подключён:
+  woff2-сабсеты Medium (400–699) и Bold (700–900) в `public/fonts/`, исходники TTF —
+  `fonts-source/`, два `@font-face` с диапазонами весов в `src/index.css`.
 - **Стиль:** плоские карточки `#0A0A0F` + hairline-линии, **без** неоновых свечений,
   пульсирующих «live»-точек, золотого shimmer, «плашек»-бейджей, emoji в UI,
   стеклянного glassmorphism и «X // Y»-заголовков. Красный — точечно: CTA,

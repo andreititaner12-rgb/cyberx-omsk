@@ -10,18 +10,29 @@
    ============================================================ */
 
 /* ------------------------------------------------------------
-   1. FRANCHISE DISPLAY FONT
-   Tactic Sans — поставьте файлы шрифта (woff2) в public/fonts,
-   см. public/fonts/README.md. До этого система корректно
-   отрисовывается на Montserrat (тот же стилистический регистр).
+   1. FRANCHISE DISPLAY FONT — Tactic Sans
+   Файлы в public/fonts: woff2-сабсеты (кириллица + латиница, ~15 КБ
+   каждое), исходники TTF — в fonts-source/.
+   Medium face — диапазон 400–699; Bold face — 700–900
+   (самое тяжёлое доступное начертание, на нём рендерятся
+   все заголовки сайта). local() подхватывает установленное
+   семейство на машинах бренд-команды.
    ------------------------------------------------------------ */
 @font-face {
   font-family: 'Tactic Sans';
   font-style: normal;
-  font-weight: 400 900;
+  font-weight: 400 699;
   font-display: swap;
-  src: local('Tactic Sans'), local('TacticSans-Regular'),
-       url('/fonts/tactic-sans.woff2') format('woff2');
+  src: local('Tactic Sans Medium'), local('TacticSans-Medium'), local('TacticSans-Med'),
+       url('/fonts/tactic-sans-medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Tactic Sans';
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: swap;
+  src: local('Tactic Sans Bold'), local('TacticSans-Bold'), local('TacticSans-Bld'),
+       url('/fonts/tactic-sans-bold.woff2') format('woff2');
 }
 
 @layer base {

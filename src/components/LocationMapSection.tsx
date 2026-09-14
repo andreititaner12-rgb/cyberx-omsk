@@ -12,6 +12,7 @@ import {
 import { sound } from '../utils/sound';
 import { SectionHeading } from './ui/SectionHeading';
 import { Reveal } from './ui/Reveal';
+import { ErrorBoundary } from './ui/ErrorBoundary';
 import { Dynamic2GisMap } from './Dynamic2GisMap';
 
 interface LocationMapSectionProps {
@@ -202,10 +203,24 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
 
               {/* Карта */}
               <div className="lg:col-span-7 relative min-h-[420px] lg:min-h-full border-t lg:border-t-0 lg:border-l border-white/[0.08]">
-                <Dynamic2GisMap
-                  selectedArenaId={selectedArenaId}
-                  onSelectArena={setSelectedArenaId}
-                />
+                <ErrorBoundary
+                  label="map"
+                  fallback={
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-[#0a0a0f] px-6 text-center">
+                      <MapPin size={22} className="text-cyberx-red" />
+                      <div className="eyebrow text-white/80">Карта временно недоступна</div>
+                      <div className="text-[11px] font-mono text-cyberx-muted max-w-[340px] leading-relaxed">
+                        {active.name.split('//')[0].trim()} · {active.address} — адрес,
+                        транспорт и маршрут в 2ГИС в блоке слева.
+                      </div>
+                    </div>
+                  }
+                >
+                  <Dynamic2GisMap
+                    selectedArenaId={selectedArenaId}
+                    onSelectArena={setSelectedArenaId}
+                  />
+                </ErrorBoundary>
               </div>
             </div>
           </div>

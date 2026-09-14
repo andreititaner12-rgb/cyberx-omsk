@@ -69,11 +69,23 @@ export const Dynamic2GisMap: React.FC<Dynamic2GisMapProps> = ({
 
   const activeArena = ARENAS.find((a) => a.id === selectedArenaId) || ARENAS[0];
 
-  // Инициализация карты один раз
+  // Инициализация карты один раз.
+  // Защита от двойного монтирования (React StrictMode в dev, HMR-ремаунты):
+  // если контейнер ещё «занят» старым инстансом карты — очищаем его
+  // остатки и инициализируем заново вместо падения с ошибкой Leaflet.
   useEffect(() => {
-    if (!containerRef.current || mapRef.current) return;
+    const container = containerRef.current as
+      | (HTMLDivElement & { _leaflet_id?: number })
+      | null;
+    if (!container || mapRef.current) return;
 
-    const map = L.map(containerRef.current, {
+    if (container._leaflet_id) {
+      // Контейнер принадлежит только карте — чистим её DOM-остатки
+      while (container.firstChild) container.removeChild(container.firstChild);
+      container._leaflet_id = undefined;
+    }
+
+    const map = L.map(container, {
       center: [activeArena.coordinates.x, activeArena.coordinates.y],
       zoom: 15,
       zoomControl: false,
@@ -131,9 +143,18 @@ export const Dynamic2GisMap: React.FC<Dynamic2GisMapProps> = ({
 
     return () => {
       clearTimeout(t);
-      map.remove();
-      mapRef.current = null;
-      markersRef.current = {};
+      // Сначала сбрасываем ref, чтобы remove() (который может бросить,
+      // если контейнер уже занят новым инстансом) не заблокировал повторную
+      // инициализацию.
+      if (mapRef.current === map) {
+        mapRef.current = null;
+        markersRef.current = {};
+        try {
+          map.remove();
+        } catch {
+          /* контейнер уже занят новым инстансом — ничего не делаем */
+        }
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

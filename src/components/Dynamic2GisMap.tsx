@@ -13,6 +13,28 @@ interface Dynamic2GisMapProps {
 const PIN_SVG =
   '<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>';
 
+/* Тёмные тайлы: цепочка провайдеров с автофолбэком.
+   ОSM-волонтёрские серверы агрессивно блокируют датацентровый трафик
+   (403 «Access blocked»), поэтому они — последний запасной вариант,
+   а первыми идут коммерческие CDN с тёмными темами (без API-ключей). */
+const TILE_PROVIDERS: { url: string; subdomains?: string; maxZoom: number; className?: string }[] = [
+  {
+    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+    subdomains: 'abcd',
+    maxZoom: 19,
+  },
+  {
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Dark_Grey_Basemap/MapServer/tile/{z}/{y}/{x}',
+    maxZoom: 19,
+  },
+  {
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    subdomains: 'abc',
+    maxZoom: 19,
+    className: 'dark-monochrome-tiles',
+  },
+];
+
 const markerHtml = (name: string, isSelected: boolean) => `
   <div class="relative group cursor-pointer select-none">
     <div class="relative flex items-center justify-center w-9 h-9 rounded-full ${
@@ -54,12 +76,30 @@ export const Dynamic2GisMap: React.FC<Dynamic2GisMapProps> = ({
       scrollWheelZoom: true,
     });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      subdomains: ['a', 'b', 'c'],
-      maxZoom: 19,
-      minZoom: 10,
-      className: 'dark-monochrome-tiles',
-    }).addTo(map);
+    // Тайлы с фолбэком: при 3 ошибках провайдера — переключаемся на следующий
+    const layerRef: { current: L.TileLayer | null } = { current: null };
+    const errorsRef: { current: number } = { current: 0 };
+
+    const addTileProvider = (idx: number) => {
+      const provider = TILE_PROVIDERS[idx];
+      if (!provider) return;
+      if (layerRef.current) map.removeLayer(layerRef.current);
+      const layer = L.tileLayer(provider.url, {
+        subdomains: provider.subdomains,
+        maxZoom: provider.maxZoom,
+        minZoom: 10,
+        className: provider.className,
+      }).addTo(map);
+      layer.on('tileerror', () => {
+        errorsRef.current += 1;
+        if (errorsRef.current >= 3 && idx < TILE_PROVIDERS.length - 1) {
+          errorsRef.current = 0;
+          addTileProvider(idx + 1);
+        }
+      });
+      layerRef.current = layer;
+    };
+    addTileProvider(0);
 
     mapRef.current = map;
 
@@ -199,6 +239,7 @@ export const Dynamic2GisMap: React.FC<Dynamic2GisMapProps> = ({
           <div className="mt-0.5 text-[11px] font-mono text-white/50">
             {activeArena.coordinates.x.toFixed(4)}, {activeArena.coordinates.y.toFixed(4)} · {activeArena.address}
           </div>
+          <div className="mt-1 text-[9px] font-mono text-white/25">© OpenStreetMap · CARTO · Esri</div>
         </div>
         <button
           onClick={open2Gis}

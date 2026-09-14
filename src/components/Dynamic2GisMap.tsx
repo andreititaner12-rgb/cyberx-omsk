@@ -101,12 +101,16 @@ export const Dynamic2GisMap: React.FC<Dynamic2GisMapProps> = ({
       const provider = TILE_PROVIDERS[idx];
       if (!provider) return;
       if (layerRef.current) map.removeLayer(layerRef.current);
-      const layer = L.tileLayer(provider.url, {
-        subdomains: provider.subdomains,
+      // ВАЖНО: не передавать ключи со значением undefined — Leaflet copy-ит
+      // их в options, затирая дефолты (subdomains: 'abc' → undefined = краш
+      // в _getSubdomain: "reading 'length'").
+      const layerOptions: L.TileLayerOptions = {
         maxZoom: provider.maxZoom,
         minZoom: 10,
-        className: provider.className,
-      }).addTo(map);
+      };
+      if (provider.subdomains) layerOptions.subdomains = provider.subdomains;
+      if (provider.className) layerOptions.className = provider.className;
+      const layer = L.tileLayer(provider.url, layerOptions).addTo(map);
       layer.on('tileerror', () => {
         errorsRef.current += 1;
         if (errorsRef.current >= 3 && idx < TILE_PROVIDERS.length - 1) {

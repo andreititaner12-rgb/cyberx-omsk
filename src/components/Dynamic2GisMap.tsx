@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import { ARENAS } from '../data/arenaData';
 import { ExternalLink, Layers, Navigation, Minus, Plus } from 'lucide-react';
 import { sound } from '../utils/sound';
+import { CARTO_API_KEY } from '../config';
 
 interface Dynamic2GisMapProps {
   selectedArenaId: string;
@@ -14,12 +15,16 @@ const PIN_SVG =
   '<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>';
 
 /* Тёмные тайлы: цепочка провайдеров с автофолбэком.
-   ОSM-волонтёрские серверы агрессивно блокируют датацентровый трафик
-   (403 «Access blocked»), поэтому они — последний запасной вариант,
-   а первыми идут коммерческие CDN с тёмными темами (без API-ключей). */
+   CARTO (с ключом из src/config.ts) — основной: тёмная тема, подписи улиц,
+   ключ снимает водяной знак. ОSM-волонтёрские серверы агрессивно блокируют
+   датацентровый трафик (403 «Access blocked»), поэтому они — последние. */
 const TILE_PROVIDERS: { url: string; subdomains?: string; maxZoom: number; className?: string }[] = [
   {
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+    url: `https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key=${CARTO_API_KEY}`,
+    maxZoom: 19,
+  },
+  {
+    url: `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png?key=${CARTO_API_KEY}`,
     subdomains: 'abcd',
     maxZoom: 19,
   },

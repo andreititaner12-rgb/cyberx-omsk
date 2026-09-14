@@ -240,7 +240,7 @@ export const AudioSpatialTester: React.FC = () => {
           {/* Left Ear Indicator */}
           <div className={`flex-1 p-3 rounded-2xl border text-center transition-all ${
             activePan < -0.3 
-              ? 'bg-[#E32124]/20 border-[#E32124] text-white shadow-[0_0_20px_rgba(227,33,36,0.5)] scale-105' 
+              ? 'bg-[#E32124]/20 border-[#E32124] text-white  scale-105' 
               : 'bg-[#0f0f18] border-white/5 text-zinc-500'
           }`}>
             <span className="text-[10px] uppercase font-bold block">Левый канал</span>
@@ -257,7 +257,7 @@ export const AudioSpatialTester: React.FC = () => {
           {/* Right Ear Indicator */}
           <div className={`flex-1 p-3 rounded-2xl border text-center transition-all ${
             activePan > 0.3 
-              ? 'bg-[#E32124]/20 border-[#E32124] text-white shadow-[0_0_20px_rgba(227,33,36,0.5)] scale-105' 
+              ? 'bg-[#E32124]/20 border-[#E32124] text-white  scale-105' 
               : 'bg-[#0f0f18] border-white/5 text-zinc-500'
           }`}>
             <span className="text-[10px] uppercase font-bold block">Правый канал</span>

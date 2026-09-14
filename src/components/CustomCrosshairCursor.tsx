@@ -1,99 +1,80 @@
 import React, { useEffect, useRef } from 'react';
 
+/**
+ * Тактический курсор CyberX: тонкое кольцо с точкой и микро-штрихами.
+ * Уверенная инерция (lerp), реагирует на кликабельные цели,
+ * без неоновых свечений — только чистая графика.
+ */
 export const CustomCrosshairCursor: React.FC = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
-  const targetRef = useRef<{ x: number; y: number }>({ x: -100, y: -100 });
-  const currentPos = useRef<{ x: number; y: number }>({ x: -100, y: -100 });
-  const isHoveringRef = useRef(false);
-  const isClickedRef = useRef(false);
-  const isVisibleRef = useRef(false);
-  const requestRef = useRef<number | null>(null);
+  const target = useRef({ x: -100, y: -100 });
+  const pos = useRef({ x: -100, y: -100 });
+  const hovering = useRef(false);
+  const pressed = useRef(false);
+  const visible = useRef(false);
+  const raf = useRef<number | null>(null);
 
   useEffect(() => {
-    // Check if fine pointer is used (mouse)
-    const mediaQuery = window.matchMedia('(pointer: fine)');
-    if (!mediaQuery.matches) return;
+    if (!window.matchMedia('(pointer: fine)').matches) return;
 
     const el = cursorRef.current;
     const ring = ringRef.current;
     if (!el || !ring) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      targetRef.current = { x: e.clientX, y: e.clientY };
-
-      if (!isVisibleRef.current) {
-        isVisibleRef.current = true;
+    const onMove = (e: MouseEvent) => {
+      target.current = { x: e.clientX, y: e.clientY };
+      if (!visible.current) {
+        visible.current = true;
         el.style.opacity = '1';
       }
-
-      const target = e.target as HTMLElement | null;
-      if (target) {
-        const isClickable = !!target.closest('button, a, input, textarea, select, [role="button"], .cursor-pointer');
-        if (isHoveringRef.current !== isClickable) {
-          isHoveringRef.current = isClickable;
-          
-          if (isClickable) {
-            ring.style.width = '38px';
-            ring.style.height = '38px';
-            ring.style.borderColor = '#E32124';
-            ring.style.boxShadow = '0 0 16px rgba(227, 33, 36, 0.6)';
-            ring.style.backgroundColor = 'rgba(227, 33, 36, 0.08)';
-          } else {
-            ring.style.width = '24px';
-            ring.style.height = '24px';
-            ring.style.borderColor = 'rgba(255, 255, 255, 0.4)';
-            ring.style.boxShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
-            ring.style.backgroundColor = 'transparent';
-          }
-        }
+      const t = e.target as HTMLElement | null;
+      const clickable = !!t?.closest(
+        'button, a, input, textarea, select, [role="button"], .cursor-pointer'
+      );
+      if (hovering.current !== clickable) {
+        hovering.current = clickable;
+        ring.style.width = clickable ? '32px' : '22px';
+        ring.style.height = clickable ? '32px' : '22px';
+        ring.style.borderColor = clickable
+          ? 'rgba(227, 33, 36, 0.9)'
+          : 'rgba(255, 255, 255, 0.45)';
       }
     };
 
-    const handleMouseDown = () => {
-      isClickedRef.current = true;
-    };
-
-    const handleMouseUp = () => {
-      isClickedRef.current = false;
-    };
-
-    const handleMouseLeave = () => {
-      isVisibleRef.current = false;
+    const onDown = () => (pressed.current = true);
+    const onUp = () => (pressed.current = false);
+    const onLeave = () => {
+      visible.current = false;
       el.style.opacity = '0';
     };
-
-    const handleMouseEnter = () => {
-      isVisibleRef.current = true;
+    const onEnter = () => {
+      visible.current = true;
       el.style.opacity = '1';
     };
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('mouseleave', handleMouseLeave);
-    document.addEventListener('mouseenter', handleMouseEnter);
+    window.addEventListener('mousemove', onMove, { passive: true });
+    window.addEventListener('mousedown', onDown);
+    window.addEventListener('mouseup', onUp);
+    document.addEventListener('mouseleave', onLeave);
+    document.addEventListener('mouseenter', onEnter);
 
-    // Direct 144Hz+ GPU lerp loop with 0 React state re-renders
     const render = () => {
-      currentPos.current.x += (targetRef.current.x - currentPos.current.x) * 0.45;
-      currentPos.current.y += (targetRef.current.y - currentPos.current.y) * 0.45;
-
-      const clickScale = isClickedRef.current ? 0.8 : 1;
-      el.style.transform = `translate3d(${currentPos.current.x}px, ${currentPos.current.y}px, 0) translate(-50%, -50%) scale(${clickScale})`;
-
-      requestRef.current = requestAnimationFrame(render);
+      pos.current.x += (target.current.x - pos.current.x) * 0.4;
+      pos.current.y += (target.current.y - pos.current.y) * 0.4;
+      const scale = pressed.current ? 0.82 : 1;
+      el.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0) translate(-50%, -50%) scale(${scale})`;
+      raf.current = requestAnimationFrame(render);
     };
-
-    requestRef.current = requestAnimationFrame(render);
+    raf.current = requestAnimationFrame(render);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      document.removeEventListener('mouseenter', handleMouseEnter);
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mousedown', onDown);
+      window.removeEventListener('mouseup', onUp);
+      document.removeEventListener('mouseleave', onLeave);
+      document.removeEventListener('mouseenter', onEnter);
+      if (raf.current) cancelAnimationFrame(raf.current);
     };
   }, []);
 
@@ -101,29 +82,22 @@ export const CustomCrosshairCursor: React.FC = () => {
     <div
       ref={cursorRef}
       className="pointer-events-none fixed top-0 left-0 z-[9999] select-none opacity-0 will-change-transform flex items-center justify-center"
-      style={{
-        transform: 'translate3d(-100px, -100px, 0) translate(-50%, -50%)',
-      }}
+      style={{ transform: 'translate3d(-100px, -100px, 0) translate(-50%, -50%)' }}
+      aria-hidden
     >
-      {/* Expanding Circular Ring Outline */}
+      {/* Кольцо */}
       <div
         ref={ringRef}
-        className="rounded-full border transition-all duration-200 ease-out flex items-center justify-center pointer-events-none"
-        style={{
-          width: '24px',
-          height: '24px',
-          borderColor: 'rgba(255, 255, 255, 0.4)',
-        }}
-      >
-        {/* Center Tactical CS2 Red Dot */}
-        <div className="w-1.5 h-1.5 rounded-full bg-[#E32124] shadow-[0_0_8px_#E32124]" />
-      </div>
-
-      {/* 4 Micro Tactical Crosshair Ticks */}
-      <div className="absolute w-[1px] h-[4px] bg-white/70 -top-[14px]" />
-      <div className="absolute w-[1px] h-[4px] bg-white/70 -bottom-[14px]" />
-      <div className="absolute h-[1px] w-[4px] bg-white/70 -left-[14px]" />
-      <div className="absolute h-[1px] w-[4px] bg-white/70 -right-[14px]" />
+        className="rounded-full border transition-[width,height,border-color] duration-200 ease-out"
+        style={{ width: '22px', height: '22px', borderColor: 'rgba(255,255,255,0.45)' }}
+      />
+      {/* Центр */}
+      <span className="absolute h-[3px] w-[3px] rounded-full bg-[#E32124]" />
+      {/* Микро-штрихи */}
+      <span className="absolute w-px h-[5px] bg-white/50 -top-[12px]" />
+      <span className="absolute w-px h-[5px] bg-white/50 -bottom-[12px]" />
+      <span className="absolute h-px w-[5px] bg-white/50 -left-[12px]" />
+      <span className="absolute h-px w-[5px] bg-white/50 -right-[12px]" />
     </div>
   );
 };

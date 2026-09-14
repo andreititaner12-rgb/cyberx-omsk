@@ -33,3 +33,8 @@ yarn-error.log*
 *.sln
 *.sw?
 Thumbs.db
+
+# CMS-данные (не в git)
+server/data.json
+server/uploads/
+server/node_modules/

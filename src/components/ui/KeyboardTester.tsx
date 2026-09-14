@@ -191,7 +191,7 @@ export const KeyboardTester: React.FC = () => {
         {/* Tested Keys Counter + Activity Beacon */}
         <div className={`p-3 rounded-2xl border transition-all duration-300 flex items-center justify-between ${
           isInside 
-            ? 'bg-[#0e0e18] border-[#E32124]/50 shadow-[0_0_15px_rgba(227,33,36,0.15)]' 
+            ? 'bg-[#0e0e18] border-[#E32124]/50 ' 
             : 'bg-[#0a0a10] border-white/[0.08]'
         }`}>
           <div>
@@ -202,7 +202,7 @@ export const KeyboardTester: React.FC = () => {
                   ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
                   : 'bg-zinc-800 border-white/10 text-zinc-500'
               }`}>
-                <span className={`w-1.5 h-1.5 rounded-full ${isInside ? 'bg-emerald-400 animate-ping' : 'bg-zinc-600'}`} />
+                <span className={`w-1.5 h-1.5 rounded-full ${isInside ? 'bg-emerald-400' : 'bg-zinc-600'}`} />
                 <span>{isInside ? 'ТЕСТЕР АКТИВЕН' : 'НАВЕДИТЕ КУРСОР'}</span>
               </span>
             </div>
@@ -246,7 +246,7 @@ export const KeyboardTester: React.FC = () => {
       {/* Interactive Visual 65% Keyboard Layout */}
       <div className={`p-3.5 sm:p-4 rounded-3xl border transition-all duration-300 shadow-2xl relative overflow-x-auto ${
         isInside 
-          ? 'bg-[#08080f] border-[#E32124]/40 shadow-[0_0_25px_rgba(227,33,36,0.15)]' 
+          ? 'bg-[#08080f] border-[#E32124]/40 ' 
           : 'bg-[#06060a] border-white/10 opacity-90'
       }`}>
         
@@ -278,9 +278,9 @@ export const KeyboardTester: React.FC = () => {
                       k.width || 'w-8 sm:w-9'
                     } ${
                       isActive
-                        ? 'bg-[#E32124] text-white border-[#E32124] shadow-[0_0_15px_#E32124] scale-95 translate-y-0.5'
+                        ? 'bg-[#E32124] text-white border-[#E32124]  scale-95 translate-y-0.5'
                         : isTested
-                        ? 'bg-[#E32124]/20 text-white border-[#E32124]/60 shadow-[0_0_8px_rgba(227,33,36,0.3)]'
+                        ? 'bg-[#E32124]/20 text-white border-[#E32124]/60 '
                         : isWsad
                         ? 'bg-[#181822] text-zinc-200 border-[#E32124]/40 hover:border-[#E32124]'
                         : 'bg-[#101018] text-zinc-400 border-white/[0.06] hover:bg-[#161622] hover:text-white'

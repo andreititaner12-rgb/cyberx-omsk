@@ -222,7 +222,7 @@ export const MouseTester: React.FC = () => {
         >
           {trail.length === 0 ? (
             <div className="text-center p-4">
-              <Activity className="w-5 h-5 text-[#E32124] mx-auto mb-1 opacity-70 animate-pulse" />
+              <Activity className="w-5 h-5 text-[#E32124] mx-auto mb-1 opacity-70 " />
               <span className="text-xs text-zinc-500">
                 Двигайте курсор или палец: проверяется стабильность трекинга сенсора
               </span>
@@ -268,7 +268,7 @@ export const MouseTester: React.FC = () => {
             {/* LKM */}
             <div className={`px-3 py-1 rounded-lg text-[10px] font-bold border transition-all ${
               lastClickedButton === 'left' 
-                ? 'bg-[#E32124] text-white border-[#E32124] shadow-[0_0_12px_#E32124]' 
+                ? 'bg-[#E32124] text-white border-[#E32124] ' 
                 : 'bg-white/5 border-white/10 text-zinc-400'
             }`}>
               ЛКМ {lastClickedButton === 'left' && '✓'}
@@ -277,7 +277,7 @@ export const MouseTester: React.FC = () => {
             {/* Wheel */}
             <div className={`px-2 py-1 rounded-lg text-[10px] font-bold border transition-all ${
               lastClickedButton === 'middle' 
-                ? 'bg-sky-500 text-white border-sky-500 shadow-[0_0_12px_#0ea5e9]' 
+                ? 'bg-sky-500 text-white border-sky-500 ' 
                 : 'bg-white/5 border-white/10 text-zinc-400'
             }`}>
               СКМ
@@ -286,7 +286,7 @@ export const MouseTester: React.FC = () => {
             {/* PKM */}
             <div className={`px-3 py-1 rounded-lg text-[10px] font-bold border transition-all ${
               lastClickedButton === 'right' 
-                ? 'bg-[#E32124] text-white border-[#E32124] shadow-[0_0_12px_#E32124]' 
+                ? 'bg-[#E32124] text-white border-[#E32124] ' 
                 : 'bg-white/5 border-white/10 text-zinc-400'
             }`}>
               ПКМ {lastClickedButton === 'right' && '✓'}

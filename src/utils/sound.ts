@@ -3,9 +3,6 @@
 class SoundController {
   private ctx: AudioContext | null = null;
   private enabled: boolean = true;
-  private voiceAudio: HTMLAudioElement | null = null;
-  private voiceStarted: boolean = false;
-  private voicePlaying: boolean = false;
 
   constructor() {
     // Lazy initialize on first interaction or preloader
@@ -227,40 +224,6 @@ class SoundController {
     } catch {
       // Ignore
     }
-  }
-
-  // Female voice greeting playback (strictly plays ONCE, preventing double triggers/stutter)
-  public playVoiceGreeting(): Promise<void> {
-    if (!this.enabled || this.voiceStarted) return Promise.resolve();
-    this.voiceStarted = true;
-    this.voicePlaying = true;
-    this.init();
-    try {
-      if (!this.voiceAudio) {
-        this.voiceAudio = new Audio('/audio/welcome-cyberx-female.wav');
-        this.voiceAudio.volume = 1.0;
-        this.voiceAudio.onended = () => {
-          this.voicePlaying = false;
-        };
-      }
-      return this.voiceAudio.play().catch((err) => {
-        this.voiceStarted = false;
-        this.voicePlaying = false;
-        throw err;
-      });
-    } catch (e) {
-      this.voiceStarted = false;
-      this.voicePlaying = false;
-      return Promise.reject(e);
-    }
-  }
-
-  public isVoicePlaying(): boolean {
-    return this.voicePlaying;
-  }
-
-  public hasVoiceStarted(): boolean {
-    return this.voiceStarted;
   }
 
   private playBeep(freq: number, type: OscillatorType, dur: number, vol: number) {

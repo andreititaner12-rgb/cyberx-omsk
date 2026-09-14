@@ -1,99 +1,98 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Monitor, Trophy, ShieldCheck, Flame } from 'lucide-react';
-import { AnimatedGroup } from './ui/AnimatedGroup';
-import { ElegantDarkPattern } from './ui/ElegantDarkPattern';
+import { Reveal } from './ui/Reveal';
+import { CountUp } from './ui/CountUp';
+
+const STATS = [
+  {
+    value: 182,
+    suffix: '',
+    label: 'игровых ПК в сети',
+    detail: 'RTX 5070 Ti · i5-14600KF · Ryzen 7 7800X3D',
+  },
+  {
+    value: 600,
+    suffix: ' Hz',
+    label: 'максимальная герцовка',
+    detail: 'BenQ 600Hz в Super VIP и Solo-комнатах',
+  },
+  {
+    value: 10,
+    suffix: '',
+    label: 'PS5-залов во всех клубах',
+    detail: '75–85" 4K 120Hz, DualSense, PS Plus',
+  },
+  {
+    value: 24,
+    suffix: '/7',
+    label: 'клубы открыты круглосуточно',
+    detail: 'без окон и выходных, в любую погоду',
+  },
+];
 
 export const BrandManifesto: React.FC = () => {
-  const stats = [
-    {
-      icon: Flame,
-      value: '3 АРЕНЫ',
-      label: 'Флагманские клубы в Омске',
-      detail: 'Ленина 19 • Мира 42к1 • Серова 19А',
-    },
-    {
-      icon: Monitor,
-      value: '182 ПК',
-      label: 'Дисплеи BenQ 600Hz & ASUS 480Hz',
-      detail: 'RTX 5070 Ti & Ryzen 7 7800X3D',
-    },
-    {
-      icon: Trophy,
-      value: '10 PS5 ЗАЛОВ',
-      label: 'VIP & Lounge пространства',
-      detail: '2 Premium Squad сьюта + Кинозал 150"',
-    },
-    {
-      icon: ShieldCheck,
-      value: '24/7 ONLINE',
-      label: 'Круглосуточный сервис',
-      detail: 'Прямой оптический канал >1 Гбит/с',
-    },
-  ];
-
   return (
-    <ElegantDarkPattern variant="crimson" className="pt-20 pb-12 sm:pt-28 sm:pb-16 scroll-mt-24">
-      <div id="manifesto" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Main Title & Statement */}
-        <motion.div 
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center max-w-4xl mx-auto mb-16"
-        >
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E32124]/10 border border-[#E32124]/30 text-[#E32124] text-xs font-mono font-bold tracking-wider uppercase mb-4 shadow-sm shadow-red-950/40">
-            <span>ЭКОСИСТЕМА CYBERX COMMUNITY OMSK</span>
+    <section
+      id="manifesto"
+      className="relative scroll-mt-24"
+    >
+      <div className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-10 pt-20 sm:pt-28 pb-14 sm:pb-20">
+        {/* Редакционное заявление */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+          <div className="lg:col-span-7">
+            <Reveal y={14}>
+              <div className="flex items-center gap-4 mb-8">
+                <span className="h-px w-10 sm:w-14 bg-cyberx-red" aria-hidden />
+                <span className="eyebrow text-cyberx-muted">Манифест сети</span>
+              </div>
+            </Reveal>
+
+            <h2 className="font-display font-black uppercase leading-[0.95] tracking-[-0.01em] text-4xl sm:text-5xl lg:text-[3.9rem] text-white">
+              <Reveal>
+                <span className="block">Три клуба.</span>
+              </Reveal>
+              <Reveal delay={0.08}>
+                <span className="block text-cyberx-red">Один стандарт.</span>
+              </Reveal>
+            </h2>
           </div>
 
-          <h2 className="font-display font-black text-3xl sm:text-5xl md:text-6xl tracking-tight uppercase text-white leading-tight">
-            CYBERX <span className="text-[#E32124]">//</span> АРЕНЫ ОМСКА
-          </h2>
+          <div className="lg:col-span-5 lg:justify-self-end lg:self-end">
+            <Reveal delay={0.15}>
+              <p className="text-base sm:text-lg leading-relaxed text-cyberx-muted max-w-xl">
+                Сеть CyberX в Омске построена вокруг соревновательного уровня:
+                мониторы до 600 герц, бездисковая сеть и железо, на котором
+                нельзя экономить.{' '}
+                <span className="text-white">
+                  Всё остальное — Premium-комнаты, сим-рейсинг, кино-лаунж и
+                  сервис — работает на это.
+                </span>
+              </p>
+            </Reveal>
+          </div>
+        </div>
 
-          <p className="mt-4 text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto font-normal leading-relaxed">
-            Премиальные киберспортивные арены в Омске. Соревновательное железо, VIP комнаты и круглосуточный сервис 24/7.
-          </p>
-        </motion.div>
-
-        {/* 4 Key Pillars with AnimatedGroup staggered blur-slide reveal */}
-        <AnimatedGroup preset="blur-slide" staggerDelay={0.1} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {stats.map((stat, i) => {
-            const Icon = stat.icon;
-            return (
+        {/* Статистика: числа на тонких линиях, не карточки */}
+        <Reveal delay={0.1} className="mt-14 sm:mt-20">
+          <div className="grid grid-cols-2 lg:grid-cols-4 border-y border-white/[0.08] divide-x divide-y lg:divide-y-0 divide-white/[0.08]">
+            {STATS.map((stat) => (
               <div
-                key={i}
-                className="p-6 rounded-3xl border border-white/[0.08] hover:border-[#E32124]/40 bg-gradient-to-b from-[#111118] to-[#09090d] shadow-xl hover:shadow-[0_0_25px_rgba(227,33,36,0.15)] transition-all duration-300 group relative overflow-hidden h-full flex flex-col justify-between"
+                key={stat.label}
+                className="group px-5 sm:px-7 py-7 sm:py-9 transition-colors duration-500 hover:bg-white/[0.025]"
               >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-[#E32124] group-hover:scale-105 group-hover:bg-[#E32124] group-hover:text-white transition-all">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest font-bold">
-                      0{i + 1} //
-                    </span>
-                  </div>
-
-                  <div className="font-display font-black text-2xl text-white group-hover:text-[#E32124] transition-colors uppercase">
-                    {stat.value}
-                  </div>
-                  
-                  <div className="text-xs font-mono font-bold text-zinc-300 mt-1">
-                    {stat.label}
-                  </div>
+                <div className="font-display font-black text-4xl sm:text-5xl text-white tracking-tight tabular-nums">
+                  <CountUp to={stat.value} suffix={stat.suffix} />
                 </div>
-
-                <div className="text-[11px] text-zinc-500 mt-3 font-mono leading-tight">
+                <div className="mt-2 text-[13px] font-medium text-white/85">
+                  {stat.label}
+                </div>
+                <div className="mt-1.5 text-[11px] leading-snug text-cyberx-faint font-mono">
                   {stat.detail}
                 </div>
               </div>
-            );
-          })}
-        </AnimatedGroup>
-
+            ))}
+          </div>
+        </Reveal>
       </div>
-    </ElegantDarkPattern>
+    </section>
   );
 };

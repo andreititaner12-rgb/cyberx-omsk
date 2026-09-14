@@ -4,9 +4,12 @@ import { ArrowUpRight } from 'lucide-react';
 import { sound } from '../utils/sound';
 import { scrollToSection } from '../utils/scroll';
 import { EASE_OUT } from './ui/Reveal';
+import { DEFAULT_CONTENT, HeroContent } from '../data/siteContent';
 
 interface HeroProps {
   isReady?: boolean;
+  /** Контент hero из данных владельца (дефолт — DEFAULT_CONTENT.hero) */
+  content?: HeroContent;
 }
 
 const HERO_NAV = [
@@ -17,7 +20,8 @@ const HERO_NAV = [
   { label: 'Акции', target: 'promotions' },
 ];
 
-export const Hero: React.FC<HeroProps> = ({ isReady = true }) => {
+export const Hero: React.FC<HeroProps> = ({ isReady = true, content }) => {
+  const hero = content || DEFAULT_CONTENT.hero;
   const sectionRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -71,9 +75,9 @@ export const Hero: React.FC<HeroProps> = ({ isReady = true }) => {
           muted
           playsInline
           preload="auto"
-          poster="/hero-bg-poster.jpg"
+          poster={hero.poster}
           className="w-full h-full object-cover brightness-[0.62] contrast-[1.06] saturate-[0.92]"
-          src="/hero-bg-compact.mp4"
+          src={hero.videoSrc}
         />
         {/* Читабельность: градиенты сверху/снизу и мягкая виньетка */}
         <div className="absolute inset-0 bg-gradient-to-b from-cyberx-ink/80 via-transparent to-cyberx-ink" />
@@ -105,7 +109,7 @@ export const Hero: React.FC<HeroProps> = ({ isReady = true }) => {
           <div className="flex items-center gap-4">
             <span className="h-px w-10 sm:w-16 bg-cyberx-red" aria-hidden />
             <span className="eyebrow text-white/70">
-              Сеть киберспортивных арен — Омск
+              {hero.eyebrow}
             </span>
           </div>
         </motion.div>
@@ -119,7 +123,7 @@ export const Hero: React.FC<HeroProps> = ({ isReady = true }) => {
               transition={{ duration: 1.05, delay: 0.2, ease: EASE_OUT }}
               className="block text-[17.5vw] sm:text-[15vw] lg:text-[11.5rem] text-white"
             >
-              CyberX
+              {hero.titleTop}
             </motion.span>
           </span>
           <span className="mask-line">
@@ -129,7 +133,7 @@ export const Hero: React.FC<HeroProps> = ({ isReady = true }) => {
               transition={{ duration: 1.05, delay: 0.32, ease: EASE_OUT }}
               className="block text-[17.5vw] sm:text-[15vw] lg:text-[11.5rem] text-outline"
             >
-              Арены Омска
+              {hero.titleBottom}
             </motion.span>
           </span>
         </h1>
@@ -140,9 +144,7 @@ export const Hero: React.FC<HeroProps> = ({ isReady = true }) => {
             {...fadeUp(0.6)}
             className="max-w-md text-sm sm:text-base leading-relaxed text-white/65"
           >
-            182 ПК на мониторах до 600Hz, Premium-комнаты, автосимуляторы
-            Sim-Racing и LAN-сцена. Три клуба в центре Омска и в округах —
-            открыты круглосуточно.
+            {hero.description}
           </motion.p>
 
           <motion.div

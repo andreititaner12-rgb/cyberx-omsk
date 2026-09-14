@@ -8,12 +8,18 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { sound } from '../utils/sound';
+import { ARENAS } from '../data/arenaData';
+import { ArenaLocation } from '../types';
+import { DEFAULT_CONTENT, BookingContent } from '../data/siteContent';
 
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   defaultArenaId?: string;
   defaultZoneId?: string;
+  /** Клубы и ссылки бронирования из контента владельца */
+  arenas?: ArenaLocation[];
+  booking?: BookingContent;
 }
 
 interface ClubBookingInfo {
@@ -27,47 +33,30 @@ interface ClubBookingInfo {
   badge?: string;
 }
 
-const CLUBS_BOOKING: ClubBookingInfo[] = [
-  {
-    id: 'cyberx-arena',
-    title: 'CyberX Arena · Флагман',
-    shortTitle: 'Ленина, 19',
-    address: 'ул. Ленина, 19',
-    langameUrl: 'https://langame.ru/club/799452760',
-    qrImage: '/qr/qr-lenina.png',
-    description: '86 ПК · 2 Sim-Racing кокпита · 2 Premium зала · 150" экран',
-    badge: 'Центр · Флагман',
-  },
-  {
-    id: 'cyberx-evropa',
-    title: 'CyberX Европа · Нефтяники',
-    shortTitle: 'Мира, 42к1',
-    address: 'просп. Мира, 42, корп. 1',
-    langameUrl: 'https://langame.ru/club/799457743',
-    qrImage: '/qr/qr-evropa.png',
-    description: '46 ПК · Solo Room Ryzen 7800X3D + 600Hz · 3 PS5 зала',
-    badge: 'Студгородок',
-  },
-  {
-    id: 'cyberx-oktyabr',
-    title: 'CyberX Октябрь · Ленинский',
-    shortTitle: 'Серова, 19А',
-    address: 'ул. Серова, 19А',
-    langameUrl: 'https://langame.ru/club/799456444',
-    qrImage: '/qr/qr-oktyabr.png',
-    description: '50 ПК · Solo 600Hz · Trio & Duo Rooms · удобная парковка',
-    badge: 'Приватные залы',
-  },
-];
-
-const APP_STORE_URL = 'https://apps.apple.com/ru/app/cyberx/id6504088566';
-
 export const BookingModal: React.FC<BookingModalProps> = ({
   isOpen,
   onClose,
   defaultArenaId,
   defaultZoneId,
+  arenas,
+  booking,
 }) => {
+  const arenasData = arenas && arenas.length >= 3 ? arenas : ARENAS;
+  const bookingData = booking || DEFAULT_CONTENT.booking;
+  const appStoreUrl = bookingData.appStore;
+
+  // Клубы брони собираются из контента (редактируется в кабинете владельца)
+  const CLUBS_BOOKING: ClubBookingInfo[] = arenasData.map((a) => ({
+    id: a.id,
+    title: a.name.split('//')[0].trim(),
+    shortTitle: (a.name.split('//')[1] || a.address).trim(),
+    address: a.address,
+    langameUrl: bookingData.langame[a.id] || `https://langame.ru/search/${encodeURIComponent(a.name)}`,
+    qrImage: bookingData.qr[a.id] || '',
+    description: `${a.rigsCount} ПК · ${a.ps5RoomsCount} PS5 зала · открыты 24/7`,
+    badge: a.metro,
+  }));
+
   const [selectedClubId, setSelectedClubId] = useState(
     defaultArenaId || 'cyberx-arena'
   );
@@ -79,6 +68,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
       const match = CLUBS_BOOKING.find((c) => c.id === defaultArenaId);
       if (match) setSelectedClubId(match.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultArenaId]);
 
   useEffect(() => {
@@ -217,7 +207,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 <ExternalLink size={13} />
               </button>
               <button
-                onClick={() => openExternal(APP_STORE_URL)}
+                onClick={() => openExternal(appStoreUrl)}
                 className="w-full btn-ghost"
               >
                 <Download size={13} />
@@ -228,11 +218,20 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         ) : (
           <div className="mt-5 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-6 font-mono">
             <div className="relative shrink-0 p-2.5 bg-white rounded-2xl">
-              <img
-                src={showAppStoreQR ? '/qr/qr-appstore.png' : club.qrImage}
-                alt={`QR: ${showAppStoreQR ? 'App Store' : club.title}`}
-                className="w-40 h-40 object-contain rounded-lg"
-              />
+              {showAppStoreQR || club.qrImage ? (
+                <img
+                  src={showAppStoreQR ? '/qr/qr-appstore.png' : club.qrImage}
+                  alt={`QR: ${showAppStoreQR ? 'App Store' : club.title}`}
+                  className="w-40 h-40 object-contain rounded-lg"
+                />
+              ) : (
+                <div className="w-40 h-40 flex flex-col items-center justify-center gap-2 text-[#0A0A0F]">
+                  <ExternalLink size={22} className="opacity-40" />
+                  <span className="text-[10px] font-mono uppercase tracking-wider opacity-50">
+                    QR не задан
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="space-y-3 text-left min-w-0">
@@ -264,7 +263,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               </div>
 
               <button
-                onClick={() => openExternal(showAppStoreQR ? APP_STORE_URL : club.langameUrl)}
+                onClick={() => openExternal(showAppStoreQR ? appStoreUrl : club.langameUrl)}
                 className="inline-flex items-center gap-1.5 eyebrow text-cyberx-muted hover:text-white transition-colors"
               >
                 Открыть в браузере

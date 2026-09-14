@@ -12,6 +12,7 @@ import {
   Navigation,
 } from 'lucide-react';
 import { ARENAS } from '../data/arenaData';
+import { ArenaLocation } from '../types';
 import { sound } from '../utils/sound';
 import { scrollToSection, getLenis } from '../utils/scroll';
 import { SectionHeading } from './ui/SectionHeading';
@@ -20,6 +21,8 @@ import { Reveal, EASE_OUT } from './ui/Reveal';
 interface ArenaEcosystemProps {
   onOpenBooking: (arenaId: string) => void;
   selectedArenaId?: string;
+  /** Клубы из контента владельца (дефолт — ARENAS) */
+  arenas?: ArenaLocation[];
 }
 
 const ARENA_META: Record<string, { tag: string; rigs: number; ps5: number; from: number; sim: string }> = {
@@ -49,11 +52,13 @@ const ARENA_META: Record<string, { tag: string; rigs: number; ps5: number; from:
 export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
   onOpenBooking,
   selectedArenaId,
+  arenas,
 }) => {
+  const arenasData = arenas && arenas.length >= 3 ? arenas : ARENAS;
   const [activeId, setActiveId] = useState<string>(selectedArenaId || 'cyberx-arena');
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-  const current = ARENAS.find((a) => a.id === activeId) || ARENAS[1];
+  const current = arenasData.find((a) => a.id === activeId) || arenasData[1];
   const gallery = current.gallery && current.gallery.length > 0 ? current.gallery : [current.image];
 
   const [galleryIndex, setGalleryIndex] = useState(0);
@@ -102,7 +107,7 @@ export const ArenaEcosystem: React.FC<ArenaEcosystemProps> = ({
 
         {/* Карточки клубов */}
         <div className="mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
-            {ARENAS.map((arena, i) => {
+            {arenasData.map((arena, i) => {
               const meta = ARENA_META[arena.id];
               const isActive = arena.id === activeId;
               const isDimmed = hoveredId !== null && hoveredId !== arena.id;

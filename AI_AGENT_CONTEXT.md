@@ -46,8 +46,12 @@
 | `src/components/BookingModal.tsx` | Mobile: кнопки Langame/App Store; Desktop: QR-коды клубов |
 | `src/components/TournamentModal.tsx` | Каталог турниров + форма регистрации |
 | `src/components/OwnerSecurityGate.tsx` | Терминал владельца: `#admin?key=CYBERX-OMSK-ROOT-2026` + PIN `5500` |
-| `src/components/OwnerAdminModal.tsx` | Mini-CRM: метрики, турниры (Google Forms), акции, зоны, промокоды |
-| `src/data/arenaData.ts` | Все структурированные данные (клубы, зоны, железо, турниры, акции) |
+| `src/components/OwnerAdminModal.tsx` | Кабинет владельца (редизайн v2): hero, клубы+фото, зоны+фото, прайс, турнир, акции, ссылки; «Черновик» (localStorage) / «Опубликовать» (API) |
+| `src/data/arenaData.ts` | Базовые данные (клубы, зоны, железо, турниры, акции) |
+| `src/data/pricingData.ts` | Прайс 3 групп (лен. ПК / другие ПК / lounge) — сериализуемая модель |
+| `src/data/siteContent.ts` | Единая модель SiteContent, mergeContent, CMS-клиент (fetch/publish/upload), черновик |
+| `src/config.ts` | `CMS_API_BASE` — адрес CMS-бэкенда (пусто = локальный режим) |
+| `server/` | CMS-бэкенд (Express: content GET/PUT + upload), деплой — server/README.md |
 | `src/types.ts` | Типы данных (Tournament.dateISO — опциональная ISO-дата для таймера) |
 | `src/utils/sound.ts` | Web Audio UI-звуки + голосовое приветствие (mp3) |
 | `src/utils/scroll.ts` | Singleton Lenis + `scrollToSection/scrollToTop` |

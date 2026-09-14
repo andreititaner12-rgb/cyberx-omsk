@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Lenis from 'lenis';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
@@ -21,8 +21,14 @@ import { Preloader } from './components/Preloader';
 import { CyberSectionDivider } from './components/ui/CyberSectionDivider';
 import { Shield } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
-import { UPCOMING_TOURNAMENT, PROMOTIONS, ZONES } from './data/arenaData';
-import { ZoneType } from './types';
+import {
+  SiteContent,
+  mergeContent,
+  cms,
+  loadDraft,
+  saveDraft,
+  clearDraft,
+} from './data/siteContent';
 import { sound } from './utils/sound';
 import { registerLenis } from './utils/scroll';
 
@@ -47,33 +53,52 @@ export function App() {
 
   const [selectedArenaId] = useState('cyberx-arena');
 
-  // Живые данные владельца (localStorage)
-  const [liveTournament, setLiveTournament] = useState(() => {
-    try {
-      const saved = localStorage.getItem('cyberx_live_tournament');
-      return saved ? JSON.parse(saved) : UPCOMING_TOURNAMENT;
-    } catch {
-      return UPCOMING_TOURNAMENT;
-    }
-  });
+  // Контент сайта: дефолты + опубликованный (API) + локальный черновик (localStorage)
+  const [remoteContent, setRemoteContent] = useState<Partial<SiteContent> | null>(null);
+  const [draft, setDraft] = useState<Partial<SiteContent> | null>(() => loadDraft());
+  const [lastPublishedAt, setLastPublishedAt] = useState<string | null>(null);
 
-  const [livePromos, setLivePromos] = useState(() => {
-    try {
-      const saved = localStorage.getItem('cyberx_live_promos');
-      return saved ? JSON.parse(saved) : PROMOTIONS;
-    } catch {
-      return PROMOTIONS;
-    }
-  });
+  // Загрузка опубликованного контента с CMS-бэкенда (если подключён)
+  useEffect(() => {
+    let on = true;
+    cms.fetchContent().then((c) => {
+      if (on && c) {
+        setRemoteContent(c);
+        const ts = (c as { updatedAt?: string }).updatedAt;
+        if (ts) setLastPublishedAt(ts);
+      }
+    });
+    return () => {
+      on = false;
+    };
+  }, []);
 
-  const [liveZones, setLiveZones] = useState<ZoneType[]>(() => {
-    try {
-      const saved = localStorage.getItem('cyberx_live_zones');
-      return saved ? JSON.parse(saved) : ZONES;
-    } catch {
-      return ZONES;
+  const content = useMemo(() => mergeContent(draft ?? remoteContent), [draft, remoteContent]);
+
+  const handleDraft = (c: SiteContent) => {
+    saveDraft(c);
+    setDraft(c);
+  };
+
+  const handleResetDraft = () => {
+    clearDraft();
+    setDraft(null);
+  };
+
+  const handlePublish = async (c: SiteContent): Promise<boolean> => {
+    if (!cms.connected()) return false;
+    const ok = await cms.publish(c);
+    if (ok) {
+      clearDraft();
+      setDraft(null);
+      const fresh = await cms.fetchContent();
+      if (fresh) {
+        setRemoteContent(fresh);
+        setLastPublishedAt((fresh as { updatedAt?: string }).updatedAt || new Date().toISOString());
+      }
     }
-  });
+    return ok;
+  };
 
   // Голосовое приветствие (один раз, по первому жесту)
   const playWelcomeVoice = () => {
@@ -185,6 +210,7 @@ export function App() {
         onOpenBooking={() => handleOpenBooking()}
         onOpenTournaments={() => handleOpenTournaments()}
         isMuted={isMuted}
+        arenas={content.arenas}
         onToggleMute={() => {
           const next = !isMuted;
           setIsMuted(next);
@@ -193,7 +219,7 @@ export function App() {
       />
 
       {/* Hero */}
-      <Hero isReady={!loading} />
+      <Hero isReady={!loading} content={content.hero} />
 
       {/* Контент */}
       <main className="relative z-10">
@@ -206,6 +232,7 @@ export function App() {
         <ArenaEcosystem
           onOpenBooking={(arenaId) => handleOpenBooking(arenaId)}
           selectedArenaId={selectedArenaId}
+          arenas={content.arenas}
         />
 
         <CyberSectionDivider />
@@ -213,7 +240,7 @@ export function App() {
         {/* 02. Зоны */}
         <ZonesShowcase
           onOpenBooking={(arenaId, zoneId) => handleOpenBooking(arenaId, zoneId)}
-          zonesList={liveZones}
+          zonesList={content.zones}
         />
 
         <CyberSectionDivider />
@@ -234,7 +261,7 @@ export function App() {
         <TournamentCard
           onOpenRegister={(tId) => handleOpenTournaments(tId)}
           onOpenAllTournaments={() => handleOpenTournaments()}
-          tournamentData={liveTournament}
+          tournamentData={content.tournament}
         />
 
         <CyberSectionDivider />
@@ -242,6 +269,7 @@ export function App() {
         {/* 06. Прайс */}
         <PriceSection
           onOpenBooking={(arenaId, zoneId) => handleOpenBooking(arenaId, zoneId)}
+          pricing={content.pricing}
         />
 
         <CyberSectionDivider />
@@ -249,7 +277,7 @@ export function App() {
         {/* 07. Акции */}
         <PromoSection
           onOpenBooking={() => handleOpenBooking()}
-          promotionsList={livePromos}
+          promotionsList={content.promotions}
         />
 
         <CyberSectionDivider />
@@ -257,12 +285,15 @@ export function App() {
         {/* 08. География */}
         <LocationMapSection
           onOpenBooking={(arenaId) => handleOpenBooking(arenaId)}
+          arenas={content.arenas}
         />
       </main>
 
       <Footer
         onOpenBooking={() => handleOpenBooking()}
         onOpenTournaments={() => handleOpenTournaments()}
+        arenas={content.arenas}
+        brandLinks={content.brandLinks}
       />
 
       {/* Плавающий бейдж владельца */}
@@ -284,6 +315,8 @@ export function App() {
         onClose={() => setBookingOpen(false)}
         defaultArenaId={bookingArenaId}
         defaultZoneId={bookingZoneId}
+        arenas={content.arenas}
+        booking={content.booking}
       />
 
       <TournamentModal
@@ -309,10 +342,12 @@ export function App() {
       <OwnerAdminModal
         isOpen={adminOpen}
         onClose={() => setAdminOpen(false)}
-        onSaveLiveTournament={(updated) => setLiveTournament(updated)}
-        onSaveLivePromos={(updated) => setLivePromos(updated)}
-        onSaveLiveZones={(updated) => setLiveZones(updated)}
-        currentZones={liveZones}
+        content={content}
+        apiConnected={cms.connected()}
+        lastPublishedAt={lastPublishedAt}
+        onDraft={handleDraft}
+        onPublish={handlePublish}
+        onResetDraft={handleResetDraft}
         onLogout={handleOwnerLogout}
       />
     </div>

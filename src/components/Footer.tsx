@@ -1,5 +1,7 @@
 import React from 'react';
 import { ARENAS } from '../data/arenaData';
+import { ArenaLocation } from '../types';
+import { DEFAULT_CONTENT, BrandLinks } from '../data/siteContent';
 import { MapPin, Phone, ArrowUpRight, ArrowUp } from 'lucide-react';
 import { sound } from '../utils/sound';
 import { scrollToTop, scrollToSection } from '../utils/scroll';
@@ -7,9 +9,14 @@ import { scrollToTop, scrollToSection } from '../utils/scroll';
 interface FooterProps {
   onOpenBooking: () => void;
   onOpenTournaments: () => void;
+  arenas?: ArenaLocation[];
+  brandLinks?: BrandLinks;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenTournaments }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenTournaments, arenas, brandLinks }) => {
+  const arenasData = arenas && arenas.length >= 3 ? arenas : ARENAS;
+  const links = brandLinks || DEFAULT_CONTENT.brandLinks;
+  const flagship = arenasData.find((a) => a.id === 'cyberx-arena') || arenasData[0];
   return (
     <footer className="relative border-t border-white/[0.08] bg-cyberx-ink overflow-hidden">
       <div className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-10 pt-16 sm:pt-20 pb-10">
@@ -36,7 +43,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenTournaments
           <div className="lg:col-span-5">
             <div className="eyebrow text-cyberx-faint mb-5">Клубы сети</div>
             <div className="space-y-5">
-              {ARENAS.map((arena) => (
+              {arenasData.map((arena) => (
                 <button
                   key={arena.id}
                   onClick={() => scrollToSection('arenas')}
@@ -114,39 +121,39 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenTournaments
               </li>
               <li>
                 <a
-                  href="https://vk.com/omsklenina"
+                  href={links.vk}
                   target="_blank"
                   rel="noreferrer"
                   className="text-cyberx-muted hover:text-white transition-colors"
                 >
-                  ВКонтакте — vk.com/omsklenina
+                  ВКонтакте — {links.vk.replace(/^https?:\/\/(www\.)?/, '')}
                 </a>
               </li>
               <li>
                 <a
-                  href="https://t.me/cyberxcommunityomsklenina"
+                  href={links.telegram}
                   target="_blank"
                   rel="noreferrer"
                   className="text-cyberx-muted hover:text-white transition-colors"
                 >
-                  Telegram — @cyberxcommunityomsklenina
+                  Telegram — {links.telegram.replace(/^https?:\/\/t\.me\//, '@')}
                 </a>
               </li>
               <li>
                 <a
-                  href="tel:+79081109777"
+                  href={`tel:${flagship.phone.replace(/[^+\d]/g, '')}`}
                   className="text-cyberx-muted hover:text-white transition-colors flex items-center gap-2"
                 >
                   <Phone size={13} className="text-cyberx-red shrink-0" />
-                  +7 (908) 110-97-77 — CyberX Arena
+                  {flagship.phone} — CyberX Arena
                 </a>
               </li>
               <li>
                 <a
-                  href="mailto:cyberx55@yandex.ru"
+                  href={`mailto:${links.email}`}
                   className="text-cyberx-muted hover:text-white transition-colors"
                 >
-                  cyberx55@yandex.ru — бронь и партнёрство
+                  {links.email} — бронь и партнёрство
                 </a>
               </li>
             </ul>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ARENAS } from '../data/arenaData';
+import { ArenaLocation } from '../types';
 import {
   MapPin,
   Compass,
@@ -15,11 +16,14 @@ import { Dynamic2GisMap } from './Dynamic2GisMap';
 
 interface LocationMapSectionProps {
   onOpenBooking: (arenaId: string) => void;
+  /** Клубы из контента владельца (дефолт — ARENAS) */
+  arenas?: ArenaLocation[];
 }
 
-export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBooking }) => {
-  const [selectedArenaId, setSelectedArenaId] = useState(ARENAS[1].id);
-  const active = ARENAS.find((a) => a.id === selectedArenaId) || ARENAS[1];
+export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBooking, arenas }) => {
+  const arenasData = arenas && arenas.length >= 3 ? arenas : ARENAS;
+  const [selectedArenaId, setSelectedArenaId] = useState(arenasData[1].id);
+  const active = arenasData.find((a) => a.id === selectedArenaId) || arenasData[1];
 
   const details: Record<string, { gisUrl: string; landmark: string; transport: string[]; parking: string; entrance: string }> = {
     'cyberx-arena': {
@@ -72,7 +76,7 @@ export const LocationMapSection: React.FC<LocationMapSectionProps> = ({ onOpenBo
         {/* Выбор клуба */}
         <Reveal delay={0.06} className="mt-10 sm:mt-12">
           <div className="flex gap-6 sm:gap-8 overflow-x-auto border-b border-white/[0.08] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {ARENAS.map((arena) => {
+            {arenasData.map((arena) => {
               const isActive = selectedArenaId === arena.id;
               return (
                 <button

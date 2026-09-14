@@ -3,12 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Phone } from 'lucide-react';
 import { sound } from '../utils/sound';
 import { scrollToSection, scrollToTop } from '../utils/scroll';
+import { ARENAS } from '../data/arenaData';
+import { ArenaLocation } from '../types';
 
 interface HeaderProps {
   onOpenBooking: () => void;
   onOpenTournaments: () => void;
   isMuted?: boolean;
   onToggleMute?: () => void;
+  /** Клубы из контента владельца (телефон флагмана в шапке) */
+  arenas?: ArenaLocation[];
 }
 
 const NAV_ITEMS = [
@@ -24,7 +28,9 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenBooking,
   isMuted = false,
   onToggleMute,
+  arenas,
 }) => {
+  const flagship = (arenas || ARENAS).find((a) => a.id === 'cyberx-arena') || (arenas || ARENAS)[0];
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -109,13 +115,13 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Правые действия */}
             <div className="flex items-center gap-2.5 sm:gap-3">
               <a
-                href="tel:+79081109777"
+                href={`tel:${flagship.phone.replace(/[^+\d]/g, '')}`}
                 onMouseEnter={() => sound.playHover()}
                 className="hidden xl:flex items-center gap-2 eyebrow text-cyberx-muted hover:text-white transition-colors py-2"
                 title="Позвонить в CyberX Arena"
               >
                 <Phone className="w-3.5 h-3.5 text-cyberx-red" />
-                +7 908 110-97-77
+                {flagship.phone}
               </a>
 
               {onToggleMute && (
@@ -222,8 +228,8 @@ export const Header: React.FC<HeaderProps> = ({
                 Забронировать стол
               </button>
               <div className="flex items-center justify-between text-cyberx-muted">
-                <a href="tel:+79081109777" className="eyebrow hover:text-white transition-colors">
-                  +7 908 110-97-77
+                <a href={`tel:${flagship.phone.replace(/[^+\d]/g, '')}`} className="eyebrow hover:text-white transition-colors">
+                  {flagship.phone}
                 </a>
                 <span className="eyebrow text-cyberx-faint">Омск // 24/7</span>
               </div>

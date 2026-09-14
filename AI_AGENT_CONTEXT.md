@@ -30,7 +30,7 @@
 ## 📂 Структура ключевых компонентов (`src/`)
 | Путь | Назначение |
 |---|---|
-| `src/App.tsx` | Shell: Lenis, роутинг secret hash `#admin`, голосовое приветствие, модалки, живые данные владельца (localStorage) |
+| `src/App.tsx` | Shell: Lenis, роутинг secret hash `#admin`, модалки, контент владельца (CMS) |
 | `src/components/Hero.tsx` | Видео-фон (hero-bg-compact.mp4, авто-пауза вне вьюпорта), mask-reveal заголовок, нижняя навигация «КЛУБЫ / ПРАЙС / ЖЕЛЕЗО / ТУРНИРЫ / АКЦИИ» (порядок фиксированный) |
 | `src/components/Header.tsx` | Шапка: blur при скролле, телефон, CTA «Бронь», mute-кнопка, мобильный лист |
 | `src/components/Preloader.tsx` | Быстрый автотикающий прелоадер (~1.6 c), звук отпирается первым жестом в App |
@@ -53,7 +53,7 @@
 | `src/config.ts` | `CMS_API_BASE` — адрес CMS-бэкенда (пусто = локальный режим) |
 | `server/` | CMS-бэкенд (Express: content GET/PUT + upload), деплой — server/README.md |
 | `src/types.ts` | Типы данных (Tournament.dateISO — опциональная ISO-дата для таймера) |
-| `src/utils/sound.ts` | Web Audio UI-звуки + голосовое приветствие (mp3) |
+| `src/utils/sound.ts` | Web Audio UI-звуки (клики, ховеры, прелоадер) |
 | `src/utils/scroll.ts` | Singleton Lenis + `scrollToSection/scrollToTop` |
 
 ## 🚀 Запуск

@@ -35,7 +35,6 @@ import { registerLenis } from './utils/scroll';
 export function App() {
   const [loading, setLoading] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
-  const audioPlayedRef = useRef(false);
   const lenisRef = useRef<Lenis | null>(null);
 
   // Модалки
@@ -98,13 +97,6 @@ export function App() {
       }
     }
     return ok;
-  };
-
-  // Голосовое приветствие (один раз, по первому жесту)
-  const playWelcomeVoice = () => {
-    if (audioPlayedRef.current || isMuted || sound.hasVoiceStarted()) return;
-    audioPlayedRef.current = true;
-    sound.playVoiceGreeting().catch(() => {});
   };
 
   // Секретный вход владельца
@@ -189,11 +181,8 @@ export function App() {
   return (
     <div
       onClick={() => {
-        // Первый жест: отпирание Web Audio + голосовое приветствие
+        // Первый жест: отпирание Web Audio (UI-звуки)
         sound.setEnabled(!isMuted);
-        if (!audioPlayedRef.current && !loading && !sound.hasVoiceStarted()) {
-          playWelcomeVoice();
-        }
       }}
       className="relative min-h-screen bg-cyberx-ink text-cyberx-text selection:bg-[#E32124] selection:text-white overflow-x-hidden"
     >

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Phone } from 'lucide-react';
 import { sound } from '../utils/sound';
 import { scrollToSection, scrollToTop } from '../utils/scroll';
+import { EASE_OUT } from './ui/Reveal';
 import { ARENAS } from '../data/arenaData';
 import { ArenaLocation } from '../types';
 
@@ -94,23 +95,35 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </button>
 
-            {/* Десктоп-навигация */}
-            <nav className="hidden md:flex items-center gap-6 lg:gap-8">
-              {NAV_ITEMS.map((item) => (
-                <button
-                  key={item.target}
-                  onClick={() => go(item.target)}
-                  onMouseEnter={() => sound.playHover()}
-                  className="group relative py-2 eyebrow text-cyberx-muted hover:text-white transition-colors duration-300"
+            {/* Десктоп-навигация: на hero (верх страницы) её заменяет
+                нижняя навигация самого hero — чтобы не дублировать.
+                При скролле панель появляется в шапке. */}
+            <AnimatePresence>
+              {scrolled && (
+                <motion.nav
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.35, ease: EASE_OUT }}
+                  className="hidden md:flex items-center gap-6 lg:gap-8"
                 >
-                  {item.label}
-                  <span
-                    className="absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-cyberx-red transition-transform duration-300 ease-out group-hover:scale-x-100"
-                    aria-hidden
-                  />
-                </button>
-              ))}
-            </nav>
+                  {NAV_ITEMS.map((item) => (
+                    <button
+                      key={item.target}
+                      onClick={() => go(item.target)}
+                      onMouseEnter={() => sound.playHover()}
+                      className="group relative py-2 eyebrow text-cyberx-muted hover:text-white transition-colors duration-300"
+                    >
+                      {item.label}
+                      <span
+                        className="absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-cyberx-red transition-transform duration-300 ease-out group-hover:scale-x-100"
+                        aria-hidden
+                      />
+                    </button>
+                  ))}
+                </motion.nav>
+              )}
+            </AnimatePresence>
 
             {/* Правые действия */}
             <div className="flex items-center gap-2.5 sm:gap-3">
